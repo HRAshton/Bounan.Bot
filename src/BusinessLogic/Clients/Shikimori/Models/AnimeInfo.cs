@@ -15,6 +15,9 @@ public record AnimeInfo
 
     public int? Episodes { get; [UsedImplicitly] init; }
 
+    [JsonPropertyName("episodes_aired")]
+    public int? EpisodesAired { get; [UsedImplicitly] init; }
+
     [JsonPropertyName("aired_on")]
     public string? AiredOn { get; [UsedImplicitly] init; }
 

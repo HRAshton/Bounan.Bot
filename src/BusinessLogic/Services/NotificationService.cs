@@ -71,8 +71,9 @@ internal class NotificationService : INotificationService
         ArgumentNullException.ThrowIfNull(notification.ChatIds);
         ArgumentNullException.ThrowIfNull(notification.FileId);
 
-        var allEpisodes = animeInfo.Episodes.HasValue
-            ? Enumerable.Range(1, animeInfo.Episodes.Value)
+        var episodeNum = Math.Max(animeInfo.Episodes ?? 0, animeInfo.EpisodesAired ?? 0);
+        var allEpisodes = episodeNum >= 1 && episodeNum >= notification.Episode
+            ? Enumerable.Range(1, episodeNum)
             : [notification.Episode];
         var keyboard = TelegramHelpers.GetKeyboard(notification, allEpisodes, _telegramBotConfig.ButtonsPagination);
 
