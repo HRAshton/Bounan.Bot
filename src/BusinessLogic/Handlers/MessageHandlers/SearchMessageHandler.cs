@@ -41,8 +41,7 @@ public class SearchMessageHandler(
             {
                 new InlineKeyboardButton(anime.Russian ?? anime.Name)
                 {
-                    SwitchInlineQueryCurrentChat = CommandConvert.SerializeCommand(
-                        new InfoCommandDto { MyAnimeListId = anime.Id }),
+                    CallbackData = CommandConvert.SerializeCommand(new InfoCommandDto { MyAnimeListId = anime.Id }),
                 },
             });
 
