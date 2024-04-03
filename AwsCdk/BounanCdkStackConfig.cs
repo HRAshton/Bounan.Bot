@@ -16,6 +16,8 @@ public class BounanCdkStackConfig
 
     public required bool? RegisterWebhook { get; init; }
 
+    public int WarmupTimeoutMinutes { get; init; } = 5;
+
     public void Validate()
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(AlertEmail);

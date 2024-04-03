@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using Amazon.CDK;
 using Amazon.CDK.AWS.APIGateway;
 using Amazon.CDK.AWS.CloudWatch;
+using Amazon.CDK.AWS.Events;
 using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.Lambda.EventSources;
 using Amazon.CDK.AWS.Logs;
@@ -13,6 +14,7 @@ using Amazon.CDK.AWS.SQS;
 using Constructs;
 using Microsoft.Extensions.Configuration;
 using AssetOptions = Amazon.CDK.AWS.S3.Assets.AssetOptions;
+using Targets = Amazon.CDK.AWS.Events.Targets;
 
 namespace Bounan.Downloader.AwsCdk;
 
@@ -36,6 +38,8 @@ public class BotCdkStack : Stack
         var aniManLambda = Function.FromFunctionName(this, "AniManLambda", config.GetAnimeFunctionName);
         var (webhookHandler, notificationHandler) = CreateLambda(config, logGroup);
         aniManLambda.GrantInvoke(webhookHandler);
+
+        CreateWarmer(config, webhookHandler);
 
         var apiGateway = new RestApi(this, "WebhookApi", new RestApiProps());
         apiGateway.Root.AddMethod("POST", new LambdaIntegration(webhookHandler));
@@ -133,6 +137,16 @@ public class BotCdkStack : Stack
         });
 
         return (webhookHandler, notificationHandler);
+    }
+
+    private void CreateWarmer(BounanCdkStackConfig bounanCdkStackConfig, IFunction webhookHandler)
+    {
+        var rule = new Rule(this, "WarmerRule", new RuleProps
+        {
+            Schedule = Schedule.Rate(Duration.Minutes(bounanCdkStackConfig.WarmupTimeoutMinutes)),
+        });
+
+        rule.AddTarget(new Targets.LambdaFunction(webhookHandler));
     }
 
     private void Out(string key, string value)
