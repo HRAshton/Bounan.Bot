@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Bounan.Bot.Endpoint</AssemblyName>
+        <RootNamespace>Bounan.Bot.Endpoint</RootNamespace>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <Import Project="..\Common\StyleCop.props"/>
+
+    <ItemGroup>
+      <PackageReference Include="Amazon.Lambda.Annotations" Version="1.2.0" />
+      <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.0" />
+      <PackageReference Include="Amazon.Lambda.RuntimeSupport" Version="1.10.0" />
+      <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.1" />
+      <PackageReference Include="Amazon.Lambda.SQSEvents" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+    </ItemGroup>
+
+</Project>

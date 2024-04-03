@@ -1,0 +1,6 @@
+[submodule "src/LoanApi"]
+	path = src/LoanApi
+	url = https://github.com/HRAshton/LoanApi.Net.git
+[submodule "src/Common"]
+	path = src/Common
+	url = https://github.com/HRAshton/BoUnAn.Common.git

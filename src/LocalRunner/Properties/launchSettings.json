@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "LocalRunner": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Logging__LogLevel__Default": "Information",
+        "LocalRunner__NotificationQueueUrl": "",
+        "AWS_PROFILE": "",
+        "AniMan__GetAnimeFunctionName": "",
+        "LoanApi__Token": "",
+        "TelegramBot__BotToken": "",
+        "DUMMY": ""
+      }
+    }
+  }
+}
