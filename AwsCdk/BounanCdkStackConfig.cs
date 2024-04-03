@@ -14,8 +14,6 @@ public class BounanCdkStackConfig
 
     public required string NotificationQueueArn { get; init; }
 
-    public required bool? RegisterWebhook { get; init; }
-
     public int WarmupTimeoutMinutes { get; init; } = 5;
 
     public void Validate()
@@ -25,6 +23,5 @@ public class BounanCdkStackConfig
         ArgumentException.ThrowIfNullOrWhiteSpace(TelegramBotToken);
         ArgumentException.ThrowIfNullOrWhiteSpace(GetAnimeFunctionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(NotificationQueueArn);
-        ArgumentNullException.ThrowIfNull(RegisterWebhook);
     }
 }
