@@ -16,8 +16,9 @@ public static class TelegramHelpers
         var episodeStr = animeInfo?.Episodes is null or 1
             ? string.Empty
             : $"Серия {videoKey.Episode}";
+        var dubStr = videoKey.Dub.Replace(".", string.Empty); // Prevent parsing as url
 
-        return $"<b>{animeInfoStr}</b>\n{episodeStr}\nОзвучка: <i>{videoKey.Dub}</i>";
+        return $"<b>{animeInfoStr}</b>\n{episodeStr}\nОзвучка: <i>{dubStr}</i>";
     }
 
     public static InlineKeyboardMarkup GetKeyboard(
