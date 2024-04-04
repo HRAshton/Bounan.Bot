@@ -5,7 +5,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "Logging__LogLevel__Default": "Information",
-        "Logging__LogLevel__System.Net.Http.HttpClient.Refit": "Warning",
+        "Logging__LogLevel__System": "Warning",
         "LocalRunner__NotificationQueueUrl": "",
         "AWS_PROFILE": "",
         "AniMan__GetAnimeFunctionName": "",

@@ -117,7 +117,7 @@ public class BotCdkStack : Stack
             Environment = new Dictionary<string, string>
             {
                 { "Logging__LogLevel__Default", "Information" },
-                { "Logging__LogLevel__System.Net.Http.HttpClient.Refit", "Warning" },
+                { "Logging__LogLevel__System", "Warning" },
                 { "LoanApi__Token", bounanCdkStackConfig.LoanApiToken },
                 { "AniMan__GetAnimeFunctionName", bounanCdkStackConfig.GetAnimeFunctionName },
                 { "TelegramBot__BotToken", bounanCdkStackConfig.TelegramBotToken },
