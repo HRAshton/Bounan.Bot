@@ -37,10 +37,13 @@ public class LambdaHandlers
     }
 
     [LambdaFunction]
-    public Task NotificationFromAniMan(SQSEvent sqsEvent, ILambdaContext context)
+    public async Task NotificationFromAniMan(SQSEvent sqsEvent, ILambdaContext context)
     {
-        var payload = sqsEvent.Records.Single().Body;
-        return NotificationFromAniManInternal(payload, context);
+        foreach (var record in sqsEvent.Records)
+        {
+            var payload = record.Body;
+            await NotificationFromAniManInternal(payload, context);
+        }
     }
 
     public async Task NotificationFromAniManInternal(string payload, ILambdaContext context)
