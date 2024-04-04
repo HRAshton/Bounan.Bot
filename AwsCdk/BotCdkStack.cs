@@ -13,6 +13,7 @@ using Amazon.CDK.AWS.SNS.Subscriptions;
 using Amazon.CDK.AWS.SQS;
 using Constructs;
 using Microsoft.Extensions.Configuration;
+using AlarmActions = Amazon.CDK.AWS.CloudWatch.Actions;
 using AssetOptions = Amazon.CDK.AWS.S3.Assets.AssetOptions;
 using Targets = Amazon.CDK.AWS.Events.Targets;
 
@@ -76,13 +77,14 @@ public class BotCdkStack : Stack
             MetricName = "ErrorCount",
         });
 
-        _ = new Alarm(this, "LogGroupErrorAlarm", new AlarmProps
+        var alarm = new Alarm(this, "LogGroupErrorAlarm", new AlarmProps
         {
             Metric = errorPattern.Metric(),
             Threshold = 1,
             EvaluationPeriods = 1,
             TreatMissingData = TreatMissingData.NOT_BREACHING,
         });
+        alarm.AddAlarmAction(new AlarmActions.SnsAction(topic));
     }
 
     private (Function WebhookHandler, Function NotificationHandler) CreateLambda(
