@@ -71,17 +71,17 @@ public class BotCdkStack : Stack
 
         topic.AddSubscription(new EmailSubscription(bounanCdkStackConfig.AlertEmail));
 
-        var errorPattern = new MetricFilter(this, "LogGroupErrorPattern", new MetricFilterProps
+        var metricFilter = logGroup.AddMetricFilter("ErrorMetricFilter", new MetricFilterOptions
         {
-            LogGroup = logGroup,
-            FilterPattern = FilterPattern.AnyTerm("ERROR", "Error", "error"),
-            MetricNamespace = "MetricNamespace",
+            FilterPattern = FilterPattern.AnyTerm("ERROR", "Error", "error", "fail"),
+            MetricNamespace = StackName,
             MetricName = "ErrorCount",
+            MetricValue = "1"
         });
 
         var alarm = new Alarm(this, "LogGroupErrorAlarm", new AlarmProps
         {
-            Metric = errorPattern.Metric(),
+            Metric = metricFilter.Metric(),
             Threshold = 1,
             EvaluationPeriods = 1,
             TreatMissingData = TreatMissingData.NOT_BREACHING,
