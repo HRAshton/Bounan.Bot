@@ -59,10 +59,10 @@ internal class NotificationService : INotificationService
     private async Task SendFailedNotificationAsync(IBotNotification notification, AnimeInfo animeInfo)
     {
         var message = "Не удалось найти видео. Команда уже оповещена.\n"
-                      + TelegramHelpers.GetVideoDescription(animeInfo, notification.Episode);
+                      + TelegramHelpers.GetVideoDescription(animeInfo, notification);
         foreach (var chatId in notification.ChatIds)
         {
-            await BotClient.SendTextMessageAsync(chatId, message, parseMode: ParseMode.MarkdownV2);
+            await BotClient.SendTextMessageAsync(chatId, message, parseMode: ParseMode.Html);
         }
     }
 
@@ -77,14 +77,14 @@ internal class NotificationService : INotificationService
             : [notification.Episode];
         var keyboard = TelegramHelpers.GetKeyboard(notification, allEpisodes, _telegramBotConfig.ButtonsPagination);
 
-        var message = TelegramHelpers.GetVideoDescription(animeInfo, notification.Episode);
+        var message = TelegramHelpers.GetVideoDescription(animeInfo, notification);
         foreach (var chatId in notification.ChatIds)
         {
             await BotClient.SendVideoAsync(
                 chatId,
                 new InputFileId(notification.FileId),
                 caption: message,
-                parseMode: ParseMode.MarkdownV2,
+                parseMode: ParseMode.Html,
                 replyMarkup: keyboard);
         }
     }

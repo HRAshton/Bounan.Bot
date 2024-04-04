@@ -8,16 +8,16 @@ namespace Bounan.Bot.BusinessLogic.Helpers;
 
 public static class TelegramHelpers
 {
-    public static string GetVideoDescription(AnimeInfo? animeInfo, int? episode)
+    public static string GetVideoDescription(AnimeInfo? animeInfo, IVideoKey videoKey)
     {
         var animeInfoStr = animeInfo is null
             ? string.Empty
             : animeInfo.Russian ?? animeInfo.Name;
-        var episodeStr = episode is null || animeInfo?.Episodes is null or 1
+        var episodeStr = animeInfo?.Episodes is null or 1
             ? string.Empty
-            : $"Серия {episode}";
+            : $"Серия {videoKey.Episode}";
 
-        return $"*{animeInfoStr}*\n{episodeStr}";
+        return $"<b>{animeInfoStr}</b>\n{episodeStr}\nОзвучка: <i>{videoKey.Dub}</i>";
     }
 
     public static InlineKeyboardMarkup GetKeyboard(

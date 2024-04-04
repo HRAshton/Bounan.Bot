@@ -125,7 +125,7 @@ public class WatchMessageHandler(
 
     private async Task SendVideoAsync(
         Message message,
-        WatchCommandDto commandDto,
+        IVideoKey commandDto,
         IBotResponse videoInfo,
         IReplyMarkup keyboard,
         CancellationToken cancellationToken)
@@ -150,8 +150,8 @@ public class WatchMessageHandler(
         await botClient.SendVideoAsync(
             message.Chat.Id,
             new InputFileId(videoInfo.FileId),
-            caption: TelegramHelpers.GetVideoDescription(animeInfo, commandDto.Episode),
-            parseMode: ParseMode.MarkdownV2,
+            caption: TelegramHelpers.GetVideoDescription(animeInfo, commandDto),
+            parseMode: ParseMode.Html,
             replyMarkup: keyboard,
             cancellationToken: cancellationToken);
     }
