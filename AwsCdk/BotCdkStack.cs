@@ -13,6 +13,7 @@ using Amazon.CDK.AWS.SNS.Subscriptions;
 using Amazon.CDK.AWS.SQS;
 using Constructs;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using AlarmActions = Amazon.CDK.AWS.CloudWatch.Actions;
 using AssetOptions = Amazon.CDK.AWS.S3.Assets.AssetOptions;
 using Targets = Amazon.CDK.AWS.Events.Targets;
@@ -50,6 +51,7 @@ public class BotCdkStack : Stack
 
         var registrationUrl = $"https://api.telegram.org/bot{config.TelegramBotToken}/setWebhook?url={apiGateway.Url}";
 
+        Out("Bounan.Downloader.Config", JsonConvert.SerializeObject(config));
         Out("Bounan.Downloader.WebhookRegisterUrl", registrationUrl);
         Out("Bounan.Downloader.LogGroupName", logGroup.LogGroupName);
         Out("Bounan.Downloader.WebhookHandlerUrl", apiGateway.Url);
