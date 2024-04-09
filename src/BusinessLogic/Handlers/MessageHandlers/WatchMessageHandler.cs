@@ -22,7 +22,7 @@ namespace Bounan.Bot.BusinessLogic.Handlers.MessageHandlers;
 public class WatchMessageHandler(
     ILogger<WatchMessageHandler> logger,
     IShikimoriApi shikimoriApi,
-    ILoanApiComClient botLoanApiClient,
+    ILoanApiComClient botLoanApiComClient,
     IAniManClient aniManClient,
     ITelegramBotClient botClient,
     IOptions<TelegramBotConfig> telegramBotConfig) : IMessageHandler
@@ -42,7 +42,7 @@ public class WatchMessageHandler(
             return;
         }
 
-        var searchResults = await botLoanApiClient.SearchAsync(commandDto.MyAnimeListId, cancellationToken);
+        var searchResults = await botLoanApiComClient.GetExistingVideos(commandDto.MyAnimeListId, cancellationToken);
         if (searchResults is null or { Count: 0 })
         {
             logger.LogWarning("No videos for {MyAnimeListId}", commandDto.MyAnimeListId);
@@ -156,7 +156,7 @@ public class WatchMessageHandler(
             cancellationToken: cancellationToken);
     }
 
-    private async Task SendSwitchDubButtonsAsync(long chatId, IEnumerable<SearchResultItem> searchResults, int episode)
+    private async Task SendSwitchDubButtonsAsync(long chatId, IEnumerable<IVideoKeyWithLink> searchResults, int episode)
     {
         var inOtherDubs = searchResults
             .Where(item => item.Episode == episode)

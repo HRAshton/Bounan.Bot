@@ -29,7 +29,7 @@ public class DubsInlineQueryHandler(
             return TelegramInlineItemsHelpers.EmptyResults(inlineQuery.Id);
         }
 
-        var searchResults = await botLoanApiClient.SearchAsync(commandDto.MyAnimeListId, cancellationToken);
+        var searchResults = await botLoanApiClient.GetExistingVideos(commandDto.MyAnimeListId, cancellationToken);
         if (searchResults is null or { Count: 0 })
         {
             logger.LogInformation("No dubs for {MyAnimeListId}", commandDto.MyAnimeListId);
