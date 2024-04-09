@@ -37,14 +37,17 @@ public static class TelegramHelpers
         var currentPageIndex = Array.IndexOf(
             episodesPerPage,
             episodesPerPage.Single(p => p.Contains(currentVideo.Episode)));
+        var isFirstPage = currentPageIndex == 0;
+        var isLastPage = currentPageIndex == episodesPerPage.Length - 1;
+
         var buttonsToDisplay = episodesPerPage[currentPageIndex].ToList();
-        if (currentPageIndex != 0)
+        if (!isFirstPage)
         {
             var lastEpOnPrevPage = episodesPerPage[currentPageIndex - 1].Last();
             buttonsToDisplay.Insert(0, lastEpOnPrevPage);
         }
 
-        if (currentPageIndex != episodesPerPage.Length - 1)
+        if (!isLastPage)
         {
             var firstEpOnNextPage = episodesPerPage[currentPageIndex + 1].First();
             buttonsToDisplay.Add(firstEpOnNextPage);
@@ -68,8 +71,18 @@ public static class TelegramHelpers
                     })
                 .Select((btn, index) => (btn, index))
                 .GroupBy(pair => pair.index / pagingConfig.Columns)
-                .Select(x => x.Select(group => group.btn))
+                .Select(x => x.Select(group => group.btn).ToArray())
                 .ToList();
+
+        if (!isFirstPage)
+        {
+            rows[0][0].Text = "<<";
+        }
+
+        if (!isLastPage)
+        {
+            rows[^1][^1].Text = ">>";
+        }
 
         rows.Add([
             new InlineKeyboardButton("🔍 О релизе")

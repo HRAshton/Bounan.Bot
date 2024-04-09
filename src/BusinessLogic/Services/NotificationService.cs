@@ -5,6 +5,7 @@ using Bounan.Bot.BusinessLogic.Helpers;
 using Bounan.Bot.BusinessLogic.Interfaces;
 using Bounan.Bot.BusinessLogic.Models;
 using Bounan.Common.Models;
+using Bounan.LoanApi.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
@@ -21,11 +22,13 @@ internal class NotificationService : INotificationService
         ILogger<NotificationService> logger,
         ITelegramBotClient botClient,
         IShikimoriApi shikimoriApi,
-        IOptions<TelegramBotConfig> telegramBotConfig)
+        IOptions<TelegramBotConfig> telegramBotConfig,
+        ILoanApiComClient loanApiComClient)
     {
         Logger = logger;
         BotClient = botClient;
         ShikimoriApi = shikimoriApi;
+        LoanApiComClient = loanApiComClient;
         _telegramBotConfig = telegramBotConfig.Value;
     }
 
@@ -35,15 +38,17 @@ internal class NotificationService : INotificationService
 
     private IShikimoriApi ShikimoriApi { get; }
 
+    private ILoanApiComClient LoanApiComClient { get; }
+
     public async Task HandleAsync(BotNotification notification)
     {
         ArgumentNullException.ThrowIfNull(notification);
 
-        Logger.LogInformation("Handling notification from AniMan: {Notification}", notification);
+        Logger.LogInformation("Handling notification from AniMan: {@Notification}", notification);
 
         var animeInfo = await ShikimoriApi.GetAnimeInfoAsync(notification.MyAnimeListId);
         ArgumentNullException.ThrowIfNull(animeInfo);
-        Logger.LogInformation("Got anime info: {AnimeInfo}", animeInfo.Name);
+        Logger.LogInformation("Got anime info: {@AnimeInfo}", animeInfo);
 
         if (notification.FileId is null)
         {
@@ -71,10 +76,8 @@ internal class NotificationService : INotificationService
         ArgumentNullException.ThrowIfNull(notification.ChatIds);
         ArgumentNullException.ThrowIfNull(notification.FileId);
 
-        var episodeNum = Math.Max(animeInfo.Episodes ?? 0, animeInfo.EpisodesAired ?? 0);
-        var allEpisodes = episodeNum >= 1 && episodeNum >= notification.Episode
-            ? Enumerable.Range(1, episodeNum)
-            : [notification.Episode];
+        var searchResults = await LoanApiComClient.GetExistingVideos(animeInfo.Id);
+        var allEpisodes = searchResults.Select(x => x.Episode);
         var keyboard = TelegramHelpers.GetKeyboard(notification, allEpisodes, _telegramBotConfig.ButtonsPagination);
 
         var message = TelegramHelpers.GetVideoDescription(animeInfo, notification);
