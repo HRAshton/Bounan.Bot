@@ -25,8 +25,14 @@ public class LambdaHandlers
     private ServiceProvider ServiceProvider { get; }
 
     [LambdaFunction]
-    public async Task<APIGatewayProxyResponse> TelegramEvent(APIGatewayProxyRequest request, ILambdaContext context)
+    public async Task<APIGatewayProxyResponse> TelegramEvent(APIGatewayProxyRequest? request, ILambdaContext context)
     {
+        if (request?.Body is null)
+        {
+            context.Logger.LogLine("No body in request. Warmup? Returning 202.");
+            return new APIGatewayProxyResponse { StatusCode = 202 };
+        }
+
         var payload = request.Body;
         var update = JsonConvert.DeserializeObject<Update>(payload);
 
