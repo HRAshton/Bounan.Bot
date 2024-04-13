@@ -5,6 +5,7 @@ using Amazon.Lambda.SQSEvents;
 using Bounan.Bot.BusinessLogic.Interfaces;
 using Bounan.Bot.BusinessLogic.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Telegram.Bot.Types;
 
@@ -20,26 +21,40 @@ public class LambdaHandlers
         var services = new ServiceCollection();
         Bootstrap.ConfigureServices(services);
         ServiceProvider = services.BuildServiceProvider();
+
+        Logger = ServiceProvider.GetRequiredService<ILogger<LambdaHandlers>>();
     }
+
+    private ILogger<LambdaHandlers> Logger { get; }
 
     private ServiceProvider ServiceProvider { get; }
 
     [LambdaFunction]
     public async Task<APIGatewayProxyResponse> TelegramEvent(APIGatewayProxyRequest? request, ILambdaContext context)
     {
-        if (request?.Body is null)
+        try
         {
-            context.Logger.LogLine("No body in request. Warmup? Returning 202.");
+            if (request?.Body is null)
+            {
+                context.Logger.LogLine("No body in request. Warmup? Returning 202.");
+                return new APIGatewayProxyResponse { StatusCode = 202 };
+            }
+
+            var payload = request.Body;
+            var update = JsonConvert.DeserializeObject<Update>(payload);
+
+            var service = ServiceProvider.GetRequiredService<IBotService>();
+            await service.HandleUpdateAsync(update, CancellationToken.None);
+
+            return new APIGatewayProxyResponse { StatusCode = 200 };
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error handling request: {@Request}", request);
+
+            // Returning 202 to not retry the request
             return new APIGatewayProxyResponse { StatusCode = 202 };
         }
-
-        var payload = request.Body;
-        var update = JsonConvert.DeserializeObject<Update>(payload);
-
-        var service = ServiceProvider.GetRequiredService<IBotService>();
-        await service.HandleUpdateAsync(update, CancellationToken.None);
-
-        return new APIGatewayProxyResponse { StatusCode = 200 };
     }
 
     [LambdaFunction]
