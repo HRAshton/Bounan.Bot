@@ -22,6 +22,7 @@ public static class Bootstrap
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IAmazonLambda, AmazonLambdaClient>();
         services.AddSingleton<IAniManClient, AniManClient>();
+        services.AddSingleton<IFileIdFinder, FileIdFinder>();
 
         services.AddRefitClient<IShikimoriApi>()
             .ConfigureHttpClient((serviceProvider, client) =>

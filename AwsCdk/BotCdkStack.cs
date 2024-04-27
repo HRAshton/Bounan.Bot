@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Amazon.CDK;
 using Amazon.CDK.AWS.APIGateway;
 using Amazon.CDK.AWS.CloudWatch;
@@ -21,6 +22,10 @@ using Targets = Amazon.CDK.AWS.Events.Targets;
 namespace Bounan.Downloader.AwsCdk;
 
 [SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "This is a stack.")]
+[SuppressMessage(
+    "Performance",
+    "CA1859:Use concrete types when possible for improved performance",
+    Justification = "This is not a high load code.")]
 public class BotCdkStack : Stack
 {
     internal BotCdkStack(Construct scope, string id, IStackProps? props = null)
@@ -76,7 +81,7 @@ public class BotCdkStack : Stack
             FilterPattern = FilterPattern.AnyTerm("ERROR", "Error", "error", "fail"),
             MetricNamespace = StackName,
             MetricName = "ErrorCount",
-            MetricValue = "1"
+            MetricValue = "1",
         });
 
         var alarm = new Alarm(this, "LogGroupErrorAlarm", new AlarmProps
@@ -125,6 +130,8 @@ public class BotCdkStack : Stack
                 { "LoanApi__Token", bounanCdkStackConfig.LoanApiToken },
                 { "AniMan__GetAnimeFunctionName", bounanCdkStackConfig.GetAnimeFunctionName },
                 { "TelegramBot__BotToken", bounanCdkStackConfig.TelegramBotToken },
+                { "TelegramBot__VideoChatId", bounanCdkStackConfig.TelegramBotVideoChatId },
+                { "TelegramBot__ForwardingChatId", bounanCdkStackConfig.TelegramBotForwardingChatId },
             },
         });
 

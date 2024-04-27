@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Bounan.Downloader.AwsCdk;
 
@@ -9,6 +10,10 @@ public class BounanCdkStackConfig
     public required string LoanApiToken { get; init; }
 
     public required string TelegramBotToken { get; init; }
+
+    public required string TelegramBotVideoChatId { get; init; }
+
+    public required string TelegramBotForwardingChatId { get; init; }
 
     public required string GetAnimeFunctionName { get; init; }
 
@@ -23,5 +28,11 @@ public class BounanCdkStackConfig
         ArgumentException.ThrowIfNullOrWhiteSpace(TelegramBotToken);
         ArgumentException.ThrowIfNullOrWhiteSpace(GetAnimeFunctionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(NotificationQueueArn);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(
+            long.Parse(TelegramBotVideoChatId, NumberFormatInfo.InvariantInfo),
+            0);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(
+            long.Parse(TelegramBotForwardingChatId, NumberFormatInfo.InvariantInfo),
+            0);
     }
 }

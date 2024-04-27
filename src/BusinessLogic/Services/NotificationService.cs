@@ -23,12 +23,14 @@ internal class NotificationService : INotificationService
         ITelegramBotClient botClient,
         IShikimoriApi shikimoriApi,
         IOptions<TelegramBotConfig> telegramBotConfig,
-        ILoanApiComClient loanApiComClient)
+        ILoanApiComClient loanApiComClient,
+        IFileIdFinder fileIdFinder)
     {
         Logger = logger;
         BotClient = botClient;
         ShikimoriApi = shikimoriApi;
         LoanApiComClient = loanApiComClient;
+        FileIdFinder = fileIdFinder;
         _telegramBotConfig = telegramBotConfig.Value;
     }
 
@@ -40,6 +42,8 @@ internal class NotificationService : INotificationService
 
     private ILoanApiComClient LoanApiComClient { get; }
 
+    private IFileIdFinder FileIdFinder { get; }
+
     public async Task HandleAsync(BotNotification notification)
     {
         ArgumentNullException.ThrowIfNull(notification);
@@ -50,15 +54,23 @@ internal class NotificationService : INotificationService
         ArgumentNullException.ThrowIfNull(animeInfo);
         Logger.LogInformation("Got anime info: {@AnimeInfo}", animeInfo);
 
-        if (notification.FileId is null)
+        if (notification.MessageId is null)
         {
             Logger.LogInformation("Notification has no file id, sending failed notification");
             await SendFailedNotificationAsync(notification, animeInfo);
             return;
         }
 
-        Logger.LogInformation("Sending notification with file id: {FileId}", notification.FileId);
-        await SendNotificationAsync(notification, animeInfo);
+        try
+        {
+            Logger.LogInformation("Sending notification with message id: {FileId}", notification.MessageId);
+            await SendNotificationAsync(notification, animeInfo);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to send notification");
+            await SendFailedNotificationAsync(notification, animeInfo);
+        }
     }
 
     private async Task SendFailedNotificationAsync(IBotNotification notification, AnimeInfo animeInfo)
@@ -74,7 +86,11 @@ internal class NotificationService : INotificationService
     private async Task SendNotificationAsync(IBotNotification notification, AnimeInfo animeInfo)
     {
         ArgumentNullException.ThrowIfNull(notification.ChatIds);
-        ArgumentNullException.ThrowIfNull(notification.FileId);
+        ArgumentNullException.ThrowIfNull(notification.MessageId);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(notification.MessageId.Value);
+
+        var fileId = await FileIdFinder.GetFileIdAsync(notification.MessageId.Value);
+        ArgumentNullException.ThrowIfNull(fileId);
 
         var searchResults = await LoanApiComClient.GetExistingVideos(animeInfo.Id);
         var allEpisodes = searchResults.Select(x => x.Episode);
@@ -85,7 +101,7 @@ internal class NotificationService : INotificationService
         {
             await BotClient.SendVideoAsync(
                 chatId,
-                new InputFileId(notification.FileId),
+                new InputFileId(fileId),
                 caption: message,
                 parseMode: ParseMode.Html,
                 replyMarkup: keyboard);

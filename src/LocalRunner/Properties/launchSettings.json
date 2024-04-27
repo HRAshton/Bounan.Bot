@@ -11,6 +11,8 @@
         "AniMan__GetAnimeFunctionName": "",
         "LoanApi__Token": "",
         "TelegramBot__BotToken": "",
+        "TelegramBot__VideoChatId": "",
+        "TelegramBot__ForwardingChatId": "",
         "DUMMY": ""
       }
     }

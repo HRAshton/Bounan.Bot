@@ -5,6 +5,7 @@ using Bounan.Bot.BusinessLogic.Configs;
 using Bounan.Bot.BusinessLogic.Helpers;
 using Bounan.Bot.BusinessLogic.Interfaces;
 using Bounan.Bot.BusinessLogic.Models;
+using Bounan.Bot.BusinessLogic.Services;
 using Bounan.Bot.TelegramBot.Telegram;
 using Bounan.Common.Enums;
 using Bounan.Common.Models;
@@ -19,14 +20,40 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Bounan.Bot.BusinessLogic.Handlers.MessageHandlers;
 
-public class WatchMessageHandler(
-    ILogger<WatchMessageHandler> logger,
-    IShikimoriApi shikimoriApi,
-    ILoanApiComClient botLoanApiComClient,
-    IAniManClient aniManClient,
-    ITelegramBotClient botClient,
-    IOptions<TelegramBotConfig> telegramBotConfig) : IMessageHandler
+public class WatchMessageHandler : IMessageHandler
 {
+    private readonly TelegramBotConfig _telegramBotConfig;
+
+    public WatchMessageHandler(
+        ILogger<WatchMessageHandler> logger,
+        IShikimoriApi shikimoriApi,
+        ILoanApiComClient botLoanApiComClient,
+        IAniManClient aniManClient,
+        ITelegramBotClient botClient,
+        IOptions<TelegramBotConfig> telegramBotConfig,
+        IFileIdFinder fileIdFinder)
+    {
+        _telegramBotConfig = telegramBotConfig.Value;
+        Logger = logger;
+        ShikimoriApi = shikimoriApi;
+        BotLoanApiComClient = botLoanApiComClient;
+        AniManClient = aniManClient;
+        BotClient = botClient;
+        FileIdFinder = fileIdFinder;
+    }
+
+    private ILogger Logger { get; }
+
+    private IShikimoriApi ShikimoriApi { get; }
+
+    private ILoanApiComClient BotLoanApiComClient { get; }
+
+    private IAniManClient AniManClient { get; }
+
+    private ITelegramBotClient BotClient { get; }
+
+    private IFileIdFinder FileIdFinder { get; }
+
     public static bool CanHandle(Message message) => message.Text?.StartsWith(WatchCommandDto.Command) ?? false;
 
     public async Task HandleAsync(Message message, CancellationToken cancellationToken)
@@ -38,15 +65,15 @@ public class WatchMessageHandler(
         var commandDto = CommandConvert.DeserializeCommand<WatchCommandDto>(message.Text);
         if (commandDto is null)
         {
-            logger.LogInformation("Failed to deserialize command {Command}", message.Text);
+            Logger.LogInformation("Failed to deserialize command {Command}", message.Text);
             return;
         }
 
-        var searchResults = await botLoanApiComClient.GetExistingVideos(commandDto.MyAnimeListId, cancellationToken);
+        var searchResults = await BotLoanApiComClient.GetExistingVideos(commandDto.MyAnimeListId, cancellationToken);
         if (searchResults is null or { Count: 0 })
         {
-            logger.LogWarning("No videos for {MyAnimeListId}", commandDto.MyAnimeListId);
-            await botClient.SendTextMessageAsync(
+            Logger.LogWarning("No videos for {MyAnimeListId}", commandDto.MyAnimeListId);
+            await BotClient.SendTextMessageAsync(
                 message.Chat.Id,
                 "Этого аниме (пока?) нет в базе",
                 cancellationToken: cancellationToken);
@@ -65,7 +92,7 @@ public class WatchMessageHandler(
                                  && v.Episode == commandDto.Episode);
         if (selectedVideo is null)
         {
-            logger.LogInformation("Video not found in dub");
+            Logger.LogInformation("Video not found in dub");
             await SendSwitchDubButtonsAsync(message.Chat.Id, searchResults, commandDto.Episode);
             return;
         }
@@ -75,19 +102,19 @@ public class WatchMessageHandler(
             Dub: selectedVideo.Dub,
             Episode: selectedVideo.Episode,
             ChatId: message.Chat.Id);
-        var videoInfo = await aniManClient.GetAnimeAsync(botRequest, CancellationToken.None);
+        var videoInfo = await AniManClient.GetAnimeAsync(botRequest, CancellationToken.None);
 
         var keyboard = TelegramHelpers.GetKeyboard(
             commandDto,
             searchResults.Select(v => v.Episode),
-            telegramBotConfig.Value.ButtonsPagination);
+            _telegramBotConfig.ButtonsPagination);
 
         switch (videoInfo?.Status)
         {
             case VideoStatus.Pending:
             case VideoStatus.Downloading:
-                logger.LogInformation("Video not downloaded");
-                await botClient.SendTextMessageAsync(
+                Logger.LogInformation("Video not downloaded");
+                await BotClient.SendTextMessageAsync(
                     message.Chat.Id,
                     "Видео готовится. Я пришлю его, как только будет готово",
                     replyMarkup: keyboard,
@@ -96,8 +123,8 @@ public class WatchMessageHandler(
 
             case VideoStatus.Failed:
             case VideoStatus.NotAvailable:
-                logger.LogInformation("Video failed to download");
-                await botClient.SendTextMessageAsync(
+                Logger.LogInformation("Video failed to download");
+                await BotClient.SendTextMessageAsync(
                     message.Chat.Id,
                     "Я не смог найти эту серию. Какая-то ошибка, разработчик уже уведомлен",
                     replyMarkup: keyboard,
@@ -110,8 +137,8 @@ public class WatchMessageHandler(
 
             case VideoStatus.Unknown:
             case null:
-                logger.LogError("Lambda returned null");
-                await botClient.SendTextMessageAsync(
+                Logger.LogError("Lambda returned null");
+                await BotClient.SendTextMessageAsync(
                     message.Chat.Id,
                     "Что-то сломалось. Разработчик уже уведомлен",
                     replyMarkup: keyboard,
@@ -130,26 +157,29 @@ public class WatchMessageHandler(
         IReplyMarkup keyboard,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(videoInfo.FileId);
+        ArgumentNullException.ThrowIfNull(videoInfo.MessageId);
 
         AnimeInfo? animeInfo;
         try
         {
-            animeInfo = await shikimoriApi.GetAnimeInfoAsync(commandDto.MyAnimeListId, cancellationToken);
-            logger.LogInformation(
+            animeInfo = await ShikimoriApi.GetAnimeInfoAsync(commandDto.MyAnimeListId, cancellationToken);
+            Logger.LogInformation(
                 "Got anime info for {MyAnimeListId}: {AnimeInfo}",
                 commandDto.MyAnimeListId,
                 animeInfo);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to get anime info");
+            Logger.LogError(ex, "Failed to get anime info");
             animeInfo = null;
         }
 
-        await botClient.SendVideoAsync(
+        var fileId = await FileIdFinder.GetFileIdAsync(videoInfo.MessageId.Value);
+        ArgumentNullException.ThrowIfNull(fileId);
+
+        await BotClient.SendVideoAsync(
             message.Chat.Id,
-            new InputFileId(videoInfo.FileId),
+            new InputFileId(fileId),
             caption: TelegramHelpers.GetVideoDescription(animeInfo, commandDto),
             parseMode: ParseMode.Html,
             replyMarkup: keyboard,
@@ -163,9 +193,9 @@ public class WatchMessageHandler(
             .OrderBy(item => item.Dub)
             .ToArray();
 
-        logger.LogWarning("Episode not found in dub. Other dubs: {Dubs}", inOtherDubs.Select(ep => ep.Dub));
+        Logger.LogWarning("Episode not found in dub. Other dubs: {Dubs}", inOtherDubs.Select(ep => ep.Dub));
 
-        await botClient.SendTextMessageAsync(
+        await BotClient.SendTextMessageAsync(
             chatId,
             "Серии нет в этом переводе. Попробуйте другой",
             replyMarkup: new InlineKeyboardMarkup(
