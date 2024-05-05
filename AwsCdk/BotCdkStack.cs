@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using Amazon.CDK;
 using Amazon.CDK.AWS.APIGateway;
 using Amazon.CDK.AWS.CloudWatch;
@@ -51,15 +50,18 @@ public class BotCdkStack : Stack
         var apiGateway = new RestApi(this, "WebhookApi", new RestApiProps());
         apiGateway.Root.AddMethod("POST", new LambdaIntegration(webhookHandler));
 
-        var notificationQueue = Queue.FromQueueArn(this, "NotificationQueue", config.NotificationQueueArn);
+        var notificationTopic = Topic.FromTopicArn(this, "VideoRegisteredTopic", config.VideoRegisteredTopicArn);
+        var notificationQueue = new Queue(this, "VideoRegisteredNotificationQueue");
+        notificationTopic.AddSubscription(new SqsSubscription(notificationQueue));
         notificationHandler.AddEventSource(new SqsEventSource(notificationQueue));
 
         var registrationUrl = $"https://api.telegram.org/bot{config.TelegramBotToken}/setWebhook?url={apiGateway.Url}";
 
-        Out("Bounan.Downloader.Config", JsonConvert.SerializeObject(config));
-        Out("Bounan.Downloader.WebhookRegisterUrl", registrationUrl);
-        Out("Bounan.Downloader.LogGroupName", logGroup.LogGroupName);
-        Out("Bounan.Downloader.WebhookHandlerUrl", apiGateway.Url);
+        Out("Config", JsonConvert.SerializeObject(config));
+        Out("WebhookRegisterUrl", registrationUrl);
+        Out("LogGroupName", logGroup.LogGroupName);
+        Out("WebhookHandlerUrl", apiGateway.Url);
+        Out("VideoRegisteredNotificationQueueUrl", notificationQueue.QueueUrl);
     }
 
     private LogGroup CreateLogGroup()
