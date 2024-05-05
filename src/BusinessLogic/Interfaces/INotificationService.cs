@@ -4,5 +4,5 @@ namespace Bounan.Bot.BusinessLogic.Interfaces;
 
 public interface INotificationService
 {
-    Task HandleAsync(BotNotification notification);
+    Task HandleAsync(VideoDownloadedNotification notification);
 }

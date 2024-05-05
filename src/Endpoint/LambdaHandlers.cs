@@ -69,7 +69,7 @@ public class LambdaHandlers
 
     public async Task NotificationFromAniManInternal(string payload, ILambdaContext context)
     {
-        var update = JsonConvert.DeserializeObject<BotNotification>(payload);
+        var update = JsonConvert.DeserializeObject<VideoDownloadedNotification>(payload);
         ArgumentNullException.ThrowIfNull(update);
 
         var service = ServiceProvider.GetRequiredService<INotificationService>();

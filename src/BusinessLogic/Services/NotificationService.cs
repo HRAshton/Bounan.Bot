@@ -4,7 +4,7 @@ using Bounan.Bot.BusinessLogic.Configs;
 using Bounan.Bot.BusinessLogic.Helpers;
 using Bounan.Bot.BusinessLogic.Interfaces;
 using Bounan.Bot.BusinessLogic.Models;
-using Bounan.Common.Models;
+using Bounan.Common.Models.Notifications;
 using Bounan.LoanApi.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -44,7 +44,7 @@ internal class NotificationService : INotificationService
 
     private IFileIdFinder FileIdFinder { get; }
 
-    public async Task HandleAsync(BotNotification notification)
+    public async Task HandleAsync(VideoDownloadedNotification notification)
     {
         ArgumentNullException.ThrowIfNull(notification);
 
@@ -73,7 +73,7 @@ internal class NotificationService : INotificationService
         }
     }
 
-    private async Task SendFailedNotificationAsync(IBotNotification notification, AnimeInfo animeInfo)
+    private async Task SendFailedNotificationAsync(IVideoDownloadedNotification notification, AnimeInfo animeInfo)
     {
         var message = "Не удалось найти видео. Команда уже оповещена.\n"
                       + TelegramHelpers.GetVideoDescription(animeInfo, notification);
@@ -83,7 +83,7 @@ internal class NotificationService : INotificationService
         }
     }
 
-    private async Task SendNotificationAsync(IBotNotification notification, AnimeInfo animeInfo)
+    private async Task SendNotificationAsync(IVideoDownloadedNotification notification, AnimeInfo animeInfo)
     {
         ArgumentNullException.ThrowIfNull(notification.ChatIds);
         ArgumentNullException.ThrowIfNull(notification.MessageId);
