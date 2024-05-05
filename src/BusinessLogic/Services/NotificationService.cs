@@ -14,35 +14,26 @@ using Telegram.Bot.Types.Enums;
 
 namespace Bounan.Bot.BusinessLogic.Services;
 
-internal class NotificationService : INotificationService
+internal class NotificationService(
+    ILogger<NotificationService> logger,
+    ITelegramBotClient botClient,
+    IShikimoriApi shikimoriApi,
+    IOptions<TelegramBotConfig> telegramBotConfig,
+    ILoanApiComClient loanApiComClient,
+    IFileIdFinder fileIdFinder)
+    : INotificationService
 {
-    private readonly TelegramBotConfig _telegramBotConfig;
+    private readonly TelegramBotConfig _telegramBotConfig = telegramBotConfig.Value;
 
-    public NotificationService(
-        ILogger<NotificationService> logger,
-        ITelegramBotClient botClient,
-        IShikimoriApi shikimoriApi,
-        IOptions<TelegramBotConfig> telegramBotConfig,
-        ILoanApiComClient loanApiComClient,
-        IFileIdFinder fileIdFinder)
-    {
-        Logger = logger;
-        BotClient = botClient;
-        ShikimoriApi = shikimoriApi;
-        LoanApiComClient = loanApiComClient;
-        FileIdFinder = fileIdFinder;
-        _telegramBotConfig = telegramBotConfig.Value;
-    }
+    private ILogger<NotificationService> Logger => logger;
 
-    private ILogger<NotificationService> Logger { get; }
+    private ITelegramBotClient BotClient => botClient;
 
-    private ITelegramBotClient BotClient { get; }
+    private IShikimoriApi ShikimoriApi => shikimoriApi;
 
-    private IShikimoriApi ShikimoriApi { get; }
+    private ILoanApiComClient LoanApiComClient => loanApiComClient;
 
-    private ILoanApiComClient LoanApiComClient { get; }
-
-    private IFileIdFinder FileIdFinder { get; }
+    private IFileIdFinder FileIdFinder => fileIdFinder;
 
     public async Task HandleAsync(VideoDownloadedNotification notification)
     {
@@ -76,7 +67,7 @@ internal class NotificationService : INotificationService
     private async Task SendFailedNotificationAsync(IVideoDownloadedNotification notification, AnimeInfo animeInfo)
     {
         var message = "Не удалось найти видео. Команда уже оповещена.\n"
-                      + TelegramHelpers.GetVideoDescription(animeInfo, notification);
+                      + TelegramHelpers.GetVideoDescription(animeInfo, notification, scenes: null);
         foreach (var chatId in notification.ChatIds)
         {
             await BotClient.SendTextMessageAsync(chatId, message, parseMode: ParseMode.Html);
@@ -96,7 +87,7 @@ internal class NotificationService : INotificationService
         var allEpisodes = searchResults.Select(x => x.Episode);
         var keyboard = TelegramHelpers.GetKeyboard(notification, allEpisodes, _telegramBotConfig.ButtonsPagination);
 
-        var message = TelegramHelpers.GetVideoDescription(animeInfo, notification);
+        var message = TelegramHelpers.GetVideoDescription(animeInfo, notification, notification.Scenes);
         foreach (var chatId in notification.ChatIds)
         {
             await BotClient.SendVideoAsync(

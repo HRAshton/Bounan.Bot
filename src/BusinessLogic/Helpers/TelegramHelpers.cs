@@ -8,17 +8,36 @@ namespace Bounan.Bot.BusinessLogic.Helpers;
 
 public static class TelegramHelpers
 {
-    public static string GetVideoDescription(AnimeInfo? animeInfo, IVideoKey videoKey)
+    public static string GetVideoDescription(AnimeInfo? animeInfo, IVideoKey videoKey, Scenes? scenes)
     {
         var animeInfoStr = animeInfo is null
             ? string.Empty
-            : animeInfo.Russian ?? animeInfo.Name;
+            : $"<b>{animeInfo.Russian ?? animeInfo.Name}</b>";
         var episodeStr = animeInfo?.Episodes is null or 1
             ? string.Empty
             : $"Серия {videoKey.Episode}";
-        var dubStr = videoKey.Dub.Replace(".", string.Empty); // Prevent parsing as url
+        var dubStr = $"(<i>{videoKey.Dub.Replace(".", string.Empty)}</i>)"; // Prevent parsing as url
 
-        return $"<b>{animeInfoStr}</b>\n{episodeStr}\nОзвучка: <i>{dubStr}</i>";
+        var openingStr = scenes?.Opening is null
+            ? string.Empty
+            : $"{SecsToStr(scenes.Opening.End)} - Конец опенинга (от {SecsToStr(scenes.Opening.Start)})";
+
+        var endingStr = scenes?.SceneAfterEnding is null
+            ? string.Empty
+            : $"{SecsToStr(scenes.SceneAfterEnding.Start)} - Сцена-после-титров";
+
+        var videoDescription = string.Join(
+            '\n',
+            new[]
+                {
+                    $"{animeInfoStr} {dubStr}",
+                    episodeStr,
+                    openingStr,
+                    endingStr,
+                }
+                .Where(str => !string.IsNullOrWhiteSpace(str)));
+
+        return videoDescription;
     }
 
     public static InlineKeyboardMarkup GetKeyboard(
@@ -93,5 +112,11 @@ public static class TelegramHelpers
         ]);
 
         return new InlineKeyboardMarkup(rows);
+    }
+
+    private static string SecsToStr(float secs)
+    {
+        var ts = TimeSpan.FromSeconds(secs);
+        return $@"{ts:mm\:ss}";
     }
 }

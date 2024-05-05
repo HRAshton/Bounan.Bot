@@ -5,7 +5,6 @@ using Bounan.Bot.BusinessLogic.Configs;
 using Bounan.Bot.BusinessLogic.Helpers;
 using Bounan.Bot.BusinessLogic.Interfaces;
 using Bounan.Bot.BusinessLogic.Models;
-using Bounan.Bot.BusinessLogic.Services;
 using Bounan.Bot.TelegramBot.Telegram;
 using Bounan.Common.Enums;
 using Bounan.Common.Models;
@@ -20,39 +19,29 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Bounan.Bot.BusinessLogic.Handlers.MessageHandlers;
 
-public class WatchMessageHandler : IMessageHandler
+public class WatchMessageHandler(
+    ILogger<WatchMessageHandler> logger,
+    IShikimoriApi shikimoriApi,
+    ILoanApiComClient botLoanApiComClient,
+    IAniManClient aniManClient,
+    ITelegramBotClient botClient,
+    IOptions<TelegramBotConfig> telegramBotConfig,
+    IFileIdFinder fileIdFinder)
+    : IMessageHandler
 {
-    private readonly TelegramBotConfig _telegramBotConfig;
+    private readonly TelegramBotConfig _telegramBotConfig = telegramBotConfig.Value;
 
-    public WatchMessageHandler(
-        ILogger<WatchMessageHandler> logger,
-        IShikimoriApi shikimoriApi,
-        ILoanApiComClient botLoanApiComClient,
-        IAniManClient aniManClient,
-        ITelegramBotClient botClient,
-        IOptions<TelegramBotConfig> telegramBotConfig,
-        IFileIdFinder fileIdFinder)
-    {
-        _telegramBotConfig = telegramBotConfig.Value;
-        Logger = logger;
-        ShikimoriApi = shikimoriApi;
-        BotLoanApiComClient = botLoanApiComClient;
-        AniManClient = aniManClient;
-        BotClient = botClient;
-        FileIdFinder = fileIdFinder;
-    }
+    private ILogger Logger => logger;
 
-    private ILogger Logger { get; }
+    private IShikimoriApi ShikimoriApi => shikimoriApi;
 
-    private IShikimoriApi ShikimoriApi { get; }
+    private ILoanApiComClient BotLoanApiComClient => botLoanApiComClient;
 
-    private ILoanApiComClient BotLoanApiComClient { get; }
+    private IAniManClient AniManClient => aniManClient;
 
-    private IAniManClient AniManClient { get; }
+    private ITelegramBotClient BotClient => botClient;
 
-    private ITelegramBotClient BotClient { get; }
-
-    private IFileIdFinder FileIdFinder { get; }
+    private IFileIdFinder FileIdFinder => fileIdFinder;
 
     public static bool CanHandle(Message message) => message.Text?.StartsWith(WatchCommandDto.Command) ?? false;
 
@@ -180,7 +169,7 @@ public class WatchMessageHandler : IMessageHandler
         await BotClient.SendVideoAsync(
             message.Chat.Id,
             new InputFileId(fileId),
-            caption: TelegramHelpers.GetVideoDescription(animeInfo, commandDto),
+            caption: TelegramHelpers.GetVideoDescription(animeInfo, commandDto, videoInfo.Scenes),
             parseMode: ParseMode.Html,
             replyMarkup: keyboard,
             cancellationToken: cancellationToken);

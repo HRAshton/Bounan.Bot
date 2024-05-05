@@ -1,3 +1,4 @@
+using Bounan.Common.Models;
 using Bounan.Common.Models.Notifications;
 
 namespace Bounan.Bot.BusinessLogic.Models;
@@ -10,5 +11,6 @@ public record VideoDownloadedNotification(
     string Dub,
     int Episode,
     int? MessageId,
-    ICollection<long> ChatIds)
+    ICollection<long> ChatIds,
+    Scenes? Scenes)
     : IVideoDownloadedNotification;
