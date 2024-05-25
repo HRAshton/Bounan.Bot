@@ -63,16 +63,30 @@ public class LambdaHandlers
         foreach (var record in sqsEvent.Records)
         {
             var payload = record.Body;
-            await NotificationFromAniManInternal(payload, context);
+            try
+            {
+                await NotificationFromAniManInternal(payload, context);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error handling request: {@Request}", payload);
+            }
         }
     }
 
     public async Task NotificationFromAniManInternal(string payload, ILambdaContext context)
     {
-        var update = JsonConvert.DeserializeObject<VideoDownloadedNotification>(payload);
-        ArgumentNullException.ThrowIfNull(update);
+        try
+        {
+            var update = JsonConvert.DeserializeObject<VideoDownloadedNotification>(payload);
+            ArgumentNullException.ThrowIfNull(update);
 
-        var service = ServiceProvider.GetRequiredService<INotificationService>();
-        await service.HandleAsync(update);
+            var service = ServiceProvider.GetRequiredService<INotificationService>();
+            await service.HandleAsync(update);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error handling request: {@Request}", payload);
+        }
     }
 }
