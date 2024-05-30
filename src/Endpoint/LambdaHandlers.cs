@@ -1,7 +1,7 @@
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
-using Amazon.Lambda.SQSEvents;
+using Amazon.Lambda.SNSEvents;
 using Bounan.Bot.BusinessLogic.Interfaces;
 using Bounan.Bot.BusinessLogic.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,11 +58,11 @@ public class LambdaHandlers
     }
 
     [LambdaFunction]
-    public async Task NotificationFromAniMan(SQSEvent sqsEvent, ILambdaContext context)
+    public async Task NotificationFromAniMan(SNSEvent sqsEvent, ILambdaContext context)
     {
         foreach (var record in sqsEvent.Records)
         {
-            var payload = record.Body;
+            var payload = record.Sns.Message;
             try
             {
                 await NotificationFromAniManInternal(payload, context);
