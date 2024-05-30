@@ -17,7 +17,7 @@ public class BounanCdkStackConfig
 
     public required string GetAnimeFunctionName { get; init; }
 
-    public required string VideoRegisteredTopicArn { get; init; }
+    public required string VideoDownloadedTopicArn { get; init; }
 
     public int WarmupTimeoutMinutes { get; init; } = 5;
 
@@ -27,7 +27,7 @@ public class BounanCdkStackConfig
         ArgumentException.ThrowIfNullOrWhiteSpace(LoanApiToken);
         ArgumentException.ThrowIfNullOrWhiteSpace(TelegramBotToken);
         ArgumentException.ThrowIfNullOrWhiteSpace(GetAnimeFunctionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(VideoRegisteredTopicArn);
+        ArgumentException.ThrowIfNullOrWhiteSpace(VideoDownloadedTopicArn);
         ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(
             long.Parse(TelegramBotVideoChatId, NumberFormatInfo.InvariantInfo),
             0);
