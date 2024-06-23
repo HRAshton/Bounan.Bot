@@ -128,6 +128,7 @@ public class BotCdkStack : Stack
                         { "TelegramBot__BotToken", bounanCdkStackConfig.TelegramBotToken },
                         { "TelegramBot__VideoChatId", bounanCdkStackConfig.TelegramBotVideoChatId },
                         { "TelegramBot__ForwardingChatId", bounanCdkStackConfig.TelegramBotForwardingChatId },
+                        { "TelegramBot__PublisherGroup", bounanCdkStackConfig.TelegramBotPublisherGroup },
                     },
                 }));
 

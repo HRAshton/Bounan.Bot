@@ -15,7 +15,9 @@ public class InfoMessageHandler(
     ILogger<InfoMessageHandler> logger,
     ITelegramBotClient botClient,
     IShikimoriApi shikimoriApi,
-    IOptions<ShikimoriConfig> shikimoriConfig) : IMessageHandler
+    IOptions<ShikimoriConfig> shikimoriConfig,
+    IOptions<TelegramBotConfig> telegramBotConfig)
+    : IMessageHandler
 {
     public static bool CanHandle(Message message) => message.Text?.StartsWith(InfoCommandDto.Command) ?? false;
 
@@ -47,7 +49,7 @@ public class InfoMessageHandler(
         await botClient.SendPhotoAsync(
             chatId,
             new InputFileUrl(new Uri(shikimoriConfig.Value.BaseUrl, animeInfo.Image.Preview)),
-            caption: animeInfo.Russian ?? animeInfo.Name,
+            caption: $"{animeInfo.Russian ?? animeInfo.Name}\nВсе серии: {telegramBotConfig.Value.PublisherGroup}",
             replyMarkup: new InlineKeyboardMarkup([
                 new InlineKeyboardButton("Смотреть")
                 {
