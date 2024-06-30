@@ -1,4 +1,4 @@
-using Bounan.Bot.BusinessLogic.Models;
+using Bounan.Common;
 
 namespace Bounan.Bot.BusinessLogic.Interfaces;
 

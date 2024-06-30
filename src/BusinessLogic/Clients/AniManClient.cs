@@ -4,8 +4,7 @@ using Amazon.Lambda;
 using Amazon.Lambda.Model;
 using Bounan.Bot.BusinessLogic.Configs;
 using Bounan.Bot.BusinessLogic.Interfaces;
-using Bounan.Bot.BusinessLogic.Models;
-using Bounan.Common.Models;
+using Bounan.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -30,8 +29,8 @@ public class AniManClient : IAniManClient
 
     private IAmazonLambda LambdaClient { get; }
 
-    public async Task<IBotResponse?> GetAnimeAsync(
-        IBotRequest request,
+    public async Task<BotResponse?> GetAnimeAsync(
+        BotRequest request,
         CancellationToken cancellationToken)
     {
         var lambdaRequest = new InvokeRequest

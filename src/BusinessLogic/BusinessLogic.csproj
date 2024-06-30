@@ -11,7 +11,7 @@
     <Import Project="..\Common\StyleCop.props"/>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\Common.csproj"/>
+        <ProjectReference Include="..\Common\cs\Common.csproj"/>
         <ProjectReference Include="..\LoanApi\LoanApi\LoanApi.csproj"/>
         <ProjectReference Include="..\TelegramBot\TelegramBot.csproj"/>
     </ItemGroup>

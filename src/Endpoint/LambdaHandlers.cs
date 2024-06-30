@@ -3,7 +3,7 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SNSEvents;
 using Bounan.Bot.BusinessLogic.Interfaces;
-using Bounan.Bot.BusinessLogic.Models;
+using Bounan.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

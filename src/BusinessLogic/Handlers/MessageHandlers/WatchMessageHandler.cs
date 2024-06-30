@@ -4,10 +4,8 @@ using Bounan.Bot.BusinessLogic.CommandDto;
 using Bounan.Bot.BusinessLogic.Configs;
 using Bounan.Bot.BusinessLogic.Helpers;
 using Bounan.Bot.BusinessLogic.Interfaces;
-using Bounan.Bot.BusinessLogic.Models;
 using Bounan.Bot.TelegramBot.Telegram;
-using Bounan.Common.Enums;
-using Bounan.Common.Models;
+using Bounan.Common;
 using Bounan.LoanApi.Interfaces;
 using Bounan.LoanApi.Models;
 using Microsoft.Extensions.Logging;
@@ -87,9 +85,7 @@ public class WatchMessageHandler(
         }
 
         var botRequest = new BotRequest(
-            MyAnimeListId: selectedVideo.MyAnimeListId,
-            Dub: selectedVideo.Dub,
-            Episode: selectedVideo.Episode,
+            VideoKey: new VideoKey(selectedVideo.MyAnimeListId, selectedVideo.Dub, selectedVideo.Episode),
             ChatId: message.Chat.Id);
         var videoInfo = await AniManClient.GetAnimeAsync(botRequest, CancellationToken.None);
 
@@ -142,7 +138,7 @@ public class WatchMessageHandler(
     private async Task SendVideoAsync(
         Message message,
         IVideoKey commandDto,
-        IBotResponse videoInfo,
+        BotResponse videoInfo,
         IReplyMarkup keyboard,
         CancellationToken cancellationToken)
     {

@@ -3,8 +3,7 @@ using Bounan.Bot.BusinessLogic.Clients.Shikimori.Models;
 using Bounan.Bot.BusinessLogic.Configs;
 using Bounan.Bot.BusinessLogic.Helpers;
 using Bounan.Bot.BusinessLogic.Interfaces;
-using Bounan.Bot.BusinessLogic.Models;
-using Bounan.Common.Models.Notifications;
+using Bounan.Common;
 using Bounan.LoanApi.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -39,9 +38,15 @@ internal class NotificationService(
     {
         ArgumentNullException.ThrowIfNull(notification);
 
+        if (notification.SubscriberChatIds is null or { Count: 0 })
+        {
+            Logger.LogInformation("Notification has no subscribers, skipping");
+            return;
+        }
+
         Logger.LogInformation("Handling notification from AniMan: {@Notification}", notification);
 
-        var animeInfo = await ShikimoriApi.GetAnimeInfoAsync(notification.MyAnimeListId);
+        var animeInfo = await ShikimoriApi.GetAnimeInfoAsync(notification.VideoKey.MyAnimeListId);
         ArgumentNullException.ThrowIfNull(animeInfo);
         Logger.LogInformation("Got anime info: {@AnimeInfo}", animeInfo);
 
@@ -64,19 +69,20 @@ internal class NotificationService(
         }
     }
 
-    private async Task SendFailedNotificationAsync(IVideoDownloadedNotification notification, AnimeInfo animeInfo)
+    private async Task SendFailedNotificationAsync(VideoDownloadedNotification notification, AnimeInfo animeInfo)
     {
+        ArgumentNullException.ThrowIfNull(notification.SubscriberChatIds);
         var message = "Не удалось найти видео. Команда уже оповещена.\n"
-                      + TelegramHelpers.GetVideoDescription(animeInfo, notification, scenes: null);
-        foreach (var chatId in notification.ChatIds)
+                      + TelegramHelpers.GetVideoDescription(animeInfo, notification.VideoKey, scenes: null);
+        foreach (var chatId in notification.SubscriberChatIds)
         {
             await BotClient.SendTextMessageAsync(chatId, message, parseMode: ParseMode.Html);
         }
     }
 
-    private async Task SendNotificationAsync(IVideoDownloadedNotification notification, AnimeInfo animeInfo)
+    private async Task SendNotificationAsync(VideoDownloadedNotification notification, AnimeInfo animeInfo)
     {
-        ArgumentNullException.ThrowIfNull(notification.ChatIds);
+        ArgumentNullException.ThrowIfNull(notification.SubscriberChatIds);
         ArgumentNullException.ThrowIfNull(notification.MessageId);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(notification.MessageId.Value);
 
@@ -85,10 +91,13 @@ internal class NotificationService(
 
         var searchResults = await LoanApiComClient.GetExistingVideos(animeInfo.Id);
         var allEpisodes = searchResults.Select(x => x.Episode);
-        var keyboard = TelegramHelpers.GetKeyboard(notification, allEpisodes, _telegramBotConfig.ButtonsPagination);
+        var keyboard = TelegramHelpers.GetKeyboard(
+            notification.VideoKey,
+            allEpisodes,
+            _telegramBotConfig.ButtonsPagination);
 
-        var message = TelegramHelpers.GetVideoDescription(animeInfo, notification, notification.Scenes);
-        foreach (var chatId in notification.ChatIds)
+        var message = TelegramHelpers.GetVideoDescription(animeInfo, notification.VideoKey, notification.Scenes);
+        foreach (var chatId in notification.SubscriberChatIds)
         {
             await BotClient.SendVideoAsync(
                 chatId,

@@ -1,8 +1,8 @@
-using Bounan.Common.Models;
+using Bounan.Common;
 
 namespace Bounan.Bot.BusinessLogic.Interfaces;
 
 public interface IAniManClient
 {
-    Task<IBotResponse?> GetAnimeAsync(IBotRequest request, CancellationToken cancellationToken);
+    Task<BotResponse?> GetAnimeAsync(BotRequest request, CancellationToken cancellationToken);
 }

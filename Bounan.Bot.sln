@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AE95E391
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanApi", "src\LoanApi\LoanApi\LoanApi.csproj", "{52B45D21-990C-4ABB-949E-F8395A7120CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common.csproj", "{68A4D6F8-B807-47DD-AAFA-571334249D48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\cs\Common.csproj", "{68A4D6F8-B807-47DD-AAFA-571334249D48}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanApi.Tests", "src\LoanApi\LoanApi.Tests\LoanApi.Tests.csproj", "{64ED50EC-B9E2-40B4-806F-14ED0A9E3FA2}"
 EndProject

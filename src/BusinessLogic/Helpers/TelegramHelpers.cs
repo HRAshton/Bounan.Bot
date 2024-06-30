@@ -1,7 +1,7 @@
 using Bounan.Bot.BusinessLogic.Clients.Shikimori.Models;
 using Bounan.Bot.BusinessLogic.CommandDto;
 using Bounan.Bot.BusinessLogic.Configs;
-using Bounan.Common.Models;
+using Bounan.Common;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Bounan.Bot.BusinessLogic.Helpers;

@@ -1,4 +1,4 @@
-﻿using Bounan.Common.Models;
+﻿using Bounan.Common;
 
 namespace Bounan.Bot.BusinessLogic.CommandDto;
 
