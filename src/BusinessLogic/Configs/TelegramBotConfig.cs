@@ -9,6 +9,4 @@ public class TelegramBotConfig
     public required long ForwardingChatId { get; init; }
 
     public required long VideoChatId { get; init; }
-
-    public required string? PublisherGroup { get; init; }
 }
