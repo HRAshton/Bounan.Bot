@@ -43,38 +43,47 @@ public static class TelegramHelpers
     public static InlineKeyboardMarkup GetKeyboard(
         IVideoKey currentVideo,
         IEnumerable<int> allEpisodes,
-        ButtonsPagination pagingConfig)
+        PublishingDetails? publishingDetails,
+        TelegramBotConfig telegramBotConfig)
     {
+        var pagingConfig = telegramBotConfig.ButtonsPagination;
+
         var episodesPerPage = allEpisodes
             .Distinct()
             .OrderBy(ep => ep)
             .Select((ep, i) => (ep, i))
-            .GroupBy(x => x.i / ((pagingConfig.Columns * pagingConfig.Rows) - 2))
+            .GroupBy(x => x.i / (pagingConfig.Columns * pagingConfig.Rows))
             .Select(x => x.Select(y => y.ep))
             .ToArray();
 
         var currentPageIndex = Array.IndexOf(
             episodesPerPage,
             episodesPerPage.Single(p => p.Contains(currentVideo.Episode)));
-        var isFirstPage = currentPageIndex == 0;
-        var isLastPage = currentPageIndex == episodesPerPage.Length - 1;
 
+        var episodeRows = GetEpisodeRows(currentVideo, episodesPerPage, currentPageIndex, pagingConfig);
+        var controlRow = GetControlRow(
+            currentVideo,
+            publishingDetails,
+            telegramBotConfig,
+            currentPageIndex,
+            episodesPerPage);
+
+        var rows = episodeRows.Concat([ controlRow ]);
+
+        return new InlineKeyboardMarkup(rows);
+    }
+
+    private static IEnumerable<IEnumerable<InlineKeyboardButton>> GetEpisodeRows(
+        IVideoKey currentVideo,
+        IEnumerable<int>[] episodesPerPage,
+        int currentPageIndex,
+        ButtonsPagination pagingConfig)
+    {
         var buttonsToDisplay = episodesPerPage[currentPageIndex].ToList();
-        if (!isFirstPage)
-        {
-            var lastEpOnPrevPage = episodesPerPage[currentPageIndex - 1].Last();
-            buttonsToDisplay.Insert(0, lastEpOnPrevPage);
-        }
-
-        if (!isLastPage)
-        {
-            var firstEpOnNextPage = episodesPerPage[currentPageIndex + 1].First();
-            buttonsToDisplay.Add(firstEpOnNextPage);
-        }
 
         // If there are less than 2 episodes, don't display any episode buttons
-        var rows = buttonsToDisplay.Count < 2
-            ? []
+        var episodeRows = buttonsToDisplay.Count <= 1
+            ? [ ]
             : buttonsToDisplay
                 .Select(ep => ep == currentVideo.Episode
                     ? new InlineKeyboardButton($"[{ep}]") { Url = "tg://placeholder" }
@@ -90,28 +99,71 @@ public static class TelegramHelpers
                     })
                 .Select((btn, index) => (btn, index))
                 .GroupBy(pair => pair.index / pagingConfig.Columns)
-                .Select(x => x.Select(group => group.btn).ToArray())
-                .ToList();
+                .Select(x => x.Select(group => group.btn));
+        return episodeRows;
+    }
+
+    private static List<InlineKeyboardButton> GetControlRow(
+        IVideoKey currentVideo,
+        PublishingDetails? publishingDetails,
+        TelegramBotConfig telegramBotConfig,
+        int currentPageIndex,
+        IEnumerable<int>[] episodesPerPage)
+    {
+        var controlRow = new List<InlineKeyboardButton>
+        {
+            new("🔍 О релизе")
+            {
+                CallbackData = CommandConvert.SerializeCommand(
+                    new InfoCommandDto { MyAnimeListId = currentVideo.MyAnimeListId }),
+            },
+        };
+
+        if (publishingDetails is not null)
+        {
+            controlRow.Add(new InlineKeyboardButton("🍿 Все серии")
+            {
+                Url = string.Join(
+                    '/',
+                    "https://t.me",
+                    telegramBotConfig.PublisherGroupName,
+                    publishingDetails.ThreadId,
+                    publishingDetails.MessageId),
+            });
+        }
+
+        var isFirstPage = currentPageIndex == 0;
+        var isLastPage = currentPageIndex == episodesPerPage.Length - 1;
 
         if (!isFirstPage)
         {
-            rows[0][0].Text = "<<";
+            controlRow.Insert(0, new InlineKeyboardButton("<<")
+            {
+                CallbackData = CommandConvert.SerializeCommand(
+                    new WatchCommandDto
+                    {
+                        MyAnimeListId = currentVideo.MyAnimeListId,
+                        Dub = AnimeHelpers.DubToKey(currentVideo.Dub),
+                        Episode = episodesPerPage[currentPageIndex - 1].Last(),
+                    }),
+            });
         }
 
         if (!isLastPage)
         {
-            rows[^1][^1].Text = ">>";
-        }
-
-        rows.Add([
-            new InlineKeyboardButton("🔍 О релизе")
+            controlRow.Add(new InlineKeyboardButton(">>")
             {
                 CallbackData = CommandConvert.SerializeCommand(
-                    new InfoCommandDto { MyAnimeListId = currentVideo.MyAnimeListId }),
-            }
-        ]);
+                    new WatchCommandDto
+                    {
+                        MyAnimeListId = currentVideo.MyAnimeListId,
+                        Dub = AnimeHelpers.DubToKey(currentVideo.Dub),
+                        Episode = episodesPerPage[currentPageIndex + 1].First(),
+                    }),
+            });
+        }
 
-        return new InlineKeyboardMarkup(rows);
+        return controlRow;
     }
 
     private static string SecsToStr(float secs)

@@ -94,7 +94,8 @@ internal class NotificationService(
         var keyboard = TelegramHelpers.GetKeyboard(
             notification.VideoKey,
             allEpisodes,
-            _telegramBotConfig.ButtonsPagination);
+            notification.PublishingDetails,
+            _telegramBotConfig);
 
         var message = TelegramHelpers.GetVideoDescription(animeInfo, notification.VideoKey, notification.Scenes);
         foreach (var chatId in notification.SubscriberChatIds)

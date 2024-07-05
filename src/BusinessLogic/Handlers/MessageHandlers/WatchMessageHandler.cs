@@ -92,7 +92,8 @@ public class WatchMessageHandler(
         var keyboard = TelegramHelpers.GetKeyboard(
             commandDto,
             searchResults.Select(v => v.Episode),
-            _telegramBotConfig.ButtonsPagination);
+            videoInfo?.PublishingDetails,
+            _telegramBotConfig);
 
         switch (videoInfo?.Status)
         {

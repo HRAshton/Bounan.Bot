@@ -15,6 +15,8 @@ public class BounanCdkStackConfig
 
     public required string TelegramBotForwardingChatId { get; init; }
 
+    public required string TelegramBotPublisherGroupName { get; init; }
+
     public required string GetAnimeFunctionName { get; init; }
 
     public required string VideoDownloadedTopicArn { get; init; }
@@ -28,6 +30,7 @@ public class BounanCdkStackConfig
         ArgumentException.ThrowIfNullOrWhiteSpace(TelegramBotToken);
         ArgumentException.ThrowIfNullOrWhiteSpace(GetAnimeFunctionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(VideoDownloadedTopicArn);
+        ArgumentException.ThrowIfNullOrWhiteSpace(TelegramBotPublisherGroupName);
 
         ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(
             long.Parse(TelegramBotVideoChatId, NumberFormatInfo.InvariantInfo),
