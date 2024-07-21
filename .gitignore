@@ -1,11 +1,4 @@
-.idea/
-Bounan.LoanApi.Tests/TestResults/
-bin/
-obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
-*.user
-
-serverless.template
-cdk.out/
+cdk.out
+.tmp
+.idea
+node_modules
