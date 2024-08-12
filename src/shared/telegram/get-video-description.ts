@@ -19,12 +19,15 @@ export const getVideoDescription = (
     videoKey: VideoKey,
     scenes: Scenes | undefined,
 ): string => {
+    const has_episodes = animeInfo.episodes && animeInfo.episodes > 1
+        || animeInfo.episodes_aired && animeInfo.episodes_aired > 1;
+
     return [
         Texts.VideoDescription__Name
             .replace('%1', animeInfo.russian || animeInfo.name)
             .replace('%2', videoKey.dub && `(${escapeLinks(videoKey.dub)})`),
 
-        animeInfo.episodes && animeInfo.episodes > 1
+        has_episodes
         && Texts.VideoDescription__Episode.replace('%1', videoKey.episode.toString()),
 
         scenes?.opening
