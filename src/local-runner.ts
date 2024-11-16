@@ -1,4 +1,6 @@
 ﻿/* eslint @typescript-eslint/no-explicit-any: 0 */
+/* eslint @typescript-eslint/no-unused-vars: 0 */
+/* eslint no-constant-condition: 0 */
 
 import { handler as onVideoDownloadedHandler } from './handlers/on-video-downloaded/handler';
 import { VideoDownloadedNotification } from './api-clients/animan/common/ts/interfaces';
@@ -40,16 +42,16 @@ const main = async () => {
     //         ThreadId: 4241,
     //     },
     // });
-    
+
     await onDownloaded({
-        "VideoKey": {
-            "MyAnimeListId": 6919,
-            "Dub": "AniDUB",
-            "Episode": 12
+        'VideoKey': {
+            'MyAnimeListId': 6919,
+            'Dub': 'AniDUB',
+            'Episode': 12,
         },
-        "SubscriberChatIds": [
-            442033576
-        ]
+        'SubscriberChatIds': [
+            442033576,
+        ],
     });
 }
 

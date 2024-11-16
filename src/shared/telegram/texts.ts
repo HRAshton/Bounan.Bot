@@ -1,6 +1,4 @@
-﻿import { KnownInlineAnswers } from '../../handlers/on-webhook/constants/known-inline-answers';
-
-export enum Texts {
+﻿export enum Texts {
     Start = 'Напиши название аниме или нажми на кнопку "Искать", и я найду его для тебя',
 
     Search__NoResultsInShiki = 'Аниме не найдено',
