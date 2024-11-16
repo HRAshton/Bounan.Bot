@@ -1,6 +1,5 @@
 ﻿import { MessageHandler } from '../query-handler';
-import { Message } from 'telegram-bot-api-lightweight-client/src/types';
-import { deleteMessage } from 'telegram-bot-api-lightweight-client/src/client';
+import { deleteMessage, Message } from 'telegram-bot-api-lightweight-client';
 import { assert } from '../../../../shared/helpers/assert';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';
 

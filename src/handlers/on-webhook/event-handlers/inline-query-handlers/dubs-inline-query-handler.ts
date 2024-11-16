@@ -1,4 +1,4 @@
-﻿import { InlineQuery, InlineQueryResultArticle } from 'telegram-bot-api-lightweight-client/src/types';
+﻿import { InlineQuery, InlineQueryResultArticle } from 'telegram-bot-api-lightweight-client';
 import { DubsCommandDto, WatchCommandDto } from '../../command-dtos';
 import { InlineQueryHandler } from '../query-handler';
 import { dubToKey } from '../../../../shared/helpers/dub-to-key';

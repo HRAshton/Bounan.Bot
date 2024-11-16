@@ -4,7 +4,7 @@ import { process } from './processor';
 import { retry } from '../../shared/helpers/retry';
 import { setToken } from '../../api-clients/loan-api/src/animan-loan-api-client';
 import { config } from '../../config/config';
-import { client_setClientToken } from 'telegram-bot-api-lightweight-client/src/core';
+import { client_setClientToken } from 'telegram-bot-api-lightweight-client';
 
 setToken(config.loanApi.token);
 client_setClientToken(config.telegram.token);

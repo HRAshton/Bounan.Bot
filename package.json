@@ -30,7 +30,7 @@
     "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
-    "telegram-bot-api-lightweight-client": "^7.7.0",
+    "telegram-bot-api-lightweight-client": "^7.11.1",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3"
   }

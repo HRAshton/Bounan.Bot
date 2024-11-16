@@ -1,5 +1,5 @@
 ﻿import { assert } from '../../../../shared/helpers/assert';
-import { CallbackQuery } from 'telegram-bot-api-lightweight-client/src/types';
+import { CallbackQuery } from 'telegram-bot-api-lightweight-client';
 import { MessageHandler } from '../query-handler';
 import { AnswerCallbackQueryData } from 'telegram-bot-api-lightweight-client';
 

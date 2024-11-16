@@ -5,8 +5,7 @@
     Message,
     Update,
 } from 'telegram-bot-api-lightweight-client';
-import { answerCallbackQuery, answerInlineQuery } from 'telegram-bot-api-lightweight-client/src/client';
-import { InlineQueryResult } from 'telegram-bot-api-lightweight-client/src/types';
+import { answerCallbackQuery, answerInlineQuery, InlineQueryResult } from 'telegram-bot-api-lightweight-client';
 
 type CanHandleUpdate<TUpdateField> = (updateField: TUpdateField) => boolean;
 type Handler<TUpdateField, TResult> = (updateField: TUpdateField) => Promise<TResult>;

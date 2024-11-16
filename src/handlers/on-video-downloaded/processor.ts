@@ -1,9 +1,14 @@
 ﻿import { VideoDownloadedNotification } from './models';
 import { getVideoDescription } from '../../shared/telegram/get-video-description';
 import { getAnimeInfo } from '../../api-clients/shikimori/shikimori-client';
-import { CopyMessageData, InlineKeyboardMarkup, SendMessageData } from 'telegram-bot-api-lightweight-client/src/types';
+import {
+    copyMessage,
+    sendMessage,
+    CopyMessageData,
+    InlineKeyboardMarkup,
+    SendMessageData,
+} from 'telegram-bot-api-lightweight-client';
 import { config } from '../../config/config';
-import { copyMessage, sendMessage } from 'telegram-bot-api-lightweight-client/src/client';
 import { getKeyboard } from '../../shared/telegram/get-keyboard';
 import { getAllExistingVideos } from '../../api-clients/loan-api/src/animan-loan-api-client';
 import { Texts } from '../../shared/telegram/texts';

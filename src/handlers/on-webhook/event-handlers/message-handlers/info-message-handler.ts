@@ -1,7 +1,6 @@
-﻿import { Message } from 'telegram-bot-api-lightweight-client/src/types';
+﻿import { sendMessage, sendPhoto, Message } from 'telegram-bot-api-lightweight-client';
 import { InfoCommandDto, DubsCommandDto, RelatedCommandDto } from '../../command-dtos';
 import { assert } from '../../../../shared/helpers/assert';
-import { sendMessage, sendPhoto } from 'telegram-bot-api-lightweight-client/src/client';
 import { MessageHandler } from '../query-handler';
 import { getAnimeInfo, toAbsoluteUrl } from '../../../../api-clients/shikimori/shikimori-client';
 import { Texts } from '../../../../shared/telegram/texts';

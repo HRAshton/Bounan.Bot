@@ -1,4 +1,4 @@
-﻿import { CallbackQuery } from 'telegram-bot-api-lightweight-client/src/types';
+﻿import { CallbackQuery } from 'telegram-bot-api-lightweight-client';
 import { CallbackQueryHandler } from '../query-handler';
 import { processCallbackQuery } from './callback-query-adapter-base';
 import { WatchCommandDto } from '../../command-dtos';

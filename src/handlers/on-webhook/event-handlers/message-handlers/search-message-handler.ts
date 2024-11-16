@@ -1,5 +1,5 @@
 ﻿import { MessageHandler } from '../query-handler';
-import { sendMessage } from 'telegram-bot-api-lightweight-client/src/client';
+import { sendMessage } from 'telegram-bot-api-lightweight-client';
 import { assert } from '../../../../shared/helpers/assert';
 import { searchAnime } from '../../../../api-clients/shikimori/shikimori-client';
 import { InfoCommandDto } from '../../command-dtos';
