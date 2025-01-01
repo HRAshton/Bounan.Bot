@@ -1,6 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import {
+﻿import {
     VideoDownloadedNotification as RawVideoDownloadedNotification,
 } from '../../api-clients/animan/common/ts/interfaces';
 import { KeysToCamelCase, toCamelCase } from '../../shared/object-transformer';
