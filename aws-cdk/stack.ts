@@ -106,6 +106,7 @@ export class AniManCdkStack extends Stack {
                     TELEGRAM_BUTTONS_ROWS: '3',
                     RETRY_MAX_ATTEMPTS: '1',
                     RETRY_DELAY_MS: '1000',
+                    STUDIO_LOGOS_URL: config.studioLogosUrl,
                     // DATABASE_USERS_TABLE_NAME: 'users',
                     // DATABASE_SUBSCRIPTIONS_TABLE_NAME: 'subscriptions',
                 },

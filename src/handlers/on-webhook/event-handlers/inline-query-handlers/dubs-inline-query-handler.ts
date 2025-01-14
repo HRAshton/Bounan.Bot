@@ -4,6 +4,7 @@ import { InlineQueryHandler } from '../query-handler';
 import { dubToKey } from '../../../../shared/helpers/dub-to-key';
 import { getDubs } from '../../../../api-clients/loan-api/src/animan-loan-api-client';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';
+import { getStudioLogoUrl } from '../../../../shared/studio-logos-provider/studio-logos-provider';
 
 const canHandle = (inlineQuery: InlineQuery): boolean => inlineQuery.query?.startsWith(DubsCommandDto.Command) ?? false;
 
@@ -35,6 +36,7 @@ const handler: InlineQueryHandler = async (inlineQuery) => {
             type: 'article',
             id: item.name,
             title: item.name,
+            thumbnail_url: getStudioLogoUrl(item.name),
             input_message_content: {
                 message_text: new WatchCommandDto(
                     commandDto.myAnimeListId,

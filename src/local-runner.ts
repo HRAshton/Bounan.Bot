@@ -43,24 +43,27 @@ const main = async () => {
     //     },
     // });
 
-    await onDownloaded({
-        'VideoKey': {
-            'MyAnimeListId': 6919,
-            'Dub': 'AniDUB',
-            'Episode': 12,
+    await onWebhook({
+        update_id: 1,
+        inline_query: {
+            id: '1',
+            from: {
+                id: 0,
+                is_bot: false,
+                first_name: 'Test',
+            },
+            query: ':озв 37430',
+            offset: '',
         },
-        'SubscriberChatIds': [
-            442033576,
-        ],
     });
 }
 
 const pooling = async () => {
     let offset = 0;
     while (true) {
-        const result = await fetch(`https://api.telegram.org/bot${config.telegram.token}/getUpdates?offset=${offset}&timeout=60`);
+        const result = await fetch(`https://api.telegram.org/bot${config.telegram.token}/getUpdates?offset=${offset}&timeout=60&allowed_updates=["callback_query","inline_query","message"]`);
         const updates = await result.json();
-        offset = updates.result[updates.result.length - 1]?.update_id + 1 || offset;
+        offset = updates.result[updates.result?.length - 1]?.update_id + 1 || offset;
 
         for (const update of updates.result) {
             await onWebhook(update);
@@ -70,5 +73,5 @@ const pooling = async () => {
     }
 }
 
-main();
-// pooling();
+// main();
+pooling();

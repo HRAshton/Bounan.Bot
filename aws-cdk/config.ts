@@ -8,6 +8,7 @@ interface Config {
     telegramBotPublisherGroupName: string;
     getAnimeFunctionName: string;
     videoDownloadedTopicArn: string;
+    studioLogosUrl: string;
 }
 
 export const config: Config = configFile;
@@ -32,4 +33,7 @@ if (!config.getAnimeFunctionName) {
 }
 if (!config.videoDownloadedTopicArn) {
     throw new Error('videoDownloadedTopicArn is required');
+}
+if (!config.studioLogosUrl) {
+    throw new Error('studioLogosUrl is required');
 }

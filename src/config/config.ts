@@ -1,15 +1,30 @@
-﻿// process.env.AWS_PROFILE = '';
-// process.env.ANIMAN_GET_ANIME_FUNCTION_NAME = '';
-// process.env.LOAN_API_TOKEN = '';
-// process.env.LOAN_API_MAX_CONCURRENT_REQUESTS = '';
-// process.env.TELEGRAM_TOKEN = '';
-// process.env.TELEGRAM_VIDEO_CHAT_ID = '';
-// process.env.TELEGRAM_PUBLISHER_GROUP_NAME = '';
-// process.env.TELEGRAM_BUTTONS_COLUMNS = '';
-// process.env.TELEGRAM_BUTTONS_ROWS = '';
-// process.env.RETRY_MAX_ATTEMPTS = '';
-// process.env.RETRY_DELAY_MS = '';
-
+﻿// {
+//     const local_config = {
+//         'alertEmail': '',
+//         'loanApiToken': '',
+//         'getAnimeFunctionName': '',
+//         'videoDownloadedTopicArn': '',
+//         'telegramBotToken': '',
+//         'telegramBotVideoChatId': 0,
+//         'telegramBotVideoChatId_dev': 0,
+//         'telegramBotVideoChatId_prod': 0,
+//         'telegramBotPublisherGroupName': '',
+//         'studioLogosUrl': '',
+//     };
+//    
+//     process.env.AWS_PROFILE = '';
+//     process.env.ANIMAN_GET_ANIME_FUNCTION_NAME = local_config.getAnimeFunctionName;
+//     process.env.LOAN_API_TOKEN = local_config.loanApiToken;
+//     process.env.LOAN_API_MAX_CONCURRENT_REQUESTS = '6';
+//     process.env.TELEGRAM_TOKEN = local_config.telegramBotToken;
+//     process.env.TELEGRAM_VIDEO_CHAT_ID = local_config.telegramBotVideoChatId.toString();
+//     process.env.TELEGRAM_PUBLISHER_GROUP_NAME = local_config.telegramBotPublisherGroupName;
+//     process.env.TELEGRAM_BUTTONS_COLUMNS = '7';
+//     process.env.TELEGRAM_BUTTONS_ROWS = '3';
+//     process.env.RETRY_MAX_ATTEMPTS = '1';
+//     process.env.RETRY_DELAY_MS = '1000';
+//     process.env.STUDIO_LOGOS_URL = local_config.studioLogosUrl;
+// }
 
 interface AniManConfig {
     getAnimeFunctionName: string;
@@ -37,6 +52,10 @@ interface RetryConfig {
     delayMs: number;
 }
 
+interface AssetsConfig {
+    studioLogosUrl: string;
+}
+
 // interface DatabaseConfig {
 //     usersTableName: string;
 //     subscriptionsTableName: string;
@@ -47,6 +66,7 @@ export interface Config {
     loanApi: LoanApiConfig;
     telegram: TelegramConfig;
     retry: RetryConfig;
+    assets: AssetsConfig;
     // database: DatabaseConfig;
 }
 
@@ -82,6 +102,9 @@ export const config: Config = {
     retry: {
         maxAttempts: parseInt(getEnv('RETRY_MAX_ATTEMPTS')),
         delayMs: parseInt(getEnv('RETRY_DELAY_MS')),
+    },
+    assets: {
+        studioLogosUrl: getEnv('STUDIO_LOGOS_URL'),
     },
     // database: {
     //     usersTableName: getEnv('DATABASE_USERS_TABLE_NAME'),
