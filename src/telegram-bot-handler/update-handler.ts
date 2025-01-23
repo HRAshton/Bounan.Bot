@@ -6,7 +6,8 @@
     Update,
 } from 'telegram-bot-api-lightweight-client';
 import { answerCallbackQuery, answerInlineQuery, InlineQueryResult } from 'telegram-bot-api-lightweight-client';
-import { registerNewUserIfNotExists } from './repository';
+import { getUserStatus, registerNewUserIfNotExists } from './repository';
+import { UserStatus } from '../shared/database/entities/user-status';
 
 type CanHandleUpdate<TUpdateField> = (updateField: TUpdateField) => boolean;
 type Handler<TUpdateField, TResult> = (updateField: TUpdateField) => Promise<TResult>;
@@ -27,12 +28,14 @@ export interface BotSettings {
     onInlineQueryDefault: Handler<InlineQuery, InlineQueryResult[]> | undefined;
 }
 
-const ensureUserExists = async (userId: number | undefined): Promise<void> => {
+const ensureUserExistsAndGetStatus = async (userId: number | undefined): Promise<UserStatus> => {
     if (!userId) {
         throw new Error('User ID is required');
     }
 
     await registerNewUserIfNotExists(userId);
+
+    return getUserStatus(userId);
 }
 
 const tryHandleUpdate = async <TUpdateField, TResult>(
@@ -54,10 +57,20 @@ export const handleUpdate = async (update: Update, settings: BotSettings): Promi
     console.log('Processing update: ', update);
 
     if (update.message) {
-        await ensureUserExists(update.message.from?.id);
+        const userStatus = await ensureUserExistsAndGetStatus(update.message.from?.id);
+        if (userStatus === UserStatus.SUSPENDED) {
+            console.warn('User is suspended');
+            return;
+        }
+
         await tryHandleUpdate(update.message, settings.onMessage, settings.onMessageDefault);
     } else if (update.callback_query) {
-        await ensureUserExists(update.callback_query.from.id);
+        const userStatus = await ensureUserExistsAndGetStatus(update.callback_query.from.id);
+        if (userStatus === UserStatus.SUSPENDED) {
+            console.warn('User is suspended');
+            return;
+        }
+
         const result = await tryHandleUpdate<CallbackQuery, Omit<AnswerCallbackQueryData, 'callback_query_id'>>(
             update.callback_query,
             settings.onCallbackQuery,
@@ -72,7 +85,12 @@ export const handleUpdate = async (update: Update, settings: BotSettings): Promi
             console.log('Answered callback query', JSON.stringify(response));
         }
     } else if (update.inline_query) {
-        await ensureUserExists(update.inline_query.from.id);
+        const userStatus = await ensureUserExistsAndGetStatus(update.inline_query.from.id);
+        if (userStatus === UserStatus.SUSPENDED) {
+            console.warn('User is suspended');
+            return;
+        }
+
         const results = await tryHandleUpdate<InlineQuery, InlineQueryResult[]>(
             update.inline_query,
             settings.onInlineQuery,

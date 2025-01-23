@@ -1,7 +1,8 @@
-import { PutCommand } from '@aws-sdk/lib-dynamodb';
+import { GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { config } from '../config/config';
 import { docClient } from '../shared/database/repository';
 import { UserEntity } from '../shared/database/entities/user-entity';
+import { UserStatus } from '../shared/database/entities/user-status';
 
 export const registerNewUserIfNotExists = async (userId: number): Promise<void> => {
     const command = new PutCommand({
@@ -11,6 +12,7 @@ export const registerNewUserIfNotExists = async (userId: number): Promise<void> 
             directRank: 0,
             indirectRank: 0,
             requestedEpisodes: [],
+            status: UserStatus.ACTIVE,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         } as UserEntity,
@@ -30,4 +32,15 @@ export const registerNewUserIfNotExists = async (userId: number): Promise<void> 
     }
 
     console.log(`Register user result: ${result}`);
+}
+
+export const getUserStatus = async (userId: number): Promise<UserStatus> => {
+    const response = await docClient.send(new GetCommand({
+        TableName: config.database.usersTableName,
+        Key: { userId },
+        ProjectionExpression: '#status',
+        ExpressionAttributeNames: { '#status': 'status' },
+    }));
+
+    return (response.Item as UserEntity).status;
 }
