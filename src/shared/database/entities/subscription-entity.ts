@@ -1,17 +1,17 @@
 ﻿// import { AnimeKey } from './anime-key';
 //
 // export interface SubscriptionEntity extends AnimeKey {
-//     AnimeKey: string;
-//     MyAnimeListId: number;
-//     Dub: string;
+//     animeKey: string;
+//     myAnimeListId: number;
+//     dub: string;
 //
-//     ChatIds: Set<number>;
+//     chatIds: Set<number>;
 //
 //     // Episode-ChatId pairs
-//     OneTimeSubscribers: {
+//     oneTimeSubscribers: {
 //         [key: number]: number[];
 //     }
 //
-//     CreatedAt: string;
-//     UpdatedAt: string;
+//     createdAt: string;
+//     updatedAt: string;
 // }

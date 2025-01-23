@@ -1,10 +1,11 @@
-﻿import { Stack, StackProps, Duration, CfnOutput } from 'aws-cdk-lib';
+﻿import { Stack, StackProps, Duration, CfnOutput, RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import * as cw from 'aws-cdk-lib/aws-cloudwatch';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import { LlrtFunction } from 'cdk-lambda-llrt';
@@ -18,8 +19,8 @@ export class AniManCdkStack extends Stack {
         const logGroup = this.createLogGroup();
         this.setErrorAlarm(logGroup);
 
-        // const tables = this.createTables();
-        const functions = this.createLambdas(logGroup);
+        const tables = this.createTables();
+        const functions = this.createLambdas(logGroup, tables);
 
         const videoDownloadedTopic = sns.Topic.fromTopicArn(
             this, 'VideoDownloadedSnsTopic', config.videoDownloadedTopicArn);
@@ -34,35 +35,33 @@ export class AniManCdkStack extends Stack {
         apiGateway.root.addMethod('POST', new apigateway.LambdaIntegration(functions.get(LambdaHandler.OnWebhook)!));
 
         this.out('Config', JSON.stringify(config));
-        // this.out('Tables', Array.from(tables.values()).map(table => table.tableName));
-        functions.forEach((func, key) => this.out(`${key}-LambdaName`, func.functionName));
+        this.out('Tables', Array.from(tables.values()).map(x => x.tableName));
+        this.out('Lambdas', Array.from(functions.values()).map(x => x.functionName));
         this.out(
             'SetWebhookUrl',
             `https://api.telegram.org/bot${config.telegramBotToken}/setWebhook?url=${apiGateway.url}`);
     }
 
-    // private createTables(): Map<Table, dynamodb.Table> {
-    //     const usersTable = new dynamodb.Table(this, 'Users', {
-    //         partitionKey: { name: 'ChatId', type: dynamodb.AttributeType.NUMBER },
-    //         removalPolicy: RemovalPolicy.RETAIN,
-    //     });
-    //
-    //     const subscriptionsTable = new dynamodb.Table(this, 'Subscriptions', {
-    //         partitionKey: { name: 'ChatId', type: dynamodb.AttributeType.NUMBER },
-    //         sortKey: { name: 'AnimeKey', type: dynamodb.AttributeType.STRING },
-    //         removalPolicy: RemovalPolicy.RETAIN,
-    //     });
-    //
-    //     return new Map([
-    //         [Table.Users, usersTable],
-    //         [Table.Subscriptions, subscriptionsTable],
-    //     ]);
-    // }
+    private createTables(): Map<Table, dynamodb.Table> {
+        const usersTable = new dynamodb.Table(this, Table.Users, {
+            partitionKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
+            removalPolicy: RemovalPolicy.RETAIN,
+        });
+
+        const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
+            partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
+            sortKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
+            removalPolicy: RemovalPolicy.RETAIN,
+        });
+
+        return new Map([
+            [Table.Users, usersTable],
+            [Table.Subscriptions, subscriptionsTable],
+        ]);
+    }
 
     private createLogGroup(): logs.LogGroup {
-        return new logs.LogGroup(this, 'LogGroup', {
-            retention: logs.RetentionDays.ONE_WEEK,
-        });
+        return new logs.LogGroup(this, 'LogGroup', { retention: logs.RetentionDays.ONE_WEEK });
     }
 
     private setErrorAlarm(logGroup: logs.LogGroup): void {
@@ -86,7 +85,10 @@ export class AniManCdkStack extends Stack {
         alarm.addAlarmAction(new cloudwatchActions.SnsAction(topic));
     }
 
-    private createLambdas(logGroup: logs.LogGroup): Map<LambdaHandler, lambda.Function> {
+    private createLambdas(
+        logGroup: logs.LogGroup,
+        tables: Map<Table, dynamodb.Table>,
+    ): Map<LambdaHandler, lambda.Function> {
         const functions = new Map<LambdaHandler, lambda.Function>();
 
         Object.entries(LambdaHandler).forEach(([lambdaName, handlerName]) => {
@@ -97,6 +99,8 @@ export class AniManCdkStack extends Stack {
                 environment: {
                     AWS_PROFILE: 'hra',
                     ANIMAN_GET_ANIME_FUNCTION_NAME: config.getAnimeFunctionName,
+                    DATABASE_USERS_TABLE_NAME: tables.get(Table.Users)!.tableName,
+                    DATABASE_SUBSCRIPTIONS_TABLE_NAME: tables.get(Table.Subscriptions)!.tableName,
                     LOAN_API_TOKEN: config.loanApiToken,
                     LOAN_API_MAX_CONCURRENT_REQUESTS: '6',
                     TELEGRAM_TOKEN: config.telegramBotToken,
@@ -107,8 +111,6 @@ export class AniManCdkStack extends Stack {
                     RETRY_MAX_ATTEMPTS: '1',
                     RETRY_DELAY_MS: '1000',
                     STUDIO_LOGOS_URL: config.studioLogosUrl,
-                    // DATABASE_USERS_TABLE_NAME: 'users',
-                    // DATABASE_SUBSCRIPTIONS_TABLE_NAME: 'subscriptions',
                 },
                 timeout: Duration.seconds(30),
             });
@@ -125,10 +127,10 @@ export class AniManCdkStack extends Stack {
     }
 }
 
-// enum Table {
-//     Users = 'Users',
-//     Subscriptions = 'Subscriptions',
-// }
+enum Table {
+    Users = 'users',
+    Subscriptions = 'subscriptions',
+}
 
 enum LambdaHandler {
     OnWebhook = 'on-webhook',

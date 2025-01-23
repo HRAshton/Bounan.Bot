@@ -1,11 +1,12 @@
-﻿// import { AnimeKey } from './subscription-entity';
-//
-// export interface UserEntity {
-//     ChatId: number;
-//
-//     RequestedAnimes: Set<AnimeKey>;
-//     RequestedEpisodes: number;
-//
-//     CreatedAt: string;
-//     UpdatedAt: string;
-// }
+﻿import { VideoKey } from '../../models';
+
+export interface UserEntity {
+    userId: number;
+
+    directRank: number;
+    indirectRank: number;
+    requestedEpisodes: VideoKey[];
+
+    createdAt: string;
+    updatedAt: string;
+}

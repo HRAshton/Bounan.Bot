@@ -6,6 +6,7 @@
     Update,
 } from 'telegram-bot-api-lightweight-client';
 import { answerCallbackQuery, answerInlineQuery, InlineQueryResult } from 'telegram-bot-api-lightweight-client';
+import { registerNewUserIfNotExists } from './repository';
 
 type CanHandleUpdate<TUpdateField> = (updateField: TUpdateField) => boolean;
 type Handler<TUpdateField, TResult> = (updateField: TUpdateField) => Promise<TResult>;
@@ -24,6 +25,14 @@ export interface BotSettings {
 
     onInlineQuery: CanHandleUpdatePair<InlineQuery, InlineQueryResult[]>[];
     onInlineQueryDefault: Handler<InlineQuery, InlineQueryResult[]> | undefined;
+}
+
+const ensureUserExists = async (userId: number | undefined): Promise<void> => {
+    if (!userId) {
+        throw new Error('User ID is required');
+    }
+
+    await registerNewUserIfNotExists(userId);
 }
 
 const tryHandleUpdate = async <TUpdateField, TResult>(
@@ -45,8 +54,10 @@ export const handleUpdate = async (update: Update, settings: BotSettings): Promi
     console.log('Processing update: ', update);
 
     if (update.message) {
+        await ensureUserExists(update.message.from?.id);
         await tryHandleUpdate(update.message, settings.onMessage, settings.onMessageDefault);
     } else if (update.callback_query) {
+        await ensureUserExists(update.callback_query.from.id);
         const result = await tryHandleUpdate<CallbackQuery, Omit<AnswerCallbackQueryData, 'callback_query_id'>>(
             update.callback_query,
             settings.onCallbackQuery,
@@ -61,6 +72,7 @@ export const handleUpdate = async (update: Update, settings: BotSettings): Promi
             console.log('Answered callback query', JSON.stringify(response));
         }
     } else if (update.inline_query) {
+        await ensureUserExists(update.inline_query.from.id);
         const results = await tryHandleUpdate<InlineQuery, InlineQueryResult[]>(
             update.inline_query,
             settings.onInlineQuery,

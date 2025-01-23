@@ -1,4 +1,4 @@
-﻿// export interface AnimeKey {
-//     MyAnimeListId: number;
-//     Dub: string;
-// }
+﻿export interface AnimeKey {
+    myAnimeListId: number;
+    dub: string;
+}

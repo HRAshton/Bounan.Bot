@@ -48,7 +48,7 @@ const main = async () => {
         inline_query: {
             id: '1',
             from: {
-                id: 0,
+                id: 14,
                 is_bot: false,
                 first_name: 'Test',
             },
