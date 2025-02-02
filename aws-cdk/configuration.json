@@ -6,5 +6,8 @@
   "telegramBotToken": "",
   "telegramBotVideoChatId": "",
   "telegramBotPublisherGroupName": "",
+  "loanApiMaxConcurrentRequests": "",
+  "retriesMax": "",
+  "retriesDelayMs": "",
   "studioLogosUrl": ""
 }

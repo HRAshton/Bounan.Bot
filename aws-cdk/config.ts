@@ -14,6 +14,9 @@ export interface Config {
     getAnimeFunctionName: string;
     videoDownloadedTopicArn: string;
 
+    loanApiMaxConcurrentRequests: string;
+    retriesMax: string;
+    retriesDelayMs: string;
     studioLogosUrl: string;
 }
 
@@ -36,5 +39,8 @@ export const getConfig = (stack: cdk.Stack, cfnPrefix: string, ssmPrefix: string
     getAnimeFunctionName: getCfnValue('getAnimeFunctionName', cfnPrefix, ExportNames.GetAnimeFunctionName),
     videoDownloadedTopicArn: getCfnValue('videoDownloadedTopicArn', cfnPrefix, ExportNames.VideoDownloadedSnsTopicArn),
 
+    loanApiMaxConcurrentRequests: configFile.loanApiMaxConcurrentRequests || '6',
+    retriesMax: configFile.retriesMax || '1',
+    retriesDelayMs: configFile.retriesDelayMs || '1000',
     studioLogosUrl: getSsmValue(stack, ssmPrefix, 'studioLogosUrl'),
 });

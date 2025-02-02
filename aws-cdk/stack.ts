@@ -2,16 +2,18 @@
 import { LlrtFunction } from 'cdk-lambda-llrt';
 
 import * as cdk from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as sns from 'aws-cdk-lib/aws-sns';
-import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
-import * as logs from 'aws-cdk-lib/aws-logs';
+import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as cw from 'aws-cdk-lib/aws-cloudwatch';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
-import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
-import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as logs from 'aws-cdk-lib/aws-logs';
+import * as sns from 'aws-cdk-lib/aws-sns';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
 
 import { Config, getConfig } from './config';
+import { Config as RuntimeConfig } from '../src/config/config';
 
 export class Stack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -22,7 +24,8 @@ export class Stack extends cdk.Stack {
         const logGroup = this.createLogGroup();
 
         const tables = this.createTables();
-        const functions = this.createLambdas(logGroup, tables, config);
+        const parameter = this.saveParameters(tables, config);
+        const functions = this.createLambdas(logGroup, tables, parameter);
         this.setErrorAlarm(logGroup, config);
 
         const videoDownloadedTopic = sns.Topic.fromTopicArn(
@@ -49,15 +52,15 @@ export class Stack extends cdk.Stack {
             removalPolicy: cdk.RemovalPolicy.RETAIN,
         });
 
-        const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
-            partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
-            sortKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
-            removalPolicy: cdk.RemovalPolicy.RETAIN,
-        });
+        // const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
+        //     partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
+        //     sortKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
+        //     removalPolicy: cdk.RemovalPolicy.RETAIN,
+        // });
 
         return {
             [Table.Users]: usersTable,
-            [Table.Subscriptions]: subscriptionsTable,
+            // [Table.Subscriptions]: subscriptionsTable,
         }
     }
 
@@ -89,7 +92,7 @@ export class Stack extends cdk.Stack {
     private createLambdas(
         logGroup: logs.LogGroup,
         tables: Record<Table, dynamodb.Table>,
-        config: Config,
+        parameter: ssm.StringParameter,
     ): Record<LambdaHandler, lambda.Function> {
         // @ts-expect-error - we know that the keys are the same
         const functions: Record<LambdaHandler, lambda.Function> = {};
@@ -99,29 +102,69 @@ export class Stack extends cdk.Stack {
                 entry: `src/handlers/${handlerName}/handler.ts`,
                 handler: 'handler',
                 logGroup: logGroup,
-                environment: {
-                    AWS_PROFILE: 'hra',
-                    ANIMAN_GET_ANIME_FUNCTION_NAME: config.getAnimeFunctionName,
-                    DATABASE_USERS_TABLE_NAME: tables[Table.Users].tableName,
-                    DATABASE_SUBSCRIPTIONS_TABLE_NAME: tables[Table.Subscriptions].tableName,
-                    LOAN_API_TOKEN: config.loanApiToken,
-                    LOAN_API_MAX_CONCURRENT_REQUESTS: '6',
-                    TELEGRAM_TOKEN: config.telegramBotToken,
-                    TELEGRAM_VIDEO_CHAT_ID: config.telegramBotVideoChatId.toString(),
-                    TELEGRAM_PUBLISHER_GROUP_NAME: config.telegramBotPublisherGroupName,
-                    TELEGRAM_BUTTONS_COLUMNS: '7',
-                    TELEGRAM_BUTTONS_ROWS: '3',
-                    RETRY_MAX_ATTEMPTS: '1',
-                    RETRY_DELAY_MS: '1000',
-                    STUDIO_LOGOS_URL: config.studioLogosUrl,
-                },
+                // environment: {
+                //     AWS_PROFILE: 'hra',
+                //     ANIMAN_GET_ANIME_FUNCTION_NAME: config.getAnimeFunctionName,
+                //     DATABASE_USERS_TABLE_NAME: tables[Table.Users].tableName,
+                //     DATABASE_SUBSCRIPTIONS_TABLE_NAME: tables[Table.Subscriptions].tableName,
+                //     LOAN_API_TOKEN: config.loanApiToken,
+                //     LOAN_API_MAX_CONCURRENT_REQUESTS: '6',
+                //     TELEGRAM_TOKEN: config.telegramBotToken,
+                //     TELEGRAM_VIDEO_CHAT_ID: config.telegramBotVideoChatId.toString(),
+                //     TELEGRAM_PUBLISHER_GROUP_NAME: config.telegramBotPublisherGroupName,
+                //     TELEGRAM_BUTTONS_COLUMNS: '7',
+                //     TELEGRAM_BUTTONS_ROWS: '3',
+                //     RETRY_MAX_ATTEMPTS: '1',
+                //     RETRY_DELAY_MS: '1000',
+                //     STUDIO_LOGOS_URL: config.studioLogosUrl,
+                // },
                 timeout: cdk.Duration.seconds(30),
             });
+
+            tables[Table.Users].grantReadWriteData(func);
+            parameter.grantRead(func);
 
             functions[handlerName] = func;
         });
 
         return functions;
+    }
+
+    private saveParameters(
+        tables: Record<Table, dynamodb.Table>,
+        config: Config,
+    ): ssm.StringParameter {
+        const value = {
+            animan: {
+                getAnimeFunctionName: config.getAnimeFunctionName,
+            },
+            loanApi: {
+                token: config.loanApiToken,
+                maxConcurrentRequests: cdk.Token.asNumber(config.loanApiMaxConcurrentRequests),
+            },
+            database: {
+                usersTableName: tables[Table.Users].tableName,
+                // subscriptionsTableName: getEnv('DATABASE_SUBSCRIPTIONS_TABLE_NAME'),
+            },
+            telegram: {
+                token: config.telegramBotToken,
+
+                videoChatId: cdk.Token.asNumber(config.telegramBotVideoChatId),
+                publisherGroupName: config.telegramBotPublisherGroupName,
+            },
+            retry: {
+                maxAttempts: cdk.Token.asNumber(config.retriesMax),
+                delayMs: cdk.Token.asNumber(config.retriesDelayMs),
+            },
+            assets: {
+                studioLogosUrl: config.studioLogosUrl,
+            },
+        } as Required<RuntimeConfig>;
+
+        return new ssm.StringParameter(this, '/bounan/bot/runtime-config', {
+            parameterName: '/bounan/bot/runtime-config',
+            stringValue: JSON.stringify(value, null, 2),
+        });
     }
 
     private out(key: string, value: object | string): void {
@@ -132,7 +175,7 @@ export class Stack extends cdk.Stack {
 
 enum Table {
     Users = 'users',
-    Subscriptions = 'subscriptions',
+    // Subscriptions = 'subscriptions',
 }
 
 enum LambdaHandler {
