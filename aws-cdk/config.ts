@@ -1,39 +1,40 @@
-﻿import configFile from './configuration.json';
+﻿import * as cdk from 'aws-cdk-lib';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+import { ExportNames } from '../src/api-clients/animan/common/ts/cdk/export-names';
+import configFile from './configuration.json';
 
-interface Config {
+export interface Config {
     alertEmail: string;
     loanApiToken: string;
+
     telegramBotToken: string;
-    telegramBotVideoChatId: number;
+    telegramBotVideoChatId: string;
     telegramBotPublisherGroupName: string;
+
     getAnimeFunctionName: string;
     videoDownloadedTopicArn: string;
+
     studioLogosUrl: string;
 }
 
-export const config: Config = configFile;
+const getCfnValue = (key: keyof Config, prefix: string, exportSuffix: ExportNames): string => {
+    return configFile[key] || cdk.Fn.importValue(prefix + exportSuffix);
+}
 
-if (!config.alertEmail) {
-    throw new Error('errorAlarmEmail is required');
+const getSsmValue = (stack: cdk.Stack, prefix: string, parameterSuffix: keyof Config): string => {
+    return configFile[parameterSuffix] || ssm.StringParameter.valueForStringParameter(stack, prefix + parameterSuffix);
 }
-if (!config.loanApiToken) {
-    throw new Error('loanApiToken is required');
-}
-if (!config.telegramBotToken) {
-    throw new Error('telegramBotToken is required');
-}
-if (!config.telegramBotVideoChatId) {
-    throw new Error('telegramBotVideoChatId is required');
-}
-if (!config.telegramBotPublisherGroupName) {
-    throw new Error('telegramBotPublisherGroupName is required');
-}
-if (!config.getAnimeFunctionName) {
-    throw new Error('getAnimeFunctionName is required');
-}
-if (!config.videoDownloadedTopicArn) {
-    throw new Error('videoDownloadedTopicArn is required');
-}
-if (!config.studioLogosUrl) {
-    throw new Error('studioLogosUrl is required');
-}
+
+export const getConfig = (stack: cdk.Stack, cfnPrefix: string, ssmPrefix: string): Config => ({
+    alertEmail: getCfnValue('alertEmail', cfnPrefix, ExportNames.AlertEmail),
+    loanApiToken: getCfnValue('loanApiToken', cfnPrefix, ExportNames.LoanApiToken),
+
+    telegramBotToken: getSsmValue(stack, ssmPrefix, 'telegramBotToken'),
+    telegramBotVideoChatId: getSsmValue(stack, ssmPrefix, 'telegramBotVideoChatId'),
+    telegramBotPublisherGroupName: getSsmValue(stack, ssmPrefix, 'telegramBotPublisherGroupName'),
+
+    getAnimeFunctionName: getCfnValue('getAnimeFunctionName', cfnPrefix, ExportNames.GetAnimeFunctionName),
+    videoDownloadedTopicArn: getCfnValue('videoDownloadedTopicArn', cfnPrefix, ExportNames.VideoDownloadedSnsTopicArn),
+
+    studioLogosUrl: getSsmValue(stack, ssmPrefix, 'studioLogosUrl'),
+});

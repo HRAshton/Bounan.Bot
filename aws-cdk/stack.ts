@@ -11,17 +11,19 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 
-import { config } from './config';
+import { Config, getConfig } from './config';
 
 export class Stack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
+        const config = getConfig(this, 'bounan:', '/bounan/bot/deploy-config/');
+
         const logGroup = this.createLogGroup();
-        this.setErrorAlarm(logGroup);
 
         const tables = this.createTables();
-        const functions = this.createLambdas(logGroup, tables);
+        const functions = this.createLambdas(logGroup, tables, config);
+        this.setErrorAlarm(logGroup, config);
 
         const videoDownloadedTopic = sns.Topic.fromTopicArn(
             this, 'VideoDownloadedSnsTopic', config.videoDownloadedTopicArn);
@@ -65,7 +67,7 @@ export class Stack extends cdk.Stack {
         return new logs.LogGroup(this, 'LogGroup', { retention: logs.RetentionDays.ONE_WEEK });
     }
 
-    private setErrorAlarm(logGroup: logs.LogGroup): void {
+    private setErrorAlarm(logGroup: logs.LogGroup, config: Config): void {
         const topic = new sns.Topic(this, 'LogGroupAlarmSnsTopic');
         topic.addSubscription(new subs.EmailSubscription(config.alertEmail));
 
@@ -89,6 +91,7 @@ export class Stack extends cdk.Stack {
     private createLambdas(
         logGroup: logs.LogGroup,
         tables: Map<Table, dynamodb.Table>,
+        config: Config,
     ): Map<LambdaHandler, lambda.Function> {
         const functions = new Map<LambdaHandler, lambda.Function>();
 
