@@ -1,10 +1,10 @@
-import { App as AwsApp } from 'aws-cdk-lib';
-import { AniManCdkStack } from './stack';
+import * as cfn from 'aws-cdk-lib';
+import { Stack } from './stack';
 
-class App extends AwsApp {
+class App extends cfn.App {
     constructor() {
         super();
-        new AniManCdkStack(this, 'Bounan-Bot', {});
+        new Stack(this, 'Bounan-Bot', {});
     }
 }
 
