@@ -45,10 +45,22 @@ export class Stack extends cdk.Stack {
             `https://api.telegram.org/bot${config.telegramBotToken}/setWebhook?url=${apiGateway.url}`);
     }
 
+    private get isStage(): boolean {
+        return this.region === 'eu-central-1';
+    }
+
     private createTables(): Record<Table, dynamodb.Table> {
+        const capacity = {
+            billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+            maxReadRequestUnits: 5,
+            maxWriteRequestUnits: 5,
+        };
+
         const usersTable = new dynamodb.Table(this, Table.Users, {
             partitionKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
             removalPolicy: cdk.RemovalPolicy.RETAIN,
+            deletionProtection: !this.isStage,
+            ...capacity,
         });
 
         // const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
@@ -100,7 +112,7 @@ export class Stack extends cdk.Stack {
             const func = new LlrtFunction(this, lambdaName, {
                 entry: `src/handlers/${handlerName}/handler.ts`,
                 handler: 'handler',
-                logGroup: logGroup,
+                logGroup,
                 timeout: cdk.Duration.seconds(30),
             });
 
