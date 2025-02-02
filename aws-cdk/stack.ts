@@ -1,7 +1,7 @@
 ﻿import { Construct } from 'constructs';
 import { LlrtFunction } from 'cdk-lambda-llrt';
 
-import * as cfn from 'aws-cdk-lib';
+import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
@@ -13,8 +13,8 @@ import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 
 import { config } from './config';
 
-export class Stack extends cfn.Stack {
-    constructor(scope: Construct, id: string, props?: cfn.StackProps) {
+export class Stack extends cdk.Stack {
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
         const logGroup = this.createLogGroup();
@@ -46,13 +46,13 @@ export class Stack extends cfn.Stack {
     private createTables(): Map<Table, dynamodb.Table> {
         const usersTable = new dynamodb.Table(this, Table.Users, {
             partitionKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
-            removalPolicy: cfn.RemovalPolicy.RETAIN,
+            removalPolicy: cdk.RemovalPolicy.RETAIN,
         });
 
         const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
             partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
             sortKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
-            removalPolicy: cfn.RemovalPolicy.RETAIN,
+            removalPolicy: cdk.RemovalPolicy.RETAIN,
         });
 
         return new Map([
@@ -113,7 +113,7 @@ export class Stack extends cfn.Stack {
                     RETRY_DELAY_MS: '1000',
                     STUDIO_LOGOS_URL: config.studioLogosUrl,
                 },
-                timeout: cfn.Duration.seconds(30),
+                timeout: cdk.Duration.seconds(30),
             });
 
             functions.set(handlerName, func);
@@ -124,7 +124,7 @@ export class Stack extends cfn.Stack {
 
     private out(key: string, value: object | string): void {
         const output = typeof value === 'string' ? value : JSON.stringify(value);
-        new cfn.CfnOutput(this, key, { value: output });
+        new cdk.CfnOutput(this, key, { value: output });
     }
 }
 
