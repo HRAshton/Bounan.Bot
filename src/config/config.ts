@@ -44,11 +44,6 @@ interface TelegramConfig {
 
     videoChatId: number;
     publisherGroupName: string;
-
-    buttons: {
-        columns: number;
-        rows: number;
-    };
 }
 
 interface RetryConfig {
@@ -62,7 +57,7 @@ interface AssetsConfig {
 
 interface DatabaseConfig {
     usersTableName: string;
-    subscriptionsTableName: string;
+    // subscriptionsTableName: string;
 }
 
 export interface Config {
@@ -94,18 +89,13 @@ export const config: Config = {
     },
     database: {
         usersTableName: getEnv('DATABASE_USERS_TABLE_NAME'),
-        subscriptionsTableName: getEnv('DATABASE_SUBSCRIPTIONS_TABLE_NAME'),
+        // subscriptionsTableName: getEnv('DATABASE_SUBSCRIPTIONS_TABLE_NAME'),
     },
     telegram: {
         token: getEnv('TELEGRAM_TOKEN'),
 
         videoChatId: parseInt(getEnv('TELEGRAM_VIDEO_CHAT_ID')),
         publisherGroupName: getEnv('TELEGRAM_PUBLISHER_GROUP_NAME'),
-
-        buttons: {
-            columns: parseInt(getEnv('TELEGRAM_BUTTONS_COLUMNS')),
-            rows: parseInt(getEnv('TELEGRAM_BUTTONS_ROWS')),
-        },
     },
     retry: {
         maxAttempts: parseInt(getEnv('RETRY_MAX_ATTEMPTS')),

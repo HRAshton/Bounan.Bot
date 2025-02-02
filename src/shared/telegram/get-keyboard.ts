@@ -5,6 +5,9 @@ import { InfoCommandDto, WatchCommandDto } from '../../handlers/on-webhook/comma
 import { dubToKey } from '../helpers/dub-to-key';
 import { Texts } from './texts';
 
+const COLUMNS = 7;
+const ROWS = 3;
+
 const getEpisodeRows = (
     currentVideo: VideoKey,
     episodesPerPage: number[][],
@@ -29,7 +32,7 @@ const getEpisodeRows = (
             })
         .map((btn, index) => ({ btn, index }))
         .reduce((acc, { btn, index }) => {
-            const groupIndex = Math.floor(index / config.telegram.buttons.columns);
+            const groupIndex = Math.floor(index / COLUMNS);
             acc[groupIndex] = [...(acc[groupIndex] || []), btn];
             return acc;
         }, [] as InlineKeyboardButton[][]);
@@ -89,7 +92,7 @@ export const getKeyboard = (
         .filter((ep, i, arr) => arr.indexOf(ep) === i) // distinct
         .sort((a, b) => a - b)
         .reduce((acc, ep, i) => {
-            const pageIndex = Math.floor(i / (config.telegram.buttons.columns * config.telegram.buttons.rows));
+            const pageIndex = Math.floor(i / (COLUMNS * ROWS));
             acc[pageIndex] = [...(acc[pageIndex] || []), ep];
             return acc;
         }, [] as number[][]);
