@@ -7,7 +7,7 @@
     "ts": "tsc",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "depcheck": "depcheck",
+    "depcheck": "depcheck --ignores=@types/node",
     "prerelease": "npm run depcheck && npm run lint && npm run ts"
   },
   "keywords": [],
@@ -22,6 +22,7 @@
     "@aws-sdk/lib-dynamodb": "^3.738.0",
     "@eslint/js": "^9.19.0",
     "@types/aws-lambda": "^8.10.147",
+    "@types/node": "^22.13.0",
     "aws-cdk-lib": "^2.177.0",
     "aws-lambda": "^1.0.7",
     "cdk-lambda-llrt": "^0.0.16",

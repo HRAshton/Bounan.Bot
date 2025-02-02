@@ -22,7 +22,6 @@ export class Stack extends cdk.Stack {
         const config = getConfig(this, 'bounan:', '/bounan/bot/deploy-config/');
 
         const logGroup = this.createLogGroup();
-
         const tables = this.createTables();
         const parameter = this.saveParameters(tables, config);
         const functions = this.createLambdas(logGroup, tables, parameter);
@@ -102,22 +101,6 @@ export class Stack extends cdk.Stack {
                 entry: `src/handlers/${handlerName}/handler.ts`,
                 handler: 'handler',
                 logGroup: logGroup,
-                // environment: {
-                //     AWS_PROFILE: 'hra',
-                //     ANIMAN_GET_ANIME_FUNCTION_NAME: config.getAnimeFunctionName,
-                //     DATABASE_USERS_TABLE_NAME: tables[Table.Users].tableName,
-                //     DATABASE_SUBSCRIPTIONS_TABLE_NAME: tables[Table.Subscriptions].tableName,
-                //     LOAN_API_TOKEN: config.loanApiToken,
-                //     LOAN_API_MAX_CONCURRENT_REQUESTS: '6',
-                //     TELEGRAM_TOKEN: config.telegramBotToken,
-                //     TELEGRAM_VIDEO_CHAT_ID: config.telegramBotVideoChatId.toString(),
-                //     TELEGRAM_PUBLISHER_GROUP_NAME: config.telegramBotPublisherGroupName,
-                //     TELEGRAM_BUTTONS_COLUMNS: '7',
-                //     TELEGRAM_BUTTONS_ROWS: '3',
-                //     RETRY_MAX_ATTEMPTS: '1',
-                //     RETRY_DELAY_MS: '1000',
-                //     STUDIO_LOGOS_URL: config.studioLogosUrl,
-                // },
                 timeout: cdk.Duration.seconds(30),
             });
 
