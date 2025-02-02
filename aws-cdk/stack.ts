@@ -28,24 +28,22 @@ export class Stack extends cdk.Stack {
         const videoDownloadedTopic = sns.Topic.fromTopicArn(
             this, 'VideoDownloadedSnsTopic', config.videoDownloadedTopicArn);
         videoDownloadedTopic.addSubscription(
-            new subs.LambdaSubscription(functions.get(LambdaHandler.OnVideoDownloaded)!));
+            new subs.LambdaSubscription(functions[LambdaHandler.OnVideoDownloaded]));
 
         const getAnimeLambda = lambda.Function.fromFunctionName(
             this, 'GetAnimeLambda', config.getAnimeFunctionName);
-        getAnimeLambda.grantInvoke(functions.get(LambdaHandler.OnWebhook)!);
+        getAnimeLambda.grantInvoke(functions[LambdaHandler.OnWebhook]);
 
         const apiGateway = new apigateway.RestApi(this, 'WebhookApi', {});
-        apiGateway.root.addMethod('POST', new apigateway.LambdaIntegration(functions.get(LambdaHandler.OnWebhook)!));
+        apiGateway.root.addMethod('POST', new apigateway.LambdaIntegration(functions[LambdaHandler.OnWebhook]));
 
         this.out('Config', JSON.stringify(config));
-        this.out('Tables', Array.from(tables.values()).map(x => x.tableName));
-        this.out('Lambdas', Array.from(functions.values()).map(x => x.functionName));
         this.out(
             'SetWebhookUrl',
             `https://api.telegram.org/bot${config.telegramBotToken}/setWebhook?url=${apiGateway.url}`);
     }
 
-    private createTables(): Map<Table, dynamodb.Table> {
+    private createTables(): Record<Table, dynamodb.Table> {
         const usersTable = new dynamodb.Table(this, Table.Users, {
             partitionKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
             removalPolicy: cdk.RemovalPolicy.RETAIN,
@@ -57,10 +55,10 @@ export class Stack extends cdk.Stack {
             removalPolicy: cdk.RemovalPolicy.RETAIN,
         });
 
-        return new Map([
-            [Table.Users, usersTable],
-            [Table.Subscriptions, subscriptionsTable],
-        ]);
+        return {
+            [Table.Users]: usersTable,
+            [Table.Subscriptions]: subscriptionsTable,
+        }
     }
 
     private createLogGroup(): logs.LogGroup {
@@ -90,10 +88,11 @@ export class Stack extends cdk.Stack {
 
     private createLambdas(
         logGroup: logs.LogGroup,
-        tables: Map<Table, dynamodb.Table>,
+        tables: Record<Table, dynamodb.Table>,
         config: Config,
-    ): Map<LambdaHandler, lambda.Function> {
-        const functions = new Map<LambdaHandler, lambda.Function>();
+    ): Record<LambdaHandler, lambda.Function> {
+        // @ts-expect-error - we know that the keys are the same
+        const functions: Record<LambdaHandler, lambda.Function> = {};
 
         Object.entries(LambdaHandler).forEach(([lambdaName, handlerName]) => {
             const func = new LlrtFunction(this, lambdaName, {
@@ -103,8 +102,8 @@ export class Stack extends cdk.Stack {
                 environment: {
                     AWS_PROFILE: 'hra',
                     ANIMAN_GET_ANIME_FUNCTION_NAME: config.getAnimeFunctionName,
-                    DATABASE_USERS_TABLE_NAME: tables.get(Table.Users)!.tableName,
-                    DATABASE_SUBSCRIPTIONS_TABLE_NAME: tables.get(Table.Subscriptions)!.tableName,
+                    DATABASE_USERS_TABLE_NAME: tables[Table.Users].tableName,
+                    DATABASE_SUBSCRIPTIONS_TABLE_NAME: tables[Table.Subscriptions].tableName,
                     LOAN_API_TOKEN: config.loanApiToken,
                     LOAN_API_MAX_CONCURRENT_REQUESTS: '6',
                     TELEGRAM_TOKEN: config.telegramBotToken,
@@ -119,7 +118,7 @@ export class Stack extends cdk.Stack {
                 timeout: cdk.Duration.seconds(30),
             });
 
-            functions.set(handlerName, func);
+            functions[handlerName] = func;
         });
 
         return functions;
