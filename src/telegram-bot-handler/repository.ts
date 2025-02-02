@@ -6,7 +6,7 @@ import { UserStatus } from '../shared/database/entities/user-status';
 
 export const registerNewUserIfNotExists = async (userId: number): Promise<void> => {
     const command = new PutCommand({
-        TableName: config.database.usersTableName,
+        TableName: config.value.database.usersTableName,
         Item: {
             userId,
             directRank: 0,
@@ -36,7 +36,7 @@ export const registerNewUserIfNotExists = async (userId: number): Promise<void> 
 
 export const getUserStatus = async (userId: number): Promise<UserStatus> => {
     const response = await docClient.send(new GetCommand({
-        TableName: config.database.usersTableName,
+        TableName: config.value.database.usersTableName,
         Key: { userId },
         ProjectionExpression: '#status',
         ExpressionAttributeNames: { '#status': 'status' },

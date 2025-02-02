@@ -61,7 +61,7 @@ const main = async () => {
 const pooling = async () => {
     let offset = 0;
     while (true) {
-        const result = await fetch(`https://api.telegram.org/bot${config.telegram.token}/getUpdates?offset=${offset}&timeout=60&allowed_updates=["callback_query","inline_query","message"]`);
+        const result = await fetch(`https://api.telegram.org/bot${config.value.telegram.token}/getUpdates?offset=${offset}&timeout=60&allowed_updates=["callback_query","inline_query","message"]`);
         const updates = await result.json();
         offset = updates.result[updates.result?.length - 1]?.update_id + 1 || offset;
 

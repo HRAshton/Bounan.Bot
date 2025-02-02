@@ -30,5 +30,5 @@ export const getStudioLogoUrl = (studioName: string): string | undefined => {
         return undefined;
     }
 
-    return config.assets.studioLogosUrl.replace('{image-key}', encodeURIComponent(imageKey));
+    return config.value.assets.studioLogosUrl.replace('{image-key}', encodeURIComponent(imageKey));
 }

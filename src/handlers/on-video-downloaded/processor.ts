@@ -24,7 +24,7 @@ const sendVideoMessages = async (
             chat_id: chatId,
             caption,
             message_id: videoMessageId,
-            from_chat_id: config.telegram.videoChatId,
+            from_chat_id: config.value.telegram.videoChatId,
             reply_markup: keyboard,
             parse_mode: 'HTML',
         };

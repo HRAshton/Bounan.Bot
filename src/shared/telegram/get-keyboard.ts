@@ -51,7 +51,7 @@ const getControlRow = (
     if (publishingDetails) {
         controlRow.push({
             text: Texts.Button__AllEpisodes,
-            url: `https://t.me/${config.telegram.publisherGroupName}/${publishingDetails.threadId}/${publishingDetails.messageId}`,
+            url: `https://t.me/${config.value.telegram.publisherGroupName}/${publishingDetails.threadId}/${publishingDetails.messageId}`,
         });
     }
 

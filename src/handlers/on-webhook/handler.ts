@@ -1,6 +1,6 @@
 ﻿import { APIGatewayEvent, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { Texts } from '../../shared/telegram/texts';
-import { config } from '../../config/config';
+import { config, initConfig } from '../../config/config';
 import { retry } from '../../shared/helpers/retry';
 import { setToken } from '../../api-clients/loan-api/src/animan-loan-api-client';
 import { CallbackQuery } from 'telegram-bot-api-lightweight-client';
@@ -46,12 +46,15 @@ const settings: BotSettings = {
     },
 };
 
-setToken(config.loanApi.token);
-client_setClientToken(config.telegram.token);
-
 const SUCCESS_RESPONSE = { statusCode: 202 };
 
 export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResultV2> => {
+    console.log('Processing event: ', JSON.stringify(event));
+
+    await initConfig();
+    setToken(config.value.loanApi.token);
+    client_setClientToken(config.value.telegram.token);
+
     try {
         if (!event.body) {
             console.log('No body');

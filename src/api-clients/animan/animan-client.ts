@@ -23,7 +23,7 @@ export const getVideoInfo = async (videoKey: VideoKey, chatId: number): Promise<
     console.log('Sending request: ', message);
 
     const response = await lambdaClient.send(new InvokeCommand({
-        FunctionName: config.animan.getAnimeFunctionName,
+        FunctionName: config.value.animan.getAnimeFunctionName,
         Payload: message,
     }));
     console.log('Request sent: ', response);

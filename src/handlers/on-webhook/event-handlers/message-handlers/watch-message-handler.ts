@@ -43,7 +43,7 @@ const sendVideo = async (
 
     const args: CopyMessageData = {
         chat_id: message.chat.id,
-        from_chat_id: config.telegram.videoChatId,
+        from_chat_id: config.value.telegram.videoChatId,
         message_id: videoInfo.messageId!,
         caption: videoDescription,
         reply_markup: keyboard,
