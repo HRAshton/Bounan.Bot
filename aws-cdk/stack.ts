@@ -50,10 +50,10 @@ export class Stack extends cdk.Stack {
     }
 
     private createTables(): Record<Table, dynamodb.Table> {
-        const capacity = {
-            billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-            maxReadRequestUnits: 5,
-            maxWriteRequestUnits: 5,
+        const capacity: Partial<dynamodb.TableProps> = {
+            billingMode: dynamodb.BillingMode.PROVISIONED,
+            readCapacity: 1,
+            writeCapacity: 1,
         };
 
         const usersTable = new dynamodb.Table(this, Table.Users, {
