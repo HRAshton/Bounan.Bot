@@ -19,6 +19,7 @@ export const studioLogosList = [
     'AniJoy',
     'AniLane',
     'AniLeague',
+    'AniLiberty (AniLibria)',
     'AniLibria-s',
     'AniLibria',
     'AniMaunt',
