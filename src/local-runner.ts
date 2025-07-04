@@ -6,7 +6,7 @@ import { handler as onVideoDownloadedHandler } from './handlers/on-video-downloa
 import { VideoDownloadedNotification } from './api-clients/animan/common/ts/interfaces';
 import { handler as onWebhookHandler } from './handlers/on-webhook/handler';
 import { Update } from 'telegram-bot-api-lightweight-client';
-import { config } from './config/config';
+import { config, initConfig } from './config/config';
 
 const onDownloaded = async (message: VideoDownloadedNotification) => {
     console.log('Processing message: ', message);
@@ -59,6 +59,8 @@ const main = async () => {
 }
 
 const pooling = async () => {
+    process.env.AWS_PROFILE = 'hra';
+    await initConfig();
     let offset = 0;
     while (true) {
         const result = await fetch(`https://api.telegram.org/bot${config.value.telegram.token}/getUpdates?offset=${offset}&timeout=60&allowed_updates=["callback_query","inline_query","message"]`);
