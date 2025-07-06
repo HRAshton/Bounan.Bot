@@ -1,4 +1,4 @@
-﻿import { InlineQuery, InlineQueryResultArticle } from 'telegram-bot-api-lightweight-client';
+﻿import { InlineQuery, InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { InlineQueryHandler } from '../query-handler';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';
 import { getRelated, toAbsoluteUrl } from '../../../../api-clients/shikimori/shikimori-client';

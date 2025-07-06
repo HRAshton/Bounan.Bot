@@ -1,5 +1,5 @@
 ﻿import { MessageHandler } from '../query-handler';
-import { sendMessage, Message } from 'telegram-bot-api-lightweight-client';
+import { sendMessage, Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { assert } from '../../../../shared/helpers/assert';
 import { Texts } from '../../../../shared/telegram/texts';
 

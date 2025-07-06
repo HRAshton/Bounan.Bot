@@ -4,7 +4,7 @@
     CallbackQuery,
     InlineQuery,
     Message,
-} from 'telegram-bot-api-lightweight-client';
+} from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
 export type QueryHandler<TUpdateItem, TResult> = (updateItem: TUpdateItem) => Promise<TResult>;
 

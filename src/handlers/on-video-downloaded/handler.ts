@@ -4,7 +4,7 @@ import { process } from './processor';
 import { retry } from '../../shared/helpers/retry';
 import { setToken } from '../../api-clients/loan-api/src/animan-loan-api-client';
 import { config, initConfig } from '../../config/config';
-import { client_setClientToken } from 'telegram-bot-api-lightweight-client';
+import { client_setClientToken } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
 const processMessage = async (message: string): Promise<void> => {
     console.log('Processing message: ', message);

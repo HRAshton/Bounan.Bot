@@ -1,4 +1,4 @@
-﻿import { sendMessage, sendPhoto, Message } from 'telegram-bot-api-lightweight-client';
+﻿import { sendMessage, sendPhoto, Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { InfoCommandDto, DubsCommandDto, RelatedCommandDto } from '../../command-dtos';
 import { assert } from '../../../../shared/helpers/assert';
 import { MessageHandler } from '../query-handler';

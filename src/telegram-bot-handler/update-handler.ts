@@ -4,8 +4,10 @@
     InlineQuery,
     Message,
     Update,
-} from 'telegram-bot-api-lightweight-client';
-import { answerCallbackQuery, answerInlineQuery, InlineQueryResult } from 'telegram-bot-api-lightweight-client';
+    InlineQueryResult,
+    answerCallbackQuery,
+    answerInlineQuery,
+} from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { getUserStatus, registerNewUserIfNotExists } from './repository';
 import { UserStatus } from '../shared/database/entities/user-status';
 

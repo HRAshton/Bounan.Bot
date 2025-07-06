@@ -7,7 +7,7 @@ import {
     CopyMessageData,
     InlineKeyboardMarkup,
     SendMessageData,
-} from 'telegram-bot-api-lightweight-client';
+} from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { config } from '../../config/config';
 import { getKeyboard } from '../../shared/telegram/get-keyboard';
 import { getAllExistingVideos } from '../../api-clients/loan-api/src/animan-loan-api-client';

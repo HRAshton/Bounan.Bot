@@ -5,7 +5,7 @@
 import { handler as onVideoDownloadedHandler } from './handlers/on-video-downloaded/handler';
 import { VideoDownloadedNotification } from './api-clients/animan/common/ts/interfaces';
 import { handler as onWebhookHandler } from './handlers/on-webhook/handler';
-import { Update } from 'telegram-bot-api-lightweight-client';
+import { Update } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { config, initConfig } from './config/config';
 
 const onDownloaded = async (message: VideoDownloadedNotification) => {

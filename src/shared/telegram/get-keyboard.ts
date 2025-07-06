@@ -1,5 +1,5 @@
 ﻿import { PublishingDetails, VideoKey } from '../models';
-import { InlineKeyboardButton, InlineKeyboardMarkup } from 'telegram-bot-api-lightweight-client';
+import { InlineKeyboardButton, InlineKeyboardMarkup } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { config } from '../../config/config';
 import { InfoCommandDto, WatchCommandDto } from '../../handlers/on-webhook/command-dtos';
 import { dubToKey } from '../helpers/dub-to-key';

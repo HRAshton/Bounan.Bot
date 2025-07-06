@@ -1,7 +1,7 @@
 ﻿import { assert } from '../../../../shared/helpers/assert';
-import { CallbackQuery } from 'telegram-bot-api-lightweight-client';
+import { CallbackQuery } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { MessageHandler } from '../query-handler';
-import { AnswerCallbackQueryData } from 'telegram-bot-api-lightweight-client';
+import { AnswerCallbackQueryData } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
 export const processCallbackQuery = async (
     callbackQuery: CallbackQuery,

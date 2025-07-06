@@ -1,9 +1,14 @@
 ﻿import { WatchCommandDto } from '../../command-dtos';
 import { MessageHandler } from '../query-handler';
-import { Message } from 'telegram-bot-api-lightweight-client';
+import { Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { assert } from '../../../../shared/helpers/assert';
 import { getAllExistingVideos } from '../../../../api-clients/loan-api/src/animan-loan-api-client';
-import { copyMessage, sendMessage, CopyMessageData, InlineKeyboardMarkup } from 'telegram-bot-api-lightweight-client';
+import {
+    copyMessage,
+    sendMessage,
+    CopyMessageData,
+    InlineKeyboardMarkup,
+} from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { getVideoInfo } from '../../../../api-clients/animan/animan-client';
 import { BotResponse, VideoKey } from '../../../../shared/models';
 import { Texts } from '../../../../shared/telegram/texts';
