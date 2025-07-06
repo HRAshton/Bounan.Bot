@@ -2,6 +2,7 @@
 import { MessageHandler } from '../query-handler';
 import { Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { assert } from '../../../../shared/helpers/assert';
+import { getShikiAnimeInfo } from '../../../../api-clients/shikimori/shikimori-client';
 import { getAllExistingVideos } from '../../../../api-clients/loan-api/src/animan-loan-api-client';
 import {
     copyMessage,
@@ -16,7 +17,6 @@ import { getKeyboard } from '../../../../shared/telegram/get-keyboard';
 import { getVideoDescription } from '../../../../shared/telegram/get-video-description';
 import { config } from '../../../../config/config';
 import { dubToKey } from '../../../../shared/helpers/dub-to-key';
-import { getAnimeInfo } from '../../../../api-clients/shikimori/shikimori-client';
 
 const sendSwitchDubButtons = async (chatId: number, searchResults: VideoKey[], episode: number) => {
     const inOtherDubs = searchResults
@@ -43,7 +43,7 @@ const sendVideo = async (
     videoInfo: BotResponse,
     keyboard: InlineKeyboardMarkup,
 ) => {
-    const animeInfo = await getAnimeInfo(commandDto.myAnimeListId);
+    const animeInfo = await getShikiAnimeInfo(commandDto.myAnimeListId);
     const videoDescription = getVideoDescription(animeInfo, commandDto, videoInfo.scenes);
 
     const args: CopyMessageData = {

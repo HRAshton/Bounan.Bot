@@ -1,34 +1,68 @@
-﻿import { ShikiAnimeInfo } from './shiki-anime-info';
-import { ShikiRelated } from './shiki-related';
+﻿import { animes, Maybe } from '@lightweight-clients/shikimori-graphql-api-lightweight-client';
 
-let rateLimitingPromise: Promise<void> = Promise.resolve();
+export type ShikiAnimeInfo = {
+    id: string;
+    url: string;
 
-export const SHIKIMORI_BASE_URL = 'https://shikimori.one';
+    episodes: Maybe<number>;
+    episodesAired: Maybe<number>;
 
-const request = async <T>(relativeUrl: string): Promise<T> => {
-    await rateLimitingPromise;
-    rateLimitingPromise = new Promise((resolve) => setTimeout(resolve, 100));
+    name: string;
+    russian?: Maybe<string>;
+    english?: Maybe<string>;
+    licenseNameRu?: Maybe<string>;
+    franchise?: Maybe<string>;
+    synonyms?: Maybe<string[]>;
+    genres?: Maybe<{ russian: Maybe<string>; }[]>;
+    airedOn?: Maybe<{ year?: Maybe<number>; }>;
 
-    const response = await fetch(SHIKIMORI_BASE_URL + relativeUrl, {
-        headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': 'Bounan.Bot',
+    poster?: Maybe<{ originalUrl: string; }>;
+};
+
+export const getShikiAnimeInfo = async (myAnimeListId: number): Promise<ShikiAnimeInfo> => {
+    return (await animes({
+        ids: myAnimeListId.toString(),
+    }, {
+        id: 1,
+        url: 1,
+        episodes: 1,
+        episodesAired: 1,
+        name: 1,
+        russian: 1,
+        english: 1,
+        licenseNameRu: 1,
+        franchise: 1,
+        synonyms: 1,
+        genres: { russian: 1 },
+        airedOn: { year: 1 },
+        poster: { originalUrl: 1 },
+    }))[0];
+}
+
+export const getRelated = async (myAnimeListId: number) => {
+    return (await animes({
+        ids: myAnimeListId.toString(),
+    }, {
+        related: {
+            relationText: 1,
+            anime: {
+                id: 1,
+                name: 1,
+                russian: 1,
+                airedOn: { year: 1 },
+                poster: { originalUrl: 1 },
+            },
         },
-    });
-
-    return await response.json();
+    }));
 }
 
-export const searchAnime = async (query: string): Promise<ShikiAnimeInfo[]> => {
-    return request<ShikiAnimeInfo[]>(`/api/animes?search=${encodeURIComponent(query)}&limit=10&censored=false&status=ongoing,released`);
+export const searchAnime = async (query: string) => {
+    return (await animes({
+        search: query,
+    }, {
+        id: 1,
+        name: 1,
+        russian: 1,
+        airedOn: { year: 1 },
+    }));
 }
-
-export const getAnimeInfo = async (myAnimeListId: number): Promise<ShikiAnimeInfo> => {
-    return request<ShikiAnimeInfo>(`/api/animes/${myAnimeListId}`);
-}
-
-export const getRelated = async (myAnimeListId: number): Promise<ShikiRelated[]> => {
-    return request<ShikiRelated[]>(`/api/animes/${myAnimeListId}/related`);
-}
-
-export const toAbsoluteUrl = (relativeUrl: string) => SHIKIMORI_BASE_URL + relativeUrl;

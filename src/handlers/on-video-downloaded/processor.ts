@@ -1,6 +1,6 @@
 ﻿import { VideoDownloadedNotification } from './models';
 import { getVideoDescription } from '../../shared/telegram/get-video-description';
-import { getAnimeInfo } from '../../api-clients/shikimori/shikimori-client';
+import { getShikiAnimeInfo } from '../../api-clients/shikimori/shikimori-client';
 import {
     copyMessage,
     sendMessage,
@@ -66,13 +66,13 @@ export const process = async (videoDownloadedNotification: VideoDownloadedNotifi
         return;
     }
 
-    const animeInfo = await getAnimeInfo(videoDownloadedNotification.videoKey.myAnimeListId);
+    const animeInfo = await getShikiAnimeInfo(videoDownloadedNotification.videoKey.myAnimeListId);
 
     const description = getVideoDescription(
         animeInfo,
         videoDownloadedNotification.videoKey,
         videoDownloadedNotification.scenes);
-    const episodes = await getAllExistingVideos(animeInfo.id);
+    const episodes = await getAllExistingVideos(parseInt(animeInfo.id));
     const videosWithDub = episodes.filter(x => x.dub === videoDownloadedNotification.videoKey.dub);
     const keyboard = getKeyboard(
         videoDownloadedNotification.videoKey,

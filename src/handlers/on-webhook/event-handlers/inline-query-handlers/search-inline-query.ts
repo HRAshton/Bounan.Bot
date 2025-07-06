@@ -1,5 +1,5 @@
 ﻿import { InlineQueryHandler } from '../query-handler';
-import { searchAnime, toAbsoluteUrl } from '../../../../api-clients/shikimori/shikimori-client';
+import { searchAnime } from '../../../../api-clients/shikimori/shikimori-client';
 import { getDubs } from '../../../../api-clients/loan-api/src/animan-loan-api-client';
 import { InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { InfoCommandDto } from '../../command-dtos';
@@ -17,7 +17,7 @@ export const handler: InlineQueryHandler = async (inlineQuery) => {
 
     const loanApiDubs = await Promise.all(shikimoriResults.map(async anime => ({
         anime,
-        dubs: await getDubs(anime.id),
+        dubs: await getDubs(parseInt(anime.id)),
     })));
     const availableDubs = loanApiDubs.filter(x => x.dubs.length > 0);
 
@@ -37,11 +37,11 @@ export const handler: InlineQueryHandler = async (inlineQuery) => {
             id: pair.anime.id.toString(),
             title: pair.anime.russian || pair.anime.name,
             description: [
-                pair.anime.aired_on?.substring(0, 4),
+                pair.anime.airedOn?.year,
                 pair.anime.genres?.map(x => x.russian).join(', '),
                 pair.dubs.map(x => x.name).sort().join(', '),
             ].filter(x => !!x).join('\n'),
-            thumbnail_url: pair.anime!.image.preview ? toAbsoluteUrl(pair.anime!.image.preview) : undefined,
+            thumbnail_url: pair.anime!.poster?.originalUrl,
             input_message_content: {
                 message_text: new InfoCommandDto(pair.anime.id).toString(),
             },

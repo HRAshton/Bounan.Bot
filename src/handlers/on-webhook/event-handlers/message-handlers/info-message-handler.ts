@@ -2,7 +2,7 @@
 import { InfoCommandDto, DubsCommandDto, RelatedCommandDto } from '../../command-dtos';
 import { assert } from '../../../../shared/helpers/assert';
 import { MessageHandler } from '../query-handler';
-import { getAnimeInfo, toAbsoluteUrl } from '../../../../api-clients/shikimori/shikimori-client';
+import { getShikiAnimeInfo } from '../../../../api-clients/shikimori/shikimori-client';
 import { Texts } from '../../../../shared/telegram/texts';
 
 const canHandle = (message: Message): boolean => message.text?.startsWith(InfoCommandDto.Command) ?? false;
@@ -20,7 +20,7 @@ const handler: MessageHandler = async (message) => {
         return;
     }
 
-    const anime = await getAnimeInfo(commandDto.myAnimeListId);
+    const anime = await getShikiAnimeInfo(commandDto.myAnimeListId);
     console.log('Anime info: ', JSON.stringify(anime));
     if (!anime) {
         console.error('Anime not found');
@@ -33,7 +33,7 @@ const handler: MessageHandler = async (message) => {
 
     const caption = [
         Texts.AnimeDescription__Name.replaceAll('%1', anime.russian || anime.name),
-        anime.aired_on && Texts.AnimeDescription__AiredOn.replaceAll('%1', anime.aired_on.substring(0, 4)),
+        anime.airedOn && Texts.AnimeDescription__AiredOn.replaceAll('%1', anime.airedOn.year?.toString() || ''),
         anime.genres && Texts.AnimeDescription__Genres.replaceAll('%1', anime.genres.map((g) => g.russian).join(', ')),
         Texts.AnimeDescription__Links.replaceAll('%1', anime.id.toString()),
     ]
@@ -42,7 +42,7 @@ const handler: MessageHandler = async (message) => {
 
     const result = await sendPhoto({
         chat_id: message.chat.id,
-        photo: toAbsoluteUrl(anime.image.original),
+        photo: anime.poster!.originalUrl,
         caption: caption,
         parse_mode: 'HTML',
         reply_markup: {

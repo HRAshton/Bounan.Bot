@@ -1,4 +1,4 @@
-﻿import { ShikiAnimeInfo } from '../../api-clients/shikimori/shiki-anime-info';
+﻿import { ShikiAnimeInfo } from '../../api-clients/shikimori/shikimori-client';
 import { Scenes, VideoKey } from '../models';
 import { Texts } from './texts';
 
@@ -20,7 +20,7 @@ export const getVideoDescription = (
     scenes: Scenes | undefined,
 ): string => {
     const has_episodes = animeInfo.episodes && animeInfo.episodes > 1
-        || animeInfo.episodes_aired && animeInfo.episodes_aired > 1;
+        || animeInfo.episodesAired && animeInfo.episodesAired > 1;
 
     return [
         Texts.VideoDescription__Name

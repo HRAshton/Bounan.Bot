@@ -1,8 +1,9 @@
 ﻿import { InlineQuery, InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { InlineQueryHandler } from '../query-handler';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';
-import { getRelated, toAbsoluteUrl } from '../../../../api-clients/shikimori/shikimori-client';
+import { getRelated } from '../../../../api-clients/shikimori/shikimori-client';
 import { InfoCommandDto, RelatedCommandDto } from '../../command-dtos';
+import { Related } from '@lightweight-clients/shikimori-graphql-api-lightweight-client';
 
 const canHandle = (inlineQuery: InlineQuery): boolean =>
     inlineQuery.query?.startsWith(RelatedCommandDto.Command) ?? false;
@@ -16,8 +17,8 @@ const handler: InlineQueryHandler = async (inlineQuery) => {
         return [];
     }
 
-    const related = await getRelated(commandDto.myAnimeListId);
-    const relatedAnimes = related.filter(x => !!x.anime);
+    const relatedRes = await getRelated(commandDto.myAnimeListId);
+    const relatedAnimes = relatedRes.flatMap(x => x.related).filter(x => x?.anime) as Related[];
     const items: InlineQueryResultArticle[] = relatedAnimes.length === 0
         ? [
             {
@@ -31,10 +32,10 @@ const handler: InlineQueryHandler = async (inlineQuery) => {
         ]
         : relatedAnimes.map(item => ({
             type: 'article',
-            id: item.anime!.id.toString(),
+            id: item!.anime!.id.toString(),
             title: item.anime!.russian || item.anime!.name,
-            description: [item.relation_russian, item.anime!.aired_on?.substring(0, 4)].filter(x => !!x).join(', '),
-            thumbnail_url: item.anime!.image.preview ? toAbsoluteUrl(item.anime!.image.preview) : undefined,
+            description: [item.relationText, item!.anime!.airedOn?.year].filter(x => !!x).join(', '),
+            thumbnail_url: item.anime?.poster?.originalUrl,
             input_message_content: {
                 message_text: new InfoCommandDto(item.anime!.id).toString(),
             },
