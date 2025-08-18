@@ -1,6 +1,6 @@
 ﻿import { InlineQueryHandler } from '../query-handler';
 import { searchAnime } from '../../../../api-clients/shikimori/shikimori-client';
-import { getDubs } from '../../../../api-clients/loan-api/src/animan-loan-api-client';
+import { getDubs } from '../../../../api-clients/loan-api/src/loan-api-client';
 import { InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { InfoCommandDto } from '../../command-dtos';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';

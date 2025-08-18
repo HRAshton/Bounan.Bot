@@ -10,7 +10,7 @@ import {
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { config } from '../../config/config';
 import { getKeyboard } from '../../shared/telegram/get-keyboard';
-import { getAllExistingVideos } from '../../api-clients/loan-api/src/animan-loan-api-client';
+import { getAllExistingVideos } from '../../api-clients/loan-api/src/loan-api-client';
 import { Texts } from '../../shared/telegram/texts';
 
 const sendVideoMessages = async (

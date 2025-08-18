@@ -2,7 +2,7 @@
 import { DubsCommandDto, WatchCommandDto } from '../../command-dtos';
 import { InlineQueryHandler } from '../query-handler';
 import { dubToKey } from '../../../../shared/helpers/dub-to-key';
-import { getDubs } from '../../../../api-clients/loan-api/src/animan-loan-api-client';
+import { getDubs } from '../../../../api-clients/loan-api/src/loan-api-client';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';
 import { getStudioLogoUrl } from '../../../../shared/studio-logos-provider/studio-logos-provider';
 

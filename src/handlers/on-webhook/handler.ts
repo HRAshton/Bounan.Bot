@@ -1,10 +1,9 @@
 ﻿import { APIGatewayEvent, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { CallbackQuery, client_setClientToken } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { Texts } from '../../shared/telegram/texts';
 import { config, initConfig } from '../../config/config';
 import { retry } from '../../shared/helpers/retry';
-import { setToken } from '../../api-clients/loan-api/src/animan-loan-api-client';
-import { CallbackQuery } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { client_setClientToken } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+import { setToken } from '../../api-clients/loan-api/src/loan-api-client';
 import { BotSettings, handleUpdate } from '../../telegram-bot-handler/update-handler';
 import { dubsInlineQueryHandler } from './event-handlers/inline-query-handlers/dubs-inline-query-handler';
 import { infoCallbackQueryHandler } from './event-handlers/callback-query-adapters/info-callback-query-handler';
