@@ -1,4 +1,4 @@
-﻿import { ShikiAnimeInfo } from '../../api-clients/shikimori/shikimori-client';
+﻿import { ShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
 import { Scenes, VideoKey } from '../models';
 import { Texts } from './texts';
 

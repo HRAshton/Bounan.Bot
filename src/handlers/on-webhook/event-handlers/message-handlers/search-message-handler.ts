@@ -1,7 +1,7 @@
 ﻿import { MessageHandler } from '../query-handler';
 import { sendMessage } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { assert } from '../../../../shared/helpers/assert';
-import { searchAnime } from '../../../../api-clients/shikimori/shikimori-client';
+import { searchAnime } from '../../../../api-clients/cached-shikimori-client';
 import { InfoCommandDto } from '../../command-dtos';
 import { eclipseText } from '../../../../shared/helpers/string-helpers';
 import { Texts } from '../../../../shared/telegram/texts';

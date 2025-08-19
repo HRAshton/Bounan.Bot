@@ -2,7 +2,7 @@
 import { InfoCommandDto, DubsCommandDto, RelatedCommandDto } from '../../command-dtos';
 import { assert } from '../../../../shared/helpers/assert';
 import { MessageHandler } from '../query-handler';
-import { getShikiAnimeInfo } from '../../../../api-clients/shikimori/shikimori-client';
+import { getShikiAnimeInfo } from '../../../../api-clients/cached-shikimori-client';
 import { Texts } from '../../../../shared/telegram/texts';
 
 const canHandle = (message: Message): boolean => message.text?.startsWith(InfoCommandDto.Command) ?? false;

@@ -2,7 +2,7 @@
 import { SNSEvent } from 'aws-lambda';
 import { process } from './processor';
 import { retry } from '../../shared/helpers/retry';
-import { setToken } from '../../api-clients/loan-api/src/loan-api-client';
+import { setToken } from '../../api-clients/cached-loan-api-client';
 import { config, initConfig } from '../../config/config';
 import { client_setClientToken } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 

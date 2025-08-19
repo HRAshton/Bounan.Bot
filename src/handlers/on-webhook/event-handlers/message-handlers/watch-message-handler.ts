@@ -2,8 +2,8 @@
 import { MessageHandler } from '../query-handler';
 import { Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { assert } from '../../../../shared/helpers/assert';
-import { getShikiAnimeInfo } from '../../../../api-clients/shikimori/shikimori-client';
-import { getAllExistingVideos } from '../../../../api-clients/loan-api/src/loan-api-client';
+import { getShikiAnimeInfo } from '../../../../api-clients/cached-shikimori-client';
+import { getAllExistingVideos } from '../../../../api-clients/cached-loan-api-client';
 import {
     copyMessage,
     sendMessage,
