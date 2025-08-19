@@ -12,13 +12,14 @@ import { config } from '../../config/config';
 import { getKeyboard } from '../../shared/telegram/get-keyboard';
 import { getVideoDescription } from '../../shared/telegram/get-video-description';
 import { Texts } from '../../shared/telegram/texts';
+import { getSubscriptions, removeOneTimeSubscribers } from '../subscriptions-repository';
 import { VideoDownloadedNotification } from './models';
 
 const sendVideoMessages = async (
     videoMessageId: number,
     caption: string,
     keyboard: InlineKeyboardMarkup,
-    chatIds: number[],
+    chatIds: Set<number>,
 ): Promise<void> => {
     for (const chatId of chatIds) {
         const messageToSend: CopyMessageData = {
@@ -39,7 +40,7 @@ const sendVideoMessages = async (
     }
 }
 
-const sendErrorMessages = async (caption: string, keyboard: InlineKeyboardMarkup, chatIds: number[]): Promise<void> => {
+const sendErrorMessages = async (caption: string, keyboard: InlineKeyboardMarkup, chatIds: Set<number>): Promise<void> => {
     console.log('Sending error messages');
 
     for (const chatId of chatIds) {
@@ -61,9 +62,16 @@ const sendErrorMessages = async (caption: string, keyboard: InlineKeyboardMarkup
 
 export const process = async (videoDownloadedNotification: VideoDownloadedNotification): Promise<void> => {
     console.log('Processing videos: ', JSON.stringify(videoDownloadedNotification));
+    
+    const animeSubscriptions = await getSubscriptions(videoDownloadedNotification.videoKey);
+    if (!animeSubscriptions) {
+        console.log('No subscriptions found for this video');
+        return;
+    }
 
-    if (!videoDownloadedNotification.subscriberChatIds?.length) {
-        console.log('No subscribers');
+    const oneTimeSubscribers = animeSubscriptions.oneTimeSubscribers?.[videoDownloadedNotification.videoKey.episode];
+    if (!oneTimeSubscribers || !oneTimeSubscribers.size) {
+        console.log('No subscribers for this video');
         return;
     }
 
@@ -82,10 +90,13 @@ export const process = async (videoDownloadedNotification: VideoDownloadedNotifi
     );
 
     if (videoDownloadedNotification.messageId) {
-        const { messageId, subscriberChatIds } = videoDownloadedNotification;
-        await sendVideoMessages(messageId, description, keyboard, subscriberChatIds as number[]);
+        const { videoKey, messageId } = videoDownloadedNotification;
+        await Promise.all([
+            await removeOneTimeSubscribers(videoKey),
+            await sendVideoMessages(messageId, description, keyboard, oneTimeSubscribers),
+        ])
     } else {
-        await sendErrorMessages(description, keyboard, videoDownloadedNotification.subscriberChatIds as number[]);
+        await sendErrorMessages(description, keyboard, oneTimeSubscribers);
     }
 
     console.log('Animes processed');

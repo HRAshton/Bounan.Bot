@@ -8,7 +8,7 @@ import { BotRequest as RawBotRequest } from './common/ts/interfaces';
 
 const lambdaClient = new LambdaClient({});
 
-export const getVideoInfo = async (videoKey: VideoKey, chatId: number): Promise<BotResponse> => {
+export const getVideoInfo = async (videoKey: VideoKey): Promise<BotResponse> => {
     console.log('Getting anime for video key: ', videoKey);
 
     const upperVideoKey: RawBotRequest = {
@@ -17,7 +17,7 @@ export const getVideoInfo = async (videoKey: VideoKey, chatId: number): Promise<
             Dub: videoKey.dub,
             Episode: videoKey.episode,
         },
-        ChatId: chatId,
+        ChatId: -1,
     }
 
     const message = JSON.stringify(upperVideoKey);

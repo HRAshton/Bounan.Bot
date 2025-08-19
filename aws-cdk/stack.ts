@@ -62,15 +62,14 @@ export class Stack extends cdk.Stack {
             ...capacity,
         });
 
-        // const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
-        //     partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
-        //     sortKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
-        //     removalPolicy: cdk.RemovalPolicy.RETAIN,
-        // });
+        const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
+            partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
+            removalPolicy: cdk.RemovalPolicy.RETAIN,
+        });
 
         return {
             [Table.Users]: usersTable,
-            // [Table.Subscriptions]: subscriptionsTable,
+            [Table.Subscriptions]: subscriptionsTable,
         }
     }
 
@@ -116,6 +115,7 @@ export class Stack extends cdk.Stack {
             });
 
             tables[Table.Users].grantReadWriteData(func);
+            tables[Table.Subscriptions].grantReadWriteData(func);
             parameter.grantRead(func);
 
             functions[handlerName] = func;
@@ -138,7 +138,7 @@ export class Stack extends cdk.Stack {
             },
             database: {
                 usersTableName: tables[Table.Users].tableName,
-                // subscriptionsTableName: getEnv('DATABASE_SUBSCRIPTIONS_TABLE_NAME'),
+                subscriptionsTableName: tables[Table.Subscriptions].tableName,
             },
             telegram: {
                 token: config.telegramBotToken,
@@ -169,7 +169,7 @@ export class Stack extends cdk.Stack {
 
 enum Table {
     Users = 'users',
-    // Subscriptions = 'subscriptions',
+    Subscriptions = 'subscriptions',
 }
 
 enum LambdaHandler {

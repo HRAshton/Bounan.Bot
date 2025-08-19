@@ -16,6 +16,7 @@ import { BotResponse, VideoKey } from '../../../../shared/models';
 import { getKeyboard } from '../../../../shared/telegram/get-keyboard';
 import { getVideoDescription } from '../../../../shared/telegram/get-video-description';
 import { Texts } from '../../../../shared/telegram/texts';
+import { subscribeOneTime } from '../../../subscriptions-repository';
 import { WatchCommandDto } from '../../command-dtos';
 import { MessageHandler } from '../query-handler';
 
@@ -74,7 +75,7 @@ const sendVideoResult = async (
         throw new Error('No episodes found');
     }
 
-    const videoInfo = await getVideoInfo(selectedVideo, message.chat.id);
+    const videoInfo = await getVideoInfo(selectedVideo);
     console.log('Anime info: ', JSON.stringify(videoInfo));
 
     const keyboard = getKeyboard(commandDto, episodesInDub, videoInfo?.publishingDetails);
@@ -83,11 +84,14 @@ const sendVideoResult = async (
         case 'Pending':
         case 'Downloading':
             console.log('Video not downloaded');
-            await sendMessage({
-                chat_id: message.chat.id,
-                text: Texts.Message__VideoIsCooking,
-                reply_markup: keyboard,
-            });
+            await Promise.all([
+                await subscribeOneTime(selectedVideo, message.chat.id),
+                await sendMessage({
+                    chat_id: message.chat.id,
+                    text: Texts.Message__VideoIsCooking,
+                    reply_markup: keyboard,
+                }),
+            ]);
             break;
 
         case 'Failed':
