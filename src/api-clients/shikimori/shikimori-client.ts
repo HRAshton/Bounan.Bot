@@ -59,6 +59,8 @@ export const getRelated = async (myAnimeListId: number) => {
 export const searchAnime = async (query: string) => {
     return (await animes({
         search: query,
+        limit: 10,
+        censored: false,
     }, {
         id: 1,
         name: 1,
