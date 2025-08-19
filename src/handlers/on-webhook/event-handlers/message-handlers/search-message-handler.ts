@@ -32,10 +32,19 @@ const handler: MessageHandler = async (message) => {
 
     console.log(`Found ${searchResults.length} results`);
 
-    const buttons = searchResults.map((result) => ({
-        text: eclipseText(result.russian || result.name, 25, 10),
-        callback_data: new InfoCommandDto(result.id).toString(),
-    }));
+    const buttons = searchResults.map((result) => {
+        const title = result.russian || result.name;
+        const containsDuplicates = searchResults.filter((r) => r.russian === title || r.name === title).length > 1;
+        const deduplicatedTitle = containsDuplicates && result.airedOn?.year
+            ? `${title} (${result.airedOn?.year})`
+            : title;
+        const eclipsedText = eclipseText(deduplicatedTitle, 25, 10);
+
+        return ({
+            text: eclipsedText,
+            callback_data: new InfoCommandDto(result.id).toString(),
+        });
+    });
 
     const result = await sendMessage({
         chat_id: message.chat.id,
