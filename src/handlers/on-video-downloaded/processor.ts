@@ -1,17 +1,18 @@
-﻿import { VideoDownloadedNotification } from './models';
-import { getVideoDescription } from '../../shared/telegram/get-video-description';
-import { getShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
-import {
+﻿import {
     copyMessage,
-    sendMessage,
     CopyMessageData,
     InlineKeyboardMarkup,
+    sendMessage,
     SendMessageData,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
+import { getAllExistingVideos } from '../../api-clients/cached-loan-api-client';
+import { getShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
 import { config } from '../../config/config';
 import { getKeyboard } from '../../shared/telegram/get-keyboard';
-import { getAllExistingVideos } from '../../api-clients/cached-loan-api-client';
+import { getVideoDescription } from '../../shared/telegram/get-video-description';
 import { Texts } from '../../shared/telegram/texts';
+import { VideoDownloadedNotification } from './models';
 
 const sendVideoMessages = async (
     videoMessageId: number,

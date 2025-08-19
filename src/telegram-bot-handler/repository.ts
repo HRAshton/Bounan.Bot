@@ -1,8 +1,9 @@
 import { GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
+
 import { config } from '../config/config';
-import { docClient } from '../shared/database/repository';
 import { UserEntity } from '../shared/database/entities/user-entity';
 import { UserStatus } from '../shared/database/entities/user-status';
+import { docClient } from '../shared/database/repository';
 
 export const registerNewUserIfNotExists = async (userId: number): Promise<void> => {
     const command = new PutCommand({

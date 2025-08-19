@@ -1,8 +1,9 @@
 ﻿import { CallbackQuery } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { CallbackQueryHandler } from '../query-handler';
-import { processCallbackQuery } from './callback-query-adapter-base';
+
 import { InfoCommandDto } from '../../command-dtos';
 import { infoMessageHandler } from '../message-handlers/info-message-handler';
+import { CallbackQueryHandler } from '../query-handler';
+import { processCallbackQuery } from './callback-query-adapter-base';
 
 const canHandle = (callbackQuery: CallbackQuery) => callbackQuery.data?.startsWith(InfoCommandDto.Command) || false;
 

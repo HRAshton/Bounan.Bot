@@ -1,8 +1,8 @@
 ﻿import {
-    VideoKey as RawVideoKey,
-    Scenes as RawScenes,
-    PublishingDetails as RawPublishingDetails,
     BotResponse as RawBotResponse,
+    PublishingDetails as RawPublishingDetails,
+    Scenes as RawScenes,
+    VideoKey as RawVideoKey,
 } from '../api-clients/animan/common/ts/interfaces';
 import { KeysToCamelCase } from './object-transformer';
 

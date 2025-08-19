@@ -1,15 +1,16 @@
 ﻿import {
+    answerCallbackQuery,
     AnswerCallbackQueryData,
+    answerInlineQuery,
     CallbackQuery,
     InlineQuery,
+    InlineQueryResult,
     Message,
     Update,
-    InlineQueryResult,
-    answerCallbackQuery,
-    answerInlineQuery,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { getUserStatus, registerNewUserIfNotExists } from './repository';
+
 import { UserStatus } from '../shared/database/entities/user-status';
+import { getUserStatus, registerNewUserIfNotExists } from './repository';
 
 type CanHandleUpdate<TUpdateField> = (updateField: TUpdateField) => boolean;
 type Handler<TUpdateField, TResult> = (updateField: TUpdateField) => Promise<TResult>;

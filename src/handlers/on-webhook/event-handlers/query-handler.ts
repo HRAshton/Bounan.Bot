@@ -1,8 +1,8 @@
 ﻿import {
     AnswerCallbackQueryData,
-    InlineQueryResult,
     CallbackQuery,
     InlineQuery,
+    InlineQueryResult,
     Message,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 

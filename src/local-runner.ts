@@ -2,11 +2,12 @@
 /* eslint @typescript-eslint/no-unused-vars: 0 */
 /* eslint no-constant-condition: 0 */
 
-import { handler as onVideoDownloadedHandler } from './handlers/on-video-downloaded/handler';
-import { VideoDownloadedNotification } from './api-clients/animan/common/ts/interfaces';
-import { handler as onWebhookHandler } from './handlers/on-webhook/handler';
 import { Update } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
+import { VideoDownloadedNotification } from './api-clients/animan/common/ts/interfaces';
 import { config, initConfig } from './config/config';
+import { handler as onVideoDownloadedHandler } from './handlers/on-video-downloaded/handler';
+import { handler as onWebhookHandler } from './handlers/on-webhook/handler';
 
 const onDownloaded = async (message: VideoDownloadedNotification) => {
     console.log('Processing message: ', message);

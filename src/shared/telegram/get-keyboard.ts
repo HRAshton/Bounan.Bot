@@ -1,8 +1,9 @@
-﻿import { PublishingDetails, VideoKey } from '../models';
-import { InlineKeyboardButton, InlineKeyboardMarkup } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+﻿import { InlineKeyboardButton, InlineKeyboardMarkup } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
 import { config } from '../../config/config';
 import { InfoCommandDto, WatchCommandDto } from '../../handlers/on-webhook/command-dtos';
 import { dubToKey } from '../helpers/dub-to-key';
+import { PublishingDetails, VideoKey } from '../models';
 import { Texts } from './texts';
 
 const COLUMNS = 7;

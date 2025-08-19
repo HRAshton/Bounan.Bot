@@ -1,9 +1,10 @@
-﻿import { sendMessage, sendPhoto, Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { InfoCommandDto, DubsCommandDto, RelatedCommandDto } from '../../command-dtos';
-import { assert } from '../../../../shared/helpers/assert';
-import { MessageHandler } from '../query-handler';
+﻿import { Message,sendMessage, sendPhoto } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
 import { getShikiAnimeInfo } from '../../../../api-clients/cached-shikimori-client';
+import { assert } from '../../../../shared/helpers/assert';
 import { Texts } from '../../../../shared/telegram/texts';
+import { DubsCommandDto, InfoCommandDto, RelatedCommandDto } from '../../command-dtos';
+import { MessageHandler } from '../query-handler';
 
 const canHandle = (message: Message): boolean => message.text?.startsWith(InfoCommandDto.Command) ?? false;
 

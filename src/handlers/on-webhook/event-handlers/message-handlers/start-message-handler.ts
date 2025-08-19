@@ -1,7 +1,8 @@
-﻿import { sendMessage, Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { MessageHandler } from '../query-handler';
+﻿import { Message,sendMessage } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
 import { assert } from '../../../../shared/helpers/assert';
 import { Texts } from '../../../../shared/telegram/texts';
+import { MessageHandler } from '../query-handler';
 
 const canHandle = (message: Message): boolean => message.text?.startsWith('/start') || false;
 

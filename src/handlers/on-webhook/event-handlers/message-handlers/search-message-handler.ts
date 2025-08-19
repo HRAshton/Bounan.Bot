@@ -1,10 +1,11 @@
-﻿import { MessageHandler } from '../query-handler';
-import { sendMessage } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { assert } from '../../../../shared/helpers/assert';
+﻿import { sendMessage } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
 import { searchAnime } from '../../../../api-clients/cached-shikimori-client';
-import { InfoCommandDto } from '../../command-dtos';
+import { assert } from '../../../../shared/helpers/assert';
 import { eclipseText } from '../../../../shared/helpers/string-helpers';
 import { Texts } from '../../../../shared/telegram/texts';
+import { InfoCommandDto } from '../../command-dtos';
+import { MessageHandler } from '../query-handler';
 
 const canHandle = (): boolean => {
     throw new Error('Not supported');

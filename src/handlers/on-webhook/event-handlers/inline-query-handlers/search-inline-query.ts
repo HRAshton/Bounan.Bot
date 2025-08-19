@@ -1,9 +1,10 @@
-﻿import { InlineQueryHandler } from '../query-handler';
-import { searchAnime } from '../../../../api-clients/cached-shikimori-client';
+﻿import { InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
 import { getDubs } from '../../../../api-clients/cached-loan-api-client';
-import { InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+import { searchAnime } from '../../../../api-clients/cached-shikimori-client';
 import { InfoCommandDto } from '../../command-dtos';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';
+import { InlineQueryHandler } from '../query-handler';
 
 export const handler: InlineQueryHandler = async (inlineQuery) => {
     console.log('Handling search inline query {Query}', inlineQuery.query);

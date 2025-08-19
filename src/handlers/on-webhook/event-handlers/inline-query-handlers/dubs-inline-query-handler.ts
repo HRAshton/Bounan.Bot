@@ -1,10 +1,11 @@
 ﻿import { InlineQuery, InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { DubsCommandDto, WatchCommandDto } from '../../command-dtos';
-import { InlineQueryHandler } from '../query-handler';
-import { dubToKey } from '../../../../shared/helpers/dub-to-key';
+
 import { getDubs } from '../../../../api-clients/cached-loan-api-client';
-import { KnownInlineAnswers } from '../../constants/known-inline-answers';
+import { dubToKey } from '../../../../shared/helpers/dub-to-key';
 import { getStudioLogoUrl } from '../../../../shared/studio-logos-provider/studio-logos-provider';
+import { DubsCommandDto, WatchCommandDto } from '../../command-dtos';
+import { KnownInlineAnswers } from '../../constants/known-inline-answers';
+import { InlineQueryHandler } from '../query-handler';
 
 const canHandle = (inlineQuery: InlineQuery): boolean => inlineQuery.query?.startsWith(DubsCommandDto.Command) ?? false;
 

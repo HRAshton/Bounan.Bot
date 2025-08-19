@@ -1,4 +1,5 @@
 import eslint from '@eslint/js';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
 export default [
@@ -19,6 +20,15 @@ export default [
             }],
 
             quotes: ['error', 'single'],
+        },
+    },
+    {
+        plugins: {
+            'simple-import-sort': simpleImportSort,
+        },
+        rules: {
+            'simple-import-sort/imports': 'error',
+            'simple-import-sort/exports': 'error',
         },
     },
 ];

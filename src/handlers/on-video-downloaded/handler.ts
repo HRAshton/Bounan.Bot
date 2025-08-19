@@ -1,10 +1,11 @@
-﻿import { fromJson } from './models';
+﻿import { client_setClientToken } from '@lightweight-clients/telegram-bot-api-lightweight-client'; 
 import { SNSEvent } from 'aws-lambda';
-import { process } from './processor';
-import { retry } from '../../shared/helpers/retry';
+
 import { setToken } from '../../api-clients/cached-loan-api-client';
 import { config, initConfig } from '../../config/config';
-import { client_setClientToken } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+import { retry } from '../../shared/helpers/retry';
+import { fromJson } from './models';
+import { process } from './processor';
 
 const processMessage = async (message: string): Promise<void> => {
     console.log('Processing message: ', message);

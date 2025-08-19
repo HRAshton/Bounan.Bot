@@ -1,9 +1,10 @@
-﻿import { config } from '../../config/config';
-import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
-import { BotResponse, VideoKey } from '../../shared/models';
-import { BotRequest as RawBotRequest } from './common/ts/interfaces';
-import { toCamelCase } from '../../shared/object-transformer';
+﻿import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
+
+import { config } from '../../config/config';
 import { assert } from '../../shared/helpers/assert';
+import { BotResponse, VideoKey } from '../../shared/models';
+import { toCamelCase } from '../../shared/object-transformer';
+import { BotRequest as RawBotRequest } from './common/ts/interfaces';
 
 const lambdaClient = new LambdaClient({});
 

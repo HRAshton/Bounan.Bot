@@ -1,9 +1,10 @@
-﻿import { InlineQuery, InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { InlineQueryHandler } from '../query-handler';
-import { KnownInlineAnswers } from '../../constants/known-inline-answers';
+﻿import { Related } from '@lightweight-clients/shikimori-graphql-api-lightweight-client';
+import { InlineQuery, InlineQueryResultArticle } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
 import { getRelated } from '../../../../api-clients/cached-shikimori-client';
 import { InfoCommandDto, RelatedCommandDto } from '../../command-dtos';
-import { Related } from '@lightweight-clients/shikimori-graphql-api-lightweight-client';
+import { KnownInlineAnswers } from '../../constants/known-inline-answers';
+import { InlineQueryHandler } from '../query-handler';
 
 const canHandle = (inlineQuery: InlineQuery): boolean =>
     inlineQuery.query?.startsWith(RelatedCommandDto.Command) ?? false;

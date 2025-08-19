@@ -1,19 +1,18 @@
-﻿import { Construct } from 'constructs';
-import { LlrtFunction } from 'cdk-lambda-llrt';
-
-import * as cdk from 'aws-cdk-lib';
+﻿import * as cdk from 'aws-cdk-lib';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
-import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as cw from 'aws-cdk-lib/aws-cloudwatch';
+import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import * as sns from 'aws-cdk-lib/aws-sns';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+import { LlrtFunction } from 'cdk-lambda-llrt';
+import { Construct } from 'constructs';
 
-import { Config, getConfig } from './config';
 import { Config as RuntimeConfig } from '../src/config/config';
+import { Config, getConfig } from './config';
 
 export class Stack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {

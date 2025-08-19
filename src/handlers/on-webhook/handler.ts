@@ -1,19 +1,20 @@
-﻿import { APIGatewayEvent, APIGatewayProxyResultV2 } from 'aws-lambda';
-import { CallbackQuery, client_setClientToken } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { Texts } from '../../shared/telegram/texts';
+﻿import { CallbackQuery, client_setClientToken } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+import { APIGatewayEvent, APIGatewayProxyResultV2 } from 'aws-lambda';
+
+import { setToken } from '../../api-clients/cached-loan-api-client';
 import { config, initConfig } from '../../config/config';
 import { retry } from '../../shared/helpers/retry';
-import { setToken } from '../../api-clients/cached-loan-api-client';
+import { Texts } from '../../shared/telegram/texts';
 import { BotSettings, handleUpdate } from '../../telegram-bot-handler/update-handler';
-import { dubsInlineQueryHandler } from './event-handlers/inline-query-handlers/dubs-inline-query-handler';
 import { infoCallbackQueryHandler } from './event-handlers/callback-query-adapters/info-callback-query-handler';
-import { infoMessageHandler } from './event-handlers/message-handlers/info-message-handler';
-import { knownInlineAnswerMessageHandler } from './event-handlers/message-handlers/known-inline-answer-message-handler';
+import { watchCallbackQueryHandler } from './event-handlers/callback-query-adapters/watch-callback-query-handler';
+import { dubsInlineQueryHandler } from './event-handlers/inline-query-handlers/dubs-inline-query-handler';
 import { relatedInlineQueryHandler } from './event-handlers/inline-query-handlers/related-inline-query-handler';
 import { searchInlineQueryHandler } from './event-handlers/inline-query-handlers/search-inline-query';
+import { infoMessageHandler } from './event-handlers/message-handlers/info-message-handler';
+import { knownInlineAnswerMessageHandler } from './event-handlers/message-handlers/known-inline-answer-message-handler';
 import { searchMessageHandler } from './event-handlers/message-handlers/search-message-handler';
 import { startMessageHandler } from './event-handlers/message-handlers/start-message-handler';
-import { watchCallbackQueryHandler } from './event-handlers/callback-query-adapters/watch-callback-query-handler';
 import { watchMessageHandler } from './event-handlers/message-handlers/watch-message-handler';
 
 const settings: BotSettings = {

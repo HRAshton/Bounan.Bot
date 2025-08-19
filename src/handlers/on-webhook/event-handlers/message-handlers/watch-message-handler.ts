@@ -1,22 +1,23 @@
-﻿import { WatchCommandDto } from '../../command-dtos';
-import { MessageHandler } from '../query-handler';
-import { Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
-import { assert } from '../../../../shared/helpers/assert';
-import { getShikiAnimeInfo } from '../../../../api-clients/cached-shikimori-client';
-import { getAllExistingVideos } from '../../../../api-clients/cached-loan-api-client';
+﻿import { Message } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import {
     copyMessage,
-    sendMessage,
     CopyMessageData,
     InlineKeyboardMarkup,
+    sendMessage,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
+
 import { getVideoInfo } from '../../../../api-clients/animan/animan-client';
+import { getAllExistingVideos } from '../../../../api-clients/cached-loan-api-client';
+import { getShikiAnimeInfo } from '../../../../api-clients/cached-shikimori-client';
+import { config } from '../../../../config/config';
+import { assert } from '../../../../shared/helpers/assert';
+import { dubToKey } from '../../../../shared/helpers/dub-to-key';
 import { BotResponse, VideoKey } from '../../../../shared/models';
-import { Texts } from '../../../../shared/telegram/texts';
 import { getKeyboard } from '../../../../shared/telegram/get-keyboard';
 import { getVideoDescription } from '../../../../shared/telegram/get-video-description';
-import { config } from '../../../../config/config';
-import { dubToKey } from '../../../../shared/helpers/dub-to-key';
+import { Texts } from '../../../../shared/telegram/texts';
+import { WatchCommandDto } from '../../command-dtos';
+import { MessageHandler } from '../query-handler';
 
 const sendSwitchDubButtons = async (chatId: number, searchResults: VideoKey[], episode: number) => {
     const inOtherDubs = searchResults
