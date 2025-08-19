@@ -8,7 +8,9 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "depcheck": "depcheck --ignores=@types/node",
-    "prerelease": "npm run depcheck && npm run lint && npm run ts"
+    "textgen": "npx jiti src/shared/telegram/textgen.mts",
+    "textgen-generate": "npx jiti src/shared/telegram/textgen.mts --generate",
+    "prerelease": "npm run textgen && npm run depcheck && npm run lint && npm run ts"
   },
   "keywords": [],
   "author": {

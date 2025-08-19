@@ -2,3 +2,4 @@ cdk.out
 .tmp
 .idea
 node_modules
+texts.ts
