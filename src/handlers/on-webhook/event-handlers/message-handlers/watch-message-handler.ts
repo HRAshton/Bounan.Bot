@@ -7,12 +7,12 @@ import {
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
 import { getVideoInfo } from '../../../../api-clients/animan/animan-client';
+import { BotResponse, VideoKey } from '../../../../api-clients/animan/common/ts/interfaces';
 import { getAllExistingVideos } from '../../../../api-clients/cached-loan-api-client';
 import { getShikiAnimeInfo } from '../../../../api-clients/cached-shikimori-client';
 import { config } from '../../../../config/config';
 import { assert } from '../../../../shared/helpers/assert';
 import { dubToKey } from '../../../../shared/helpers/dub-to-key';
-import { BotResponse, VideoKey } from '../../../../shared/models';
 import { getKeyboard } from '../../../../shared/telegram/get-keyboard';
 import { getVideoDescription } from '../../../../shared/telegram/get-video-description';
 import { Texts } from '../../../../shared/telegram/texts';

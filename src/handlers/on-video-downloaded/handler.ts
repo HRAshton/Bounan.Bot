@@ -4,13 +4,12 @@ import { SNSEvent } from 'aws-lambda';
 import { setToken } from '../../api-clients/cached-loan-api-client';
 import { config, initConfig } from '../../config/config';
 import { retry } from '../../shared/helpers/retry';
-import { fromJson } from './models';
 import { process } from './processor';
 
 const processMessage = async (message: string): Promise<void> => {
     console.log('Processing message: ', message);
 
-    const videoDownloadedNotification = fromJson(message);
+    const videoDownloadedNotification = JSON.parse(message);
     await process(videoDownloadedNotification);
 
     console.log('Message processed');

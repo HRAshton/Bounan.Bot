@@ -1,23 +1,21 @@
 ﻿import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
 
 import { config } from '../../config/config';
+import { VideoKey } from '../../shared/database/entities/video-key';
 import { assert } from '../../shared/helpers/assert';
-import { BotResponse, VideoKey } from '../../shared/models';
-import { toCamelCase } from '../../shared/object-transformer';
-import { BotRequest as RawBotRequest } from './common/ts/interfaces';
+import { BotRequest, BotResponse } from './common/ts/interfaces';
 
 const lambdaClient = new LambdaClient({});
 
 export const getVideoInfo = async (videoKey: VideoKey): Promise<BotResponse> => {
     console.log('Getting anime for video key: ', videoKey);
 
-    const upperVideoKey: RawBotRequest = {
-        VideoKey: {
-            MyAnimeListId: videoKey.myAnimeListId,
-            Dub: videoKey.dub,
-            Episode: videoKey.episode,
+    const upperVideoKey: BotRequest = {
+        videoKey: {
+            myAnimeListId: videoKey.myAnimeListId,
+            dub: videoKey.dub,
+            episode: videoKey.episode,
         },
-        ChatId: -1,
     }
 
     const message = JSON.stringify(upperVideoKey);
@@ -29,10 +27,9 @@ export const getVideoInfo = async (videoKey: VideoKey): Promise<BotResponse> => 
     }));
     console.log('Request sent: ', response);
 
-    const rawResult = JSON.parse(Buffer.from(response.Payload!).toString());
-    console.log('Received response: ', rawResult);
+    const result: BotResponse = JSON.parse(Buffer.from(response.Payload!).toString());
+    console.log('Received response: ', result);
 
-    const result: BotResponse = toCamelCase<BotResponse>(rawResult);
     assert('status' in result);
 
     return result;

@@ -6,6 +6,7 @@
     SendMessageData,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
+import { VideoDownloadedNotification } from '../../api-clients/animan/common/ts/interfaces';
 import { getAllExistingVideos } from '../../api-clients/cached-loan-api-client';
 import { getShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
 import { config } from '../../config/config';
@@ -13,7 +14,6 @@ import { getKeyboard } from '../../shared/telegram/get-keyboard';
 import { getVideoDescription } from '../../shared/telegram/get-video-description';
 import { Texts } from '../../shared/telegram/texts';
 import { getSubscriptions, removeOneTimeSubscribers } from '../subscriptions-repository';
-import { VideoDownloadedNotification } from './models';
 
 const sendVideoMessages = async (
     videoMessageId: number,
@@ -62,7 +62,7 @@ const sendErrorMessages = async (caption: string, keyboard: InlineKeyboardMarkup
 
 export const process = async (videoDownloadedNotification: VideoDownloadedNotification): Promise<void> => {
     console.log('Processing videos: ', JSON.stringify(videoDownloadedNotification));
-    
+
     const animeSubscriptions = await getSubscriptions(videoDownloadedNotification.videoKey);
     if (!animeSubscriptions) {
         console.log('No subscriptions found for this video');
