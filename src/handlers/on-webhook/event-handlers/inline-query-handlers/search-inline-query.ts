@@ -6,7 +6,7 @@ import { InfoCommandDto } from '../../command-dtos';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';
 import { InlineQueryHandler } from '../query-handler';
 
-export const handler: InlineQueryHandler = async (inlineQuery) => {
+const handler: InlineQueryHandler = async (inlineQuery) => {
     console.log('Handling search inline query {Query}', inlineQuery.query);
 
     if (!inlineQuery.query) {

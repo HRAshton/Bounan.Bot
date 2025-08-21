@@ -6,7 +6,7 @@
     Message,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
-export type QueryHandler<TUpdateItem, TResult> = (updateItem: TUpdateItem) => Promise<TResult>;
+type QueryHandler<TUpdateItem, TResult> = (updateItem: TUpdateItem) => Promise<TResult>;
 
 export type CallbackQueryHandler = QueryHandler<CallbackQuery, Omit<AnswerCallbackQueryData, 'callback_query_id'>>;
 

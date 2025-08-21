@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "aws-cdk/app.ts",
+    "src/handlers/**/handler.ts"
+  ],
+  "ignore": [
+    "src/api-clients/animan/common/**",
+    "src/api-clients/loan-api/**"
+  ]
+}

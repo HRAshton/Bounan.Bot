@@ -10,7 +10,7 @@ const getAnimeKey = (animeKey: AnimeKey): string => {
     return `${animeKey.myAnimeListId}#${animeKey.dub}`;
 }
 
-export type GetSubscriptionsResult = Pick<SubscriptionEntity, 'oneTimeSubscribers'>;
+type GetSubscriptionsResult = Pick<SubscriptionEntity, 'oneTimeSubscribers'>;
 
 export const getSubscriptions = async (animeKey: AnimeKey): Promise<GetSubscriptionsResult | undefined> => {
     const command = new GetCommand({

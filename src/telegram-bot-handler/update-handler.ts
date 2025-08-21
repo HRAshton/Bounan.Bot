@@ -15,7 +15,7 @@ import { getUserStatus, registerNewUserIfNotExists } from './repository';
 type CanHandleUpdate<TUpdateField> = (updateField: TUpdateField) => boolean;
 type Handler<TUpdateField, TResult> = (updateField: TUpdateField) => Promise<TResult>;
 
-export interface CanHandleUpdatePair<TUpdateField, TResult> {
+interface CanHandleUpdatePair<TUpdateField, TResult> {
     canHandle: CanHandleUpdate<TUpdateField>;
     handler: Handler<TUpdateField, TResult>;
 }

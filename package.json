@@ -7,10 +7,11 @@
     "ts": "tsc",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "depcheck": "depcheck --ignores=@types/node",
     "textgen": "npx jiti src/shared/telegram/textgen.mts",
     "textgen-reverse": "npx jiti src/shared/telegram/textgen.mts --reverse",
-    "prerelease": "npm run textgen && npm run depcheck && npm run lint && npm run ts"
+    "knip": "knip",
+    "check-updates": "npm-check-updates --errorLevel 2",
+    "prerelease": "npm run textgen && npm run check-updates && npm run knip && npm run lint && npm run ts"
   },
   "keywords": [],
   "author": {
@@ -30,12 +31,11 @@
     "aws-cdk-lib": "^2.211.0",
     "aws-lambda": "^1.0.7",
     "cdk-lambda-llrt": "^0.1.0",
-    "change-case": "^5.4.4",
     "constructs": "^10.4.2",
-    "depcheck": "^1.4.7",
     "eslint": "^9.33.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jiti": "^2.5.1",
+    "knip": "^5.63.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.40.0"
   }
