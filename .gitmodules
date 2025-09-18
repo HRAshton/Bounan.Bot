@@ -1,5 +1,5 @@
-[submodule "src/api-clients/animan/common"]
-	path = src/api-clients/animan/common
+[submodule "src/shared/common"]
+	path = src/shared/common
 	url = https://github.com/HRAshton/BoUnAn.Common.git
 [submodule "src/api-clients/loan-api"]
 	path = src/api-clients/loan-api
