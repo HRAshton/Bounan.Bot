@@ -1,5 +1,5 @@
-﻿import { Scenes, VideoKey } from '../../api-clients/animan/common/ts/interfaces';
-import { ShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
+﻿import { ShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
+import { Scenes, VideoKey } from '../common/ts/interfaces';
 import { Texts } from './texts';
 
 const escapeLinks = (text: string): string => {

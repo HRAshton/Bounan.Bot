@@ -1,7 +1,7 @@
 ﻿import * as cdk from 'aws-cdk-lib';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 
-import { ExportNames } from '../src/api-clients/animan/common/ts/cdk/export-names';
+import { ExportNames } from '../src/shared/common/ts/cdk/export-names';
 import configFile from './configuration.json';
 
 export interface Config {

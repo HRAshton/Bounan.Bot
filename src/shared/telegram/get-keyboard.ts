@@ -1,8 +1,8 @@
 ﻿import { InlineKeyboardButton, InlineKeyboardMarkup } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
-import { PublishingDetails, VideoKey } from '../../api-clients/animan/common/ts/interfaces';
 import { config } from '../../config/config';
 import { InfoCommandDto, WatchCommandDto } from '../../handlers/on-webhook/command-dtos';
+import { PublishingDetails, VideoKey } from '../common/ts/interfaces';
 import { dubToKey } from '../helpers/dub-to-key';
 import { Texts } from './texts';
 

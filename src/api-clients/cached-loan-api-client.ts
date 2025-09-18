@@ -1,4 +1,4 @@
-import { asyncMemoized } from './animan/common/ts/runtime/memorized';
+import { asyncMemoized } from '../shared/common/ts/runtime/memorized';
 import * as orig from './loan-api/src/loan-api-client';
 
 export * from './loan-api/src/loan-api-client';

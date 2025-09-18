@@ -1,9 +1,9 @@
 ﻿import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
 
 import { config } from '../../config/config';
+import { BotRequest, BotResponse } from '../../shared/common/ts/interfaces';
 import { VideoKey } from '../../shared/database/entities/video-key';
 import { assert } from '../../shared/helpers/assert';
-import { BotRequest, BotResponse } from './common/ts/interfaces';
 
 const lambdaClient = new LambdaClient({});
 
