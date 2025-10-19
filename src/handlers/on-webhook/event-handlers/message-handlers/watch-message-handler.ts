@@ -6,7 +6,7 @@ import {
     sendMessage,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
-import { getVideoInfo } from '../../../../api-clients/animan/animan-client';
+import { getVideoInfo } from '../../../../api-clients/animan-client';
 import { getAllExistingVideos } from '../../../../api-clients/cached-loan-api-client';
 import { getShikiAnimeInfo } from '../../../../api-clients/cached-shikimori-client';
 import { config } from '../../../../config/config';
