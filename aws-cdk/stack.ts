@@ -65,6 +65,8 @@ export class Stack extends cdk.Stack {
         const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
             partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
             removalPolicy: cdk.RemovalPolicy.RETAIN,
+            deletionProtection: !this.isStage,
+            ...capacity,
         });
 
         return {
