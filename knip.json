@@ -6,6 +6,7 @@
   ],
   "ignore": [
     "src/api-clients/animan/common/**",
-    "src/api-clients/loan-api/**"
+    "src/api-clients/loan-api/**",
+    "src/shared/common/**"
   ]
 }
