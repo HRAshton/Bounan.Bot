@@ -68,10 +68,18 @@ export class Stack extends cdk.Stack {
             deletionProtection: !this.isStage,
             ...capacity,
         });
+        
+        const libraryTable = new dynamodb.Table(this, Table.Library, {
+            partitionKey: { name: 'myAnimeListId', type: dynamodb.AttributeType.NUMBER },
+            removalPolicy: cdk.RemovalPolicy.RETAIN,
+            deletionProtection: !this.isStage,
+            ...capacity,
+        });
 
         return {
             [Table.Users]: usersTable,
             [Table.Subscriptions]: subscriptionsTable,
+            [Table.Library]: libraryTable,
         }
     }
 
@@ -118,6 +126,7 @@ export class Stack extends cdk.Stack {
 
             tables[Table.Users].grantReadWriteData(func);
             tables[Table.Subscriptions].grantReadWriteData(func);
+            tables[Table.Library].grantReadWriteData(func);
             parameter.grantRead(func);
 
             functions[handlerName] = func;
@@ -141,6 +150,7 @@ export class Stack extends cdk.Stack {
             database: {
                 usersTableName: tables[Table.Users].tableName,
                 subscriptionsTableName: tables[Table.Subscriptions].tableName,
+                libraryTableName: tables[Table.Library].tableName,
             },
             telegram: {
                 token: config.telegramBotToken,
@@ -172,6 +182,7 @@ export class Stack extends cdk.Stack {
 enum Table {
     Users = 'users',
     Subscriptions = 'subscriptions',
+    Library = 'library',
 }
 
 enum LambdaHandler {

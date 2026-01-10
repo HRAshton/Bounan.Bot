@@ -1,5 +1,5 @@
 {
-  "app": "tsx aws-cdk/app.ts",
+  "app": "jiti aws-cdk/app.ts",
   "context": {
     "acknowledged-issue-numbers": [
       34892

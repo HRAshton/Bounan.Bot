@@ -3,9 +3,26 @@
 import { getDubs } from '../../../../api-clients/cached-loan-api-client';
 import { dubToKey } from '../../../../shared/helpers/dub-to-key';
 import { getStudioLogoUrl } from '../../../../shared/studio-logos-provider/studio-logos-provider';
+import { Texts } from '../../../../shared/telegram/texts';
+import { getRegisteredDubs } from '../../../library-repository';
 import { DubsCommandDto, WatchCommandDto } from '../../command-dtos';
 import { KnownInlineAnswers } from '../../constants/known-inline-answers';
 import { InlineQueryHandler } from '../query-handler';
+
+const getDescription = (
+    dub: Awaited<ReturnType<typeof getDubs>>[0],
+    registeredDubs: Set<string>,
+): string => {
+    const prefix = dub.firstEpisode === 0 && dub.lastEpisode === undefined
+        ? Texts.Dubs__Description__Type__Movie
+        : `${Texts.Dubs__Description__Type__Series} ${dub.firstEpisode} - ${dub.lastEpisode ?? '?'}`;
+
+    const registeredSuffix = registeredDubs.has(dub.name)
+        ? Texts.Dubs__Description__AvailableNow
+        : Texts.Dubs__Description__NotAvailableNow;
+
+    return `${prefix} | ${registeredSuffix}`;
+};
 
 const canHandle = (inlineQuery: InlineQuery): boolean => inlineQuery.query?.startsWith(DubsCommandDto.Command) ?? false;
 
@@ -17,6 +34,8 @@ const handler: InlineQueryHandler = async (inlineQuery) => {
         console.warn('Failed to deserialize command', inlineQuery.query);
         return [];
     }
+
+    const registeredDubsTask = getRegisteredDubs(commandDto.myAnimeListId);
 
     const uniqueDubs = await getDubs(commandDto.myAnimeListId);
     console.log('Got dubs for {MyAnimeListId}: {Dubs}', commandDto.myAnimeListId, uniqueDubs);
@@ -31,12 +50,15 @@ const handler: InlineQueryHandler = async (inlineQuery) => {
         }];
     }
 
+    const registeredDubs = await registeredDubsTask;
+
     const results: InlineQueryResultArticle[] = uniqueDubs
         .sort((a, b) => a.name.localeCompare(b.name))
         .map(item => ({
             type: 'article',
             id: item.name,
             title: item.name,
+            description: getDescription(item, registeredDubs),
             thumbnail_url: getStudioLogoUrl(item.name),
             input_message_content: {
                 message_text: new WatchCommandDto(

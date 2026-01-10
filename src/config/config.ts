@@ -28,6 +28,7 @@ interface AssetsConfig {
 interface DatabaseConfig {
     usersTableName: string;
     subscriptionsTableName: string;
+    libraryTableName: string;
 }
 
 export interface Config {

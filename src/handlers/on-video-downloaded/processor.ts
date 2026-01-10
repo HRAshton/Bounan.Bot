@@ -13,6 +13,7 @@ import { VideoDownloadedNotification } from '../../shared/common/ts/interfaces';
 import { getKeyboard } from '../../shared/telegram/get-keyboard';
 import { getVideoDescription } from '../../shared/telegram/get-video-description';
 import { Texts } from '../../shared/telegram/texts';
+import { registerVideo } from '../library-repository';
 import { getSubscriptions, removeOneTimeSubscribers } from '../subscriptions-repository';
 
 const sendVideoMessages = async (
@@ -62,6 +63,7 @@ const sendErrorMessages = async (caption: string, keyboard: InlineKeyboardMarkup
 
 export const process = async (videoDownloadedNotification: VideoDownloadedNotification): Promise<void> => {
     console.log('Processing videos: ', JSON.stringify(videoDownloadedNotification));
+    const { myAnimeListId, dub, episode } = videoDownloadedNotification.videoKey;
 
     const animeSubscriptions = await getSubscriptions(videoDownloadedNotification.videoKey);
     if (!animeSubscriptions) {
@@ -69,20 +71,20 @@ export const process = async (videoDownloadedNotification: VideoDownloadedNotifi
         return;
     }
 
-    const oneTimeSubscribers = animeSubscriptions.oneTimeSubscribers?.[videoDownloadedNotification.videoKey.episode];
+    const oneTimeSubscribers = animeSubscriptions.oneTimeSubscribers?.[episode];
     if (!oneTimeSubscribers || !oneTimeSubscribers.size) {
         console.log('No subscribers for this video');
         return;
     }
 
-    const animeInfo = await getShikiAnimeInfo(videoDownloadedNotification.videoKey.myAnimeListId);
+    const animeInfo = await getShikiAnimeInfo(myAnimeListId);
 
     const description = getVideoDescription(
         animeInfo,
         videoDownloadedNotification.videoKey,
         videoDownloadedNotification.scenes);
     const episodes = await getAllExistingVideos(parseInt(animeInfo.id));
-    const videosWithDub = episodes.filter(x => x.dub === videoDownloadedNotification.videoKey.dub);
+    const videosWithDub = episodes.filter(x => x.dub === dub);
     const keyboard = getKeyboard(
         videoDownloadedNotification.videoKey,
         videosWithDub.map(x => x.episode),
@@ -92,8 +94,9 @@ export const process = async (videoDownloadedNotification: VideoDownloadedNotifi
     if (videoDownloadedNotification.messageId) {
         const { videoKey, messageId } = videoDownloadedNotification;
         await Promise.all([
-            await removeOneTimeSubscribers(videoKey),
-            await sendVideoMessages(messageId, description, keyboard, oneTimeSubscribers),
+            registerVideo(myAnimeListId, dub),
+            removeOneTimeSubscribers(videoKey),
+            sendVideoMessages(messageId, description, keyboard, oneTimeSubscribers),
         ])
     } else {
         await sendErrorMessages(description, keyboard, oneTimeSubscribers);
