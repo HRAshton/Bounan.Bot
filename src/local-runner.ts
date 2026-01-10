@@ -25,22 +25,21 @@ const onWebhook = async (message: Update) => {
 
 const main = async () => {
     // await onDownloaded({
-    //     VideoKey: {
-    //         MyAnimeListId: 1165,
-    //         Dub: 'Субтитры',
-    //         Episode: 1,
+    //     videoKey: {
+    //         myAnimeListId: 1165,
+    //         dub: 'Субтитры',
+    //         episode: 1,
     //     },
-    //     MessageId: 121,
-    //     SubscriberChatIds: [442033576],
-    //     Scenes: {
-    //         Opening: {
-    //             Start: 0,
-    //             End: 100,
+    //     messageId: 121,
+    //     scenes: {
+    //         opening: {
+    //             start: 0,
+    //             end: 100,
     //         },
     //     },
-    //     PublishingDetails: {
-    //         MessageId: 4329,
-    //         ThreadId: 4241,
+    //     publishingDetails: {
+    //         messageId: 4329,
+    //         threadId: 4241,
     //     },
     // });
 
@@ -60,7 +59,6 @@ const main = async () => {
 }
 
 const pooling = async () => {
-    process.env.AWS_PROFILE = 'hra';
     await initConfig();
     let offset = 0;
     while (true) {
@@ -76,5 +74,6 @@ const pooling = async () => {
     }
 }
 
-// main();
-pooling();
+process.env.AWS_PROFILE = 'hra';
+main();
+// pooling();
