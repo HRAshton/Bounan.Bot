@@ -41,12 +41,12 @@ const sendSwitchDubButtons = async (chatId: number, searchResults: VideoKey[], e
 
 const sendVideo = async (
     message: Pick<Message, 'chat' | 'text'>,
-    commandDto: WatchCommandDto,
+    videoKey: VideoKey,
     videoInfo: BotResponse,
     keyboard: InlineKeyboardMarkup,
 ) => {
-    const animeInfo = await getShikiAnimeInfo(commandDto.myAnimeListId);
-    const videoDescription = getVideoDescription(animeInfo, commandDto, videoInfo.scenes);
+    const animeInfo = await getShikiAnimeInfo(videoKey.myAnimeListId);
+    const videoDescription = getVideoDescription(animeInfo, videoKey, videoInfo.scenes);
 
     const args: CopyMessageData = {
         chat_id: message.chat.id,
@@ -63,29 +63,28 @@ const sendVideo = async (
 
 const sendVideoResult = async (
     message: Pick<Message, 'chat' | 'text'>,
-    commandDto: WatchCommandDto,
+    videoKey: VideoKey,
     searchResults: VideoKey[],
-    selectedVideo: VideoKey,
 ) => {
     const episodesInDub = searchResults
-        .filter(item => dubToKey(item.dub) === commandDto.dub)
+        .filter(item => item.dub === videoKey.dub)
         .map(item => item.episode)
         .sort((a, b) => a - b);
     if (episodesInDub.length === 0) {
         throw new Error('No episodes found');
     }
 
-    const videoInfo = await getVideoInfo(selectedVideo);
+    const videoInfo = await getVideoInfo(videoKey);
     console.log('Anime info: ', JSON.stringify(videoInfo));
 
-    const keyboard = getKeyboard(commandDto, episodesInDub, videoInfo?.publishingDetails);
+    const keyboard = getKeyboard(videoKey, episodesInDub, videoInfo?.publishingDetails);
 
     switch (videoInfo?.status) {
         case 'Pending':
         case 'Downloading':
             console.log('Video not downloaded');
             await Promise.all([
-                await subscribeOneTime(selectedVideo, message.chat.id),
+                await subscribeOneTime(videoKey, message.chat.id),
                 await sendMessage({
                     chat_id: message.chat.id,
                     text: Texts.Message__VideoIsCooking,
@@ -106,7 +105,7 @@ const sendVideoResult = async (
 
         case 'Downloaded':
             console.log('Sending video');
-            await sendVideo(message, commandDto, videoInfo, keyboard);
+            await sendVideo(message, videoKey, videoInfo, keyboard);
             break;
 
         case null:
@@ -157,7 +156,7 @@ const handler: MessageHandler = async (message) => {
         return;
     }
 
-    await sendVideoResult(message, commandDto, searchResults, selectedVideo);
+    await sendVideoResult(message, selectedVideo, searchResults);
 
     console.log('Watch command handled');
 }
