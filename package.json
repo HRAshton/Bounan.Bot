@@ -13,6 +13,9 @@
     "dependencies:update": "pnpm update --recursive --latest",
     "licenses:scan": "pnpm licenses list --prod --json > thirdparty.json",
     "licenses:generate": "pnpm run -w licenses:scan && jiti scripts/format-thirdparty.ts",
+    "cdk:synth": "pnpm -r --filter infra cdk:synth",
+    "cdk:diff": "pnpm -r --filter infra cdk:diff",
+    "cdk:deploy": "pnpm -r --filter infra cdk:deploy",
     "all-commited": "git diff --exit-code && git diff --cached --exit-code",
     "prerelease": "npm-run-all --parallel typecheck lint test knip dependencies:check licenses:generate && pnpm run -w all-commited && echo 'All checks passed!'"
   },

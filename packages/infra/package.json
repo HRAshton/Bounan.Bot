@@ -2,9 +2,13 @@
   "name": "infra",
   "private": true,
   "scripts": {
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "cdk:synth": "cdk synth",
+    "cdk:diff": "cdk diff",
+    "cdk:deploy": "cdk deploy"
   },
   "devDependencies": {
+    "aws-cdk": "catalog:",
     "aws-cdk-lib": "catalog:",
     "cdk-lambda-llrt": "catalog:",
     "constructs": "catalog:",
