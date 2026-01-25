@@ -1,0 +1,13 @@
+{
+  "name": "infra",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "aws-cdk-lib": "catalog:",
+    "cdk-lambda-llrt": "catalog:",
+    "constructs": "catalog:",
+    "typescript": "catalog:"
+  }
+}

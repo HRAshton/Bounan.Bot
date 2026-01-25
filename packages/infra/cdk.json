@@ -1,0 +1,9 @@
+{
+  "app": "tsx src/app.ts",
+  "context": {
+    "acknowledged-issue-numbers": [
+      34892
+    ],
+    "cli-telemetry": false
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "bounan-tofill",
+  "private": true,
+  "scripts": {
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "knip": "knip",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui --project unit-tests",
+    "dependencies:check": "pnpm outdated --recursive --use-stderr",
+    "dependencies:update": "pnpm update --recursive --latest",
+    "licenses:scan": "pnpm licenses list --prod --json > thirdparty.json",
+    "licenses:generate": "pnpm run -w licenses:scan && jiti scripts/format-thirdparty.ts",
+    "all-commited": "git diff --exit-code && git diff --cached --exit-code",
+    "prerelease": "npm-run-all --parallel typecheck lint test knip dependencies:check licenses:generate && pnpm run -w all-commited && echo 'All checks passed!'"
+  },
+  "type": "module",
+  "license": "BSD-3-Clause",
+  "keywords": [],
+  "author": {
+    "name": "HRAshton"
+  },
+  "engines": {
+    "node": ">=14.16.0",
+    "pnpm": ">=10.28.1",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  },
+  "packageManager": "pnpm@10.28.1",
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "@vitest/ui": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-simple-import-sort": "catalog:",
+    "jiti": "catalog:",
+    "knip": "catalog:",
+    "npm-run-all": "catalog:",
+    "typescript-eslint": "catalog:",
+    "vitest": "catalog:"
+  }
+}
