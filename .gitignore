@@ -4,3 +4,4 @@ cdk.out
 node_modules
 **/coverage
 thirdparty.json
+.secrets

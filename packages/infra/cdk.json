@@ -1,5 +1,5 @@
 {
-  "app": "tsx src/app.ts",
+  "app": "jiti src/app.ts",
   "context": {
     "acknowledged-issue-numbers": [
       34892
