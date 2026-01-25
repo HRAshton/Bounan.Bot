@@ -9,7 +9,6 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui --project unit-tests",
-    "update-template": "git fetch template && git merge template/master --allow-unrelated-histories -m 'Update template'",
     "dependencies:check": "pnpm outdated --recursive --use-stderr",
     "dependencies:update": "pnpm update --recursive --latest",
     "licenses:scan": "pnpm licenses list --prod --json > thirdparty.json",
