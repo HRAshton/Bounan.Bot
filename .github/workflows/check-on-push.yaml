@@ -2,8 +2,8 @@
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "master" ]
+#  push: # ToFill
+#    branches: [ "master" ]
 
 permissions:
   contents: read
