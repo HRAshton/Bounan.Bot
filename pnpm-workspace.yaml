@@ -1,3 +1,7 @@
+packages:
+  - packages/*
+  - third-party/common/ts
+
 catalog:
   '@aws-sdk/client-dynamodb': 3.975.0
   '@aws-sdk/client-lambda': 3.975.0
@@ -8,16 +12,21 @@ catalog:
   '@lightweight-clients/telegram-bot-api-lightweight-client': 9.3.0
   '@types/aws-lambda': 8.10.160
   '@types/node': 25.0.10
+  aws-cdk: 2.1103.0
   aws-cdk-lib: 2.236.0
   cdk-lambda-llrt: 0.1.4
   constructs: 10.4.5
+  cross-env: 10.1.0
   eslint: 9.39.2
   eslint-plugin-simple-import-sort: 12.1.1
   jiti: 2.6.1
   knip: 5.82.1
+  npm-run-all: 4.1.5
   typescript: 5.9.3
   typescript-eslint: 8.54.0
 
+# Use hoisted node linker for compatibility with LlrtFunction construct. This construct bundles
+# dependencies using docker, which does not work with host's symlinks.
 nodeLinker: hoisted
 
 onlyBuiltDependencies:
