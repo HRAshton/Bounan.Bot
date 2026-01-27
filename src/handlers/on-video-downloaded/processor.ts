@@ -6,10 +6,10 @@
     SendMessageData,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
+import { VideoDownloadedNotification } from '../../../third-party/common/ts/interfaces';
 import { getAllExistingVideos } from '../../api-clients/cached-loan-api-client';
 import { getShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
 import { config } from '../../config/config';
-import { VideoDownloadedNotification } from '../../shared/common/ts/interfaces';
 import { getKeyboard } from '../../shared/telegram/get-keyboard';
 import { getVideoDescription } from '../../shared/telegram/get-video-description';
 import { Texts } from '../../shared/telegram/texts';

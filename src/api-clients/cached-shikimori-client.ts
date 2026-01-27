@@ -1,4 +1,4 @@
-import { asyncMemoized } from '../shared/common/ts/runtime/memorized';
+import { asyncMemoized } from '../../third-party/common/ts/runtime/memorized';
 import * as orig from './shikimori-client';
 
 export * from './shikimori-client';
