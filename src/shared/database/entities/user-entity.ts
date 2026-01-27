@@ -1,15 +1,15 @@
-﻿import { UserStatus } from './user-status';
-import { VideoKey } from './video-key';
+﻿import type { UserStatus } from './user-status';
+import type { VideoKey } from './video-key';
 
 export interface UserEntity {
-    userId: number;
+  userId: number;
 
-    directRank: number;
-    indirectRank: number;
-    requestedEpisodes: VideoKey[];
+  directRank: number;
+  indirectRank: number;
+  requestedEpisodes: VideoKey[];
 
-    status: UserStatus;
+  status: UserStatus;
 
-    createdAt: string;
-    updatedAt: string;
+  createdAt: string;
+  updatedAt: string;
 }

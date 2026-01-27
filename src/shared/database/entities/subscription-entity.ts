@@ -1,15 +1,15 @@
-﻿import { AnimeKey } from './anime-key';
+﻿import type { AnimeKey } from './anime-key';
 
 export interface SubscriptionEntity extends AnimeKey {
-    animeKey: string;
+  animeKey: string;
 
-    // chatIds: Set<number>;
+  // chatIds: Set<number>;
 
-    // Episode-ChatId pairs
-    oneTimeSubscribers?: {
-        [key: number]: Set<number>;
-    }
+  // Episode-ChatId pairs
+  oneTimeSubscribers?: {
+    [key: number]: Set<number>;
+  }
 
-    createdAt: string;
-    updatedAt: string;
+  createdAt: string;
+  updatedAt: string;
 }

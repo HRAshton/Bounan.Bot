@@ -9,183 +9,184 @@ import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { LlrtFunction } from 'cdk-lambda-llrt';
-import { Construct } from 'constructs';
+import type { Construct } from 'constructs';
 
-import { Config as RuntimeConfig } from '../src/config/types';
-import { Config, getConfig } from './config';
+import type { Config as RuntimeConfig } from '../src/config/types';
+import type { Config } from './config';
+import { getConfig } from './config';
 
 export class Stack extends cdk.Stack {
-    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-        super(scope, id, props);
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
 
-        const config = getConfig(this, 'bounan:', '/bounan/bot/deploy-config/');
+    const config = getConfig(this, 'bounan:', '/bounan/bot/deploy-config/');
 
-        const logGroup = this.createLogGroup();
-        const tables = this.createTables();
-        const parameter = this.saveParameters(tables, config);
-        const functions = this.createLambdas(logGroup, tables, parameter);
-        this.setErrorAlarm(logGroup, config);
+    const logGroup = this.createLogGroup();
+    const tables = this.createTables();
+    const parameter = this.saveParameters(tables, config);
+    const functions = this.createLambdas(logGroup, tables, parameter);
+    this.setErrorAlarm(logGroup, config);
 
-        const videoDownloadedTopic = sns.Topic.fromTopicArn(
-            this, 'VideoDownloadedSnsTopic', config.videoDownloadedTopicArn);
-        videoDownloadedTopic.addSubscription(
-            new subs.LambdaSubscription(functions[LambdaHandler.OnVideoDownloaded]));
+    const videoDownloadedTopic = sns.Topic.fromTopicArn(
+      this, 'VideoDownloadedSnsTopic', config.videoDownloadedTopicArn);
+    videoDownloadedTopic.addSubscription(
+      new subs.LambdaSubscription(functions[LambdaHandler.OnVideoDownloaded]));
 
-        const getAnimeLambda = lambda.Function.fromFunctionName(
-            this, 'GetAnimeLambda', config.getAnimeFunctionName);
-        getAnimeLambda.grantInvoke(functions[LambdaHandler.OnWebhook]);
+    const getAnimeLambda = lambda.Function.fromFunctionName(
+      this, 'GetAnimeLambda', config.getAnimeFunctionName);
+    getAnimeLambda.grantInvoke(functions[LambdaHandler.OnWebhook]);
 
-        const apiGateway = new apigateway.RestApi(this, 'WebhookApi', {});
-        apiGateway.root.addMethod('POST', new apigateway.LambdaIntegration(functions[LambdaHandler.OnWebhook]));
+    const apiGateway = new apigateway.RestApi(this, 'WebhookApi', {});
+    apiGateway.root.addMethod('POST', new apigateway.LambdaIntegration(functions[LambdaHandler.OnWebhook]));
 
-        this.out('Config', JSON.stringify(config));
-        this.out(
-            'SetWebhookUrl',
-            `https://api.telegram.org/bot${config.telegramBotToken}/setWebhook?url=${apiGateway.url}`);
+    this.out('Config', JSON.stringify(config));
+    this.out(
+      'SetWebhookUrl',
+      `https://api.telegram.org/bot${config.telegramBotToken}/setWebhook?url=${apiGateway.url}`);
+  }
+
+  private get isStage(): boolean {
+    return this.region === 'eu-central-1';
+  }
+
+  private createTables(): Record<Table, dynamodb.Table> {
+    const capacity: Partial<dynamodb.TableProps> = {
+      billingMode: dynamodb.BillingMode.PROVISIONED,
+      readCapacity: 1,
+      writeCapacity: 1,
+    };
+
+    const usersTable = new dynamodb.Table(this, Table.Users, {
+      partitionKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      deletionProtection: !this.isStage,
+      ...capacity,
+    });
+
+    const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
+      partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      deletionProtection: !this.isStage,
+      ...capacity,
+    });
+
+    const libraryTable = new dynamodb.Table(this, Table.Library, {
+      partitionKey: { name: 'myAnimeListId', type: dynamodb.AttributeType.NUMBER },
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      deletionProtection: !this.isStage,
+      ...capacity,
+    });
+
+    return {
+      [Table.Users]: usersTable,
+      [Table.Subscriptions]: subscriptionsTable,
+      [Table.Library]: libraryTable,
     }
+  }
 
-    private get isStage(): boolean {
-        return this.region === 'eu-central-1';
-    }
+  private createLogGroup(): logs.LogGroup {
+    return new logs.LogGroup(this, 'LogGroup', { retention: logs.RetentionDays.ONE_WEEK });
+  }
 
-    private createTables(): Record<Table, dynamodb.Table> {
-        const capacity: Partial<dynamodb.TableProps> = {
-            billingMode: dynamodb.BillingMode.PROVISIONED,
-            readCapacity: 1,
-            writeCapacity: 1,
-        };
+  private setErrorAlarm(logGroup: logs.LogGroup, config: Config): void {
+    const topic = new sns.Topic(this, 'LogGroupAlarmSnsTopic');
+    topic.addSubscription(new subs.EmailSubscription(config.alertEmail));
 
-        const usersTable = new dynamodb.Table(this, Table.Users, {
-            partitionKey: { name: 'userId', type: dynamodb.AttributeType.NUMBER },
-            removalPolicy: cdk.RemovalPolicy.RETAIN,
-            deletionProtection: !this.isStage,
-            ...capacity,
-        });
+    const metricFilter = logGroup.addMetricFilter('ErrorMetricFilter', {
+      filterPattern: logs.FilterPattern.anyTerm('ERROR', 'Error', 'error', 'fail'),
+      metricNamespace: this.stackName,
+      metricName: 'ErrorCount',
+      metricValue: '1',
+    });
 
-        const subscriptionsTable = new dynamodb.Table(this, Table.Subscriptions, {
-            partitionKey: { name: 'animeKey', type: dynamodb.AttributeType.STRING },
-            removalPolicy: cdk.RemovalPolicy.RETAIN,
-            deletionProtection: !this.isStage,
-            ...capacity,
-        });
-        
-        const libraryTable = new dynamodb.Table(this, Table.Library, {
-            partitionKey: { name: 'myAnimeListId', type: dynamodb.AttributeType.NUMBER },
-            removalPolicy: cdk.RemovalPolicy.RETAIN,
-            deletionProtection: !this.isStage,
-            ...capacity,
-        });
+    const alarm = new cw.Alarm(this, 'LogGroupErrorAlarm', {
+      metric: metricFilter.metric(),
+      threshold: 1,
+      evaluationPeriods: 1,
+      treatMissingData: cw.TreatMissingData.NOT_BREACHING,
+    });
 
-        return {
-            [Table.Users]: usersTable,
-            [Table.Subscriptions]: subscriptionsTable,
-            [Table.Library]: libraryTable,
-        }
-    }
+    alarm.addAlarmAction(new cloudwatchActions.SnsAction(topic));
+  }
 
-    private createLogGroup(): logs.LogGroup {
-        return new logs.LogGroup(this, 'LogGroup', { retention: logs.RetentionDays.ONE_WEEK });
-    }
+  private createLambdas(
+    logGroup: logs.LogGroup,
+    tables: Record<Table, dynamodb.Table>,
+    parameter: ssm.StringParameter,
+  ): Record<LambdaHandler, lambda.Function> {
+    // @ts-expect-error - we know that the keys are the same
+    const functions: Record<LambdaHandler, lambda.Function> = {};
 
-    private setErrorAlarm(logGroup: logs.LogGroup, config: Config): void {
-        const topic = new sns.Topic(this, 'LogGroupAlarmSnsTopic');
-        topic.addSubscription(new subs.EmailSubscription(config.alertEmail));
+    Object.entries(LambdaHandler).forEach(([lambdaName, handlerName]) => {
+      const func = new LlrtFunction(this, lambdaName, {
+        entry: `src/handlers/${handlerName}/handler.ts`,
+        handler: 'handler',
+        logGroup,
+        timeout: cdk.Duration.seconds(30),
+      });
 
-        const metricFilter = logGroup.addMetricFilter('ErrorMetricFilter', {
-            filterPattern: logs.FilterPattern.anyTerm('ERROR', 'Error', 'error', 'fail'),
-            metricNamespace: this.stackName,
-            metricName: 'ErrorCount',
-            metricValue: '1',
-        });
+      tables[Table.Users].grantReadWriteData(func);
+      tables[Table.Subscriptions].grantReadWriteData(func);
+      tables[Table.Library].grantReadWriteData(func);
+      parameter.grantRead(func);
 
-        const alarm = new cw.Alarm(this, 'LogGroupErrorAlarm', {
-            metric: metricFilter.metric(),
-            threshold: 1,
-            evaluationPeriods: 1,
-            treatMissingData: cw.TreatMissingData.NOT_BREACHING,
-        });
+      functions[handlerName] = func;
+    });
 
-        alarm.addAlarmAction(new cloudwatchActions.SnsAction(topic));
-    }
+    return functions;
+  }
 
-    private createLambdas(
-        logGroup: logs.LogGroup,
-        tables: Record<Table, dynamodb.Table>,
-        parameter: ssm.StringParameter,
-    ): Record<LambdaHandler, lambda.Function> {
-        // @ts-expect-error - we know that the keys are the same
-        const functions: Record<LambdaHandler, lambda.Function> = {};
+  private saveParameters(
+    tables: Record<Table, dynamodb.Table>,
+    config: Config,
+  ): ssm.StringParameter {
+    const value = {
+      animan: {
+        getAnimeFunctionName: config.getAnimeFunctionName,
+      },
+      loanApi: {
+        token: config.loanApiToken,
+        maxConcurrentRequests: cdk.Token.asNumber(config.loanApiMaxConcurrentRequests),
+      },
+      database: {
+        usersTableName: tables[Table.Users].tableName,
+        subscriptionsTableName: tables[Table.Subscriptions].tableName,
+        libraryTableName: tables[Table.Library].tableName,
+      },
+      telegram: {
+        token: config.telegramBotToken,
 
-        Object.entries(LambdaHandler).forEach(([lambdaName, handlerName]) => {
-            const func = new LlrtFunction(this, lambdaName, {
-                entry: `src/handlers/${handlerName}/handler.ts`,
-                handler: 'handler',
-                logGroup,
-                timeout: cdk.Duration.seconds(30),
-            });
+        videoChatId: cdk.Token.asNumber(config.telegramBotVideoChatId),
+        publisherGroupName: config.telegramBotPublisherGroupName,
+      },
+      retry: {
+        maxAttempts: cdk.Token.asNumber(config.retriesMax),
+        delayMs: cdk.Token.asNumber(config.retriesDelayMs),
+      },
+      assets: {
+        studioLogosUrl: config.studioLogosUrl,
+      },
+    } as Required<RuntimeConfig>;
 
-            tables[Table.Users].grantReadWriteData(func);
-            tables[Table.Subscriptions].grantReadWriteData(func);
-            tables[Table.Library].grantReadWriteData(func);
-            parameter.grantRead(func);
+    return new ssm.StringParameter(this, '/bounan/bot/runtime-config', {
+      parameterName: '/bounan/bot/runtime-config',
+      stringValue: JSON.stringify(value, null, 2),
+    });
+  }
 
-            functions[handlerName] = func;
-        });
-
-        return functions;
-    }
-
-    private saveParameters(
-        tables: Record<Table, dynamodb.Table>,
-        config: Config,
-    ): ssm.StringParameter {
-        const value = {
-            animan: {
-                getAnimeFunctionName: config.getAnimeFunctionName,
-            },
-            loanApi: {
-                token: config.loanApiToken,
-                maxConcurrentRequests: cdk.Token.asNumber(config.loanApiMaxConcurrentRequests),
-            },
-            database: {
-                usersTableName: tables[Table.Users].tableName,
-                subscriptionsTableName: tables[Table.Subscriptions].tableName,
-                libraryTableName: tables[Table.Library].tableName,
-            },
-            telegram: {
-                token: config.telegramBotToken,
-
-                videoChatId: cdk.Token.asNumber(config.telegramBotVideoChatId),
-                publisherGroupName: config.telegramBotPublisherGroupName,
-            },
-            retry: {
-                maxAttempts: cdk.Token.asNumber(config.retriesMax),
-                delayMs: cdk.Token.asNumber(config.retriesDelayMs),
-            },
-            assets: {
-                studioLogosUrl: config.studioLogosUrl,
-            },
-        } as Required<RuntimeConfig>;
-
-        return new ssm.StringParameter(this, '/bounan/bot/runtime-config', {
-            parameterName: '/bounan/bot/runtime-config',
-            stringValue: JSON.stringify(value, null, 2),
-        });
-    }
-
-    private out(key: string, value: object | string): void {
-        const output = typeof value === 'string' ? value : JSON.stringify(value);
-        new cdk.CfnOutput(this, key, { value: output });
-    }
+  private out(key: string, value: object | string): void {
+    const output = typeof value === 'string' ? value : JSON.stringify(value);
+    new cdk.CfnOutput(this, key, { value: output });
+  }
 }
 
 enum Table {
-    Users = 'users',
-    Subscriptions = 'subscriptions',
-    Library = 'library',
+  Users = 'users',
+  Subscriptions = 'subscriptions',
+  Library = 'library',
 }
 
 enum LambdaHandler {
-    OnWebhook = 'on-webhook',
-    OnVideoDownloaded = 'on-video-downloaded',
+  OnWebhook = 'on-webhook',
+  OnVideoDownloaded = 'on-video-downloaded',
 }

@@ -1,9 +1,9 @@
-﻿import {
-    AnswerCallbackQueryData,
-    CallbackQuery,
-    InlineQuery,
-    InlineQueryResult,
-    Message,
+﻿import type {
+  AnswerCallbackQueryData,
+  CallbackQuery,
+  InlineQuery,
+  InlineQueryResult,
+  Message,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
 type QueryHandler<TUpdateItem, TResult> = (updateItem: TUpdateItem) => Promise<TResult>;

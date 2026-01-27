@@ -1,5 +1,5 @@
-import { AnimeKey } from './anime-key';
+import type { AnimeKey } from './anime-key';
 
 export interface VideoKey extends AnimeKey {
-    episode: number;
+  episode: number;
 }
