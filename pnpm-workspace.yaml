@@ -1,0 +1,25 @@
+catalog:
+  '@aws-sdk/client-dynamodb': 3.975.0
+  '@aws-sdk/client-lambda': 3.975.0
+  '@aws-sdk/client-ssm': 3.975.0
+  '@aws-sdk/lib-dynamodb': 3.975.0
+  '@eslint/js': 9.39.2
+  '@lightweight-clients/shikimori-graphql-api-lightweight-client': 1.1.1
+  '@lightweight-clients/telegram-bot-api-lightweight-client': 9.3.0
+  '@types/aws-lambda': 8.10.160
+  '@types/node': 25.0.10
+  aws-cdk-lib: 2.236.0
+  cdk-lambda-llrt: 0.1.4
+  constructs: 10.4.5
+  eslint: 9.39.2
+  eslint-plugin-simple-import-sort: 12.1.1
+  jiti: 2.6.1
+  knip: 5.82.1
+  typescript: 5.9.3
+  typescript-eslint: 8.54.0
+
+nodeLinker: hoisted
+
+onlyBuiltDependencies:
+  - aws-sdk
+  - esbuild
