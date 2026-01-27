@@ -3,7 +3,7 @@
   InlineKeyboardMarkup,
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
-import type { PublishingDetails, VideoKey } from '../../../third-party/common/ts/interfaces';
+import type { PublishingDetails, VideoKey } from '../../../../../third-party/common/ts/interfaces';
 import { config } from '../../config/config';
 import { InfoCommandDto, WatchCommandDto } from '../../handlers/on-webhook/command-dtos';
 import { dubToKey } from '../helpers/dub-to-key';

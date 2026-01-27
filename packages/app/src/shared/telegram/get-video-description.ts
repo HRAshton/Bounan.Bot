@@ -1,4 +1,4 @@
-﻿import type { Scenes, VideoKey } from '../../../third-party/common/ts/interfaces';
+﻿import type { Scenes, VideoKey } from '../../../../../third-party/common/ts/interfaces';
 import type { ShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
 import { Texts } from './texts';
 

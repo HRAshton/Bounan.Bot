@@ -11,7 +11,7 @@ import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { LlrtFunction } from 'cdk-lambda-llrt';
 import type { Construct } from 'constructs';
 
-import type { Config as RuntimeConfig } from '../src/config/types';
+import type { Config as RuntimeConfig } from '../../app/src/config/types';
 import type { Config } from './config';
 import { getConfig } from './config';
 
@@ -119,7 +119,7 @@ export class Stack extends cdk.Stack {
 
     Object.entries(LambdaHandler).forEach(([lambdaName, handlerName]) => {
       const func = new LlrtFunction(this, lambdaName, {
-        entry: `src/handlers/${handlerName}/handler.ts`,
+        entry: `../app/src/handlers/${handlerName}/handler.ts`,
         handler: 'handler',
         logGroup,
         timeout: cdk.Duration.seconds(30),

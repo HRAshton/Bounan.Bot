@@ -3,7 +3,7 @@
   "version": "1.0",
   "description": "",
   "scripts": {
-    "run-local": "npx jiti src/local-runner.ts",
+    "run-local": "npx jiti packages/app/src/local-runner.ts",
     "typecheck": "tsc",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
@@ -11,8 +11,8 @@
     "dependencies:update": "pnpm update --recursive --latest",
     "licenses:scan": "pnpm licenses list --prod --json > thirdparty.json",
     "licenses:generate": "pnpm run -w licenses:scan && jiti scripts/format-thirdparty.ts",
-    "textgen": "npx jiti src/shared/telegram/textgen.mts",
-    "textgen-reverse": "npx jiti src/shared/telegram/textgen.mts --reverse",
+    "textgen": "npx jiti packages/app/src/shared/telegram/textgen.mts",
+    "textgen-reverse": "npx jiti packages/app/src/shared/telegram/textgen.mts --reverse",
     "knip": "knip",
     "check-updates": "pnpm outdated --use-stderr",
     "prerelease": "npm run check-updates && npm run knip && npm run lint && npm run typecheck"

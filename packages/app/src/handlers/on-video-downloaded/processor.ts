@@ -5,7 +5,7 @@
 } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 import { copyMessage, sendMessage } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
-import type { VideoDownloadedNotification } from '../../../third-party/common/ts/interfaces';
+import type { VideoDownloadedNotification } from '../../../../../third-party/common/ts/interfaces';
 import { getAllExistingVideos } from '../../api-clients/cached-loan-api-client';
 import { getShikiAnimeInfo } from '../../api-clients/cached-shikimori-client';
 import { config } from '../../config/config';

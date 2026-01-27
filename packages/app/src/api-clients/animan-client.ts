@@ -1,5 +1,5 @@
-import type { BotRequest, BotResponse } from '../../third-party/common/ts/interfaces';
-import { makeLambdaRequest } from '../../third-party/common/ts/runtime/lambda-client';
+import type { BotRequest, BotResponse } from '../../../../third-party/common/ts/interfaces';
+import { makeLambdaRequest } from '../../../../third-party/common/ts/runtime/lambda-client';
 import { config } from '../config/config';
 import type { VideoKey } from '../shared/database/entities/video-key';
 import { assert } from '../shared/helpers/assert';

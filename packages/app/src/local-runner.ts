@@ -4,7 +4,7 @@
 
 import type { Update } from '@lightweight-clients/telegram-bot-api-lightweight-client';
 
-import type { VideoDownloadedNotification } from '../third-party/common/ts/interfaces';
+import type { VideoDownloadedNotification } from '../../../third-party/common/ts/interfaces';
 import { config, initConfig } from './config/config';
 import { handler as onVideoDownloadedHandler } from './handlers/on-video-downloaded/handler';
 import { handler as onWebhookHandler } from './handlers/on-webhook/handler';
