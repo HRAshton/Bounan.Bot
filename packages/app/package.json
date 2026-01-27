@@ -2,8 +2,10 @@
   "name": "app",
   "private": true,
   "scripts": {
-    "run-local": "cross-env AWS_PROFILE=hra npx jiti src/local-runner.ts",
-    "typecheck": "tsc"
+    "run-local": "cross-env AWS_PROFILE=hra jiti src/local-runner.ts",
+    "typecheck": "tsc",
+    "textgen": "jiti src/shared/telegram/textgen.mts",
+    "textgen-reverse": "jiti src/shared/telegram/textgen.mts --reverse"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
