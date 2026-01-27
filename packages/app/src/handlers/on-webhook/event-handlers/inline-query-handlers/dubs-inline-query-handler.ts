@@ -52,22 +52,28 @@ const handler: InlineQueryHandler = async (inlineQuery) => {
 
   const registeredDubs = await registeredDubsTask;
 
-  const results: InlineQueryResultArticle[] = uniqueDubs
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map(item => ({
-      type: 'article',
-      id: item.name,
-      title: item.name,
-      description: getDescription(item, registeredDubs),
-      thumbnail_url: getStudioLogoUrl(item.name),
-      input_message_content: {
-        message_text: new WatchCommandDto(
-          commandDto.myAnimeListId,
-          dubToKey(item.name),
-          item.firstEpisode,
-        ).toString(),
-      },
-    }));
+  const sortedDubs = [...uniqueDubs].sort((a, b) => {
+    const aSortPriority = registeredDubs.has(a.name) ? 0 : 1;
+    const bSortPriority = registeredDubs.has(b.name) ? 0 : 1;
+    return aSortPriority !== bSortPriority
+      ? aSortPriority - bSortPriority
+      : a.name.localeCompare(b.name);
+  });
+
+  const results: InlineQueryResultArticle[] = sortedDubs.map(item => ({
+    type: 'article',
+    id: item.name,
+    title: item.name,
+    description: getDescription(item, registeredDubs),
+    thumbnail_url: getStudioLogoUrl(item.name),
+    input_message_content: {
+      message_text: new WatchCommandDto(
+        commandDto.myAnimeListId,
+        dubToKey(item.name),
+        item.firstEpisode,
+      ).toString(),
+    },
+  }));
 
   console.log('Returning {Count} dubs for {MyAnimeListId}', results.length, commandDto.myAnimeListId);
   return results;
