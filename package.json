@@ -6,6 +6,9 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "knip": "knip",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui --project unit-tests",
     "dependencies:check": "pnpm outdated --recursive --use-stderr",
     "dependencies:update": "pnpm update --recursive --latest",
     "licenses:scan": "pnpm licenses list --prod --json > thirdparty.json",
@@ -33,11 +36,14 @@
   "packageManager": "pnpm@10.28.1",
   "devDependencies": {
     "@eslint/js": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "@vitest/ui": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-simple-import-sort": "catalog:",
     "jiti": "catalog:",
     "knip": "catalog:",
     "npm-run-all": "catalog:",
-    "typescript-eslint": "catalog:"
+    "typescript-eslint": "catalog:",
+    "vitest": "catalog:"
   }
 }

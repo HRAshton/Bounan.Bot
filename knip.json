@@ -1,8 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignore": [
-    "third-party/**",
-    "scripts/**"
+    "third-party/**"
   ],
   "workspaces": {
     "packages/app": {

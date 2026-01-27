@@ -1,0 +1,66 @@
+﻿name: CI
+
+on:
+  workflow_dispatch:
+#  push: # ToFill
+#    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+          token: ${{ secrets.LOAN_API_PAT_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Perform prerelease checks
+        run: pnpm run prerelease
+
+  diff:
+    name: CDK Diff Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+          token: ${{ secrets.LOAN_API_PAT_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --filter infra...
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_PROD }}:role/github-actions-cdk-diff
+          aws-region: eu-north-1
+
+      - name: CDK diff (fails if differences)
+        run: pnpm run cdk:diff --all --no-color --fail
