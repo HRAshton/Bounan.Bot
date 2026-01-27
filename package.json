@@ -9,6 +9,8 @@
     "lint-fix": "eslint . --fix",
     "dependencies:check": "pnpm outdated --recursive --use-stderr",
     "dependencies:update": "pnpm update --recursive --latest",
+    "licenses:scan": "pnpm licenses list --prod --json > thirdparty.json",
+    "licenses:generate": "pnpm run -w licenses:scan && jiti scripts/format-thirdparty.ts",
     "textgen": "npx jiti src/shared/telegram/textgen.mts",
     "textgen-reverse": "npx jiti src/shared/telegram/textgen.mts --reverse",
     "knip": "knip",
@@ -28,14 +30,17 @@
     "yarn": "please-use-pnpm"
   },
   "packageManager": "pnpm@10.28.1",
-  "devDependencies": {
+  "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
     "@aws-sdk/client-lambda": "catalog:",
     "@aws-sdk/client-ssm": "catalog:",
     "@aws-sdk/lib-dynamodb": "catalog:",
-    "@eslint/js": "catalog:",
     "@lightweight-clients/shikimori-graphql-api-lightweight-client": "catalog:",
-    "@lightweight-clients/telegram-bot-api-lightweight-client": "catalog:",
+    "@lightweight-clients/telegram-bot-api-lightweight-client": "catalog:"
+  },
+  "devDependencies": {
+    "@aws-sdk/lib-dynamodb": "catalog:",
+    "@eslint/js": "catalog:",
     "@types/aws-lambda": "catalog:",
     "@types/node": "catalog:",
     "aws-cdk-lib": "catalog:",

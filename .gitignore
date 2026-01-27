@@ -3,3 +3,6 @@ cdk.out
 .idea
 node_modules
 texts.ts
+**/coverage
+thirdparty.json
+.secrets

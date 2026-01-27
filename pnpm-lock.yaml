@@ -64,7 +64,7 @@ catalogs:
 importers:
 
   .:
-    devDependencies:
+    dependencies:
       '@aws-sdk/client-dynamodb':
         specifier: 'catalog:'
         version: 3.975.0
@@ -77,15 +77,16 @@ importers:
       '@aws-sdk/lib-dynamodb':
         specifier: 'catalog:'
         version: 3.975.0(@aws-sdk/client-dynamodb@3.975.0)
-      '@eslint/js':
-        specifier: 'catalog:'
-        version: 9.39.2
       '@lightweight-clients/shikimori-graphql-api-lightweight-client':
         specifier: 'catalog:'
         version: 1.1.1
       '@lightweight-clients/telegram-bot-api-lightweight-client':
         specifier: 'catalog:'
         version: 9.3.0
+    devDependencies:
+      '@eslint/js':
+        specifier: 'catalog:'
+        version: 9.39.2
       '@types/aws-lambda':
         specifier: 'catalog:'
         version: 8.10.160
