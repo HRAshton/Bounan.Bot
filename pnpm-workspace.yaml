@@ -9,20 +9,20 @@ allowBuilds:
 blockExoticSubdeps: true
 
 catalog:
-  '@biomejs/biome': 2.5.8
-  '@aws-sdk/client-dynamodb': 3.1110.0
-  '@aws-sdk/client-lambda': 3.1110.0
-  '@aws-sdk/client-ssm': 3.1110.0
-  '@aws-sdk/lib-dynamodb': 3.1110.0
+  '@biomejs/biome': 2.5.9
+  '@aws-sdk/client-dynamodb': 3.1115.0
+  '@aws-sdk/client-lambda': 3.1115.0
+  '@aws-sdk/client-ssm': 3.1115.0
+  '@aws-sdk/lib-dynamodb': 3.1115.0
   '@lightweight-clients/jikan-api-lightweight-client': 4.0.2
   '@lightweight-clients/shikimori-graphql-api-lightweight-client': 1.2.0
   '@lightweight-clients/telegram-bot-api-lightweight-client': 10.2.0
   '@types/aws-lambda': 8.10.162
   '@types/node': 25.9.5
-  '@vitest/coverage-v8': 4.1.10
-  '@vitest/ui': 4.1.10
-  aws-cdk: 2.1136.0
-  aws-cdk-lib: 2.265.0
+  '@vitest/coverage-v8': 4.1.11
+  '@vitest/ui': 4.1.11
+  aws-cdk: 2.1138.0
+  aws-cdk-lib: 2.266.0
   cdk-lambda-llrt: 0.1.4
   constructs: 10.8.1
   cross-env: 10.1.0
@@ -30,7 +30,7 @@ catalog:
   knip: 6.32.2
   npm-run-all2: 9.0.3
   typescript: 7.0.2
-  vitest: 4.1.10
+  vitest: 4.1.11
 
 # Delay newly published versions for one day to reduce supply-chain risk.
 minimumReleaseAge: 1440
