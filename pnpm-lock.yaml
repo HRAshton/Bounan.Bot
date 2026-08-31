@@ -7,20 +7,20 @@ settings:
 catalogs:
   default:
     '@aws-sdk/client-dynamodb':
-      specifier: 3.1115.0
-      version: 3.1115.0
+      specifier: 3.1120.0
+      version: 3.1120.0
     '@aws-sdk/client-lambda':
-      specifier: 3.1115.0
-      version: 3.1115.0
+      specifier: 3.1120.0
+      version: 3.1120.0
     '@aws-sdk/client-ssm':
-      specifier: 3.1115.0
-      version: 3.1115.0
+      specifier: 3.1120.0
+      version: 3.1120.0
     '@aws-sdk/lib-dynamodb':
-      specifier: 3.1115.0
-      version: 3.1115.0
+      specifier: 3.1120.0
+      version: 3.1120.0
     '@biomejs/biome':
-      specifier: 2.5.9
-      version: 2.5.9
+      specifier: 2.5.11
+      version: 2.5.11
     '@lightweight-clients/jikan-api-lightweight-client':
       specifier: 4.0.2
       version: 4.0.2
@@ -28,8 +28,8 @@ catalogs:
       specifier: 1.2.0
       version: 1.2.0
     '@lightweight-clients/telegram-bot-api-lightweight-client':
-      specifier: 10.2.0
-      version: 10.2.0
+      specifier: 10.3.0
+      version: 10.3.0
     '@types/aws-lambda':
       specifier: 8.10.162
       version: 8.10.162
@@ -43,11 +43,11 @@ catalogs:
       specifier: 4.1.11
       version: 4.1.11
     aws-cdk:
-      specifier: 2.1138.0
-      version: 2.1138.0
+      specifier: 2.1139.0
+      version: 2.1139.0
     aws-cdk-lib:
-      specifier: 2.266.0
-      version: 2.266.0
+      specifier: 2.267.0
+      version: 2.267.0
     cdk-lambda-llrt:
       specifier: 0.1.4
       version: 0.1.4
@@ -61,8 +61,8 @@ catalogs:
       specifier: 2.7.0
       version: 2.7.0
     knip:
-      specifier: 6.32.2
-      version: 6.32.2
+      specifier: 6.32.3
+      version: 6.32.3
     npm-run-all2:
       specifier: 9.0.3
       version: 9.0.3
@@ -79,7 +79,7 @@ importers:
     devDependencies:
       '@biomejs/biome':
         specifier: 'catalog:'
-        version: 2.5.9
+        version: 2.5.11
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 4.1.11(vitest@4.1.11)
@@ -91,7 +91,7 @@ importers:
         version: 2.7.0
       knip:
         specifier: 'catalog:'
-        version: 6.32.2
+        version: 6.32.3
       npm-run-all2:
         specifier: 'catalog:'
         version: 9.0.3
@@ -103,16 +103,16 @@ importers:
     dependencies:
       '@aws-sdk/client-dynamodb':
         specifier: 'catalog:'
-        version: 3.1115.0
+        version: 3.1120.0
       '@aws-sdk/client-lambda':
         specifier: 'catalog:'
-        version: 3.1115.0
+        version: 3.1120.0
       '@aws-sdk/client-ssm':
         specifier: 'catalog:'
-        version: 3.1115.0
+        version: 3.1120.0
       '@aws-sdk/lib-dynamodb':
         specifier: 'catalog:'
-        version: 3.1115.0(@aws-sdk/client-dynamodb@3.1115.0)
+        version: 3.1120.0(@aws-sdk/client-dynamodb@3.1120.0)
       '@lightweight-clients/jikan-api-lightweight-client':
         specifier: 'catalog:'
         version: 4.0.2
@@ -121,7 +121,7 @@ importers:
         version: 1.2.0
       '@lightweight-clients/telegram-bot-api-lightweight-client':
         specifier: 'catalog:'
-        version: 10.2.0
+        version: 10.3.0
     devDependencies:
       '@types/aws-lambda':
         specifier: 'catalog:'
@@ -140,13 +140,13 @@ importers:
     devDependencies:
       aws-cdk:
         specifier: 'catalog:'
-        version: 2.1138.0
+        version: 2.1139.0
       aws-cdk-lib:
         specifier: 'catalog:'
-        version: 2.266.0(constructs@10.8.1)
+        version: 2.267.0(constructs@10.8.1)
       cdk-lambda-llrt:
         specifier: 'catalog:'
-        version: 0.1.4(aws-cdk-lib@2.266.0(constructs@10.8.1))(constructs@10.8.1)
+        version: 0.1.4(aws-cdk-lib@2.267.0(constructs@10.8.1))(constructs@10.8.1)
       constructs:
         specifier: 'catalog:'
         version: 10.8.1
@@ -158,10 +158,10 @@ importers:
     devDependencies:
       '@aws-sdk/client-dynamodb':
         specifier: 'catalog:'
-        version: 3.1115.0
+        version: 3.1120.0
       '@aws-sdk/lib-dynamodb':
         specifier: 'catalog:'
-        version: 3.1115.0(@aws-sdk/client-dynamodb@3.1115.0)
+        version: 3.1120.0(@aws-sdk/client-dynamodb@3.1120.0)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -181,16 +181,16 @@ packages:
       - jsonschema
       - semver
 
-  '@aws-sdk/client-dynamodb@3.1115.0':
-    resolution: {integrity: sha512-nEMIOBSdGYZwTCApG0Bg1mFEr7OPP707nAVYoRzwvuoQ6M45DL7cAoHE/MbwZrNIs/1+K7JDD7uwKHUhBghXKQ==}
+  '@aws-sdk/client-dynamodb@3.1120.0':
+    resolution: {integrity: sha512-SjMCaA8fHtskSUlVJMvQCpGM0cRUI4W/Tcxj+5WQJkOidRn0WmFgY51v33eB0S1PLm9kucIeIy/txLNcZ/TCvA==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/client-lambda@3.1115.0':
-    resolution: {integrity: sha512-oGFZZcsuGHFcchacWvX7It2RSGGJas07SMd5slJPsNdTe7a/r6USQ2ZXC4na0uh/AWzN8vn7s1EbRE2zueSZeg==}
+  '@aws-sdk/client-lambda@3.1120.0':
+    resolution: {integrity: sha512-Fs2f5458ZppIPAieXQMhE4PrDJ0Z7xMGoFgyGLcsmMUkK/UD4madPjlwc8J1qR71OaTX8zl3gAzuEgVJM9x6ew==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/client-ssm@3.1115.0':
-    resolution: {integrity: sha512-VJ/oIUMl2wdxFFL/Cgzdok/WVMg7XBSEMOlcm+VrM9yFiMxVmp5kDZy5ZwJrLqBaQBk/LouT6K6J1lEbtUVYjw==}
+  '@aws-sdk/client-ssm@3.1120.0':
+    resolution: {integrity: sha512-CY9EFUtSv4vzOK6g70T8wdiMnDcJdCOUAfBesVpjRpwLwmpHYHemDJLXxhjYDlAHI9HcQyGSgZPFL8x3gGbNfQ==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.977.9':
@@ -237,11 +237,11 @@ packages:
     resolution: {integrity: sha512-8q1ICxcDjHId3bBryuu/j+1L9y5/3uQnwzLDt5j2ElcjZSoWmFtymdJy7OjLrluSMe0Z4mq5bcH4fxBXvlEHfw==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/lib-dynamodb@3.1115.0':
-    resolution: {integrity: sha512-JGLkAaZqO+Vym7hwfjTr2hRxkbFPmfrEY/hUrz7wGu8YkNdRhQPtrCgm6uT4JlztqwSSE6EEolvRo+iqolfY9g==}
+  '@aws-sdk/lib-dynamodb@3.1120.0':
+    resolution: {integrity: sha512-P43Ix7XS/RYM7k9HsocaTasiVn3tTrc6gwWzUaM+SvHcLFt1pTME6tETykg9K3HTTH/InuG5h3aLb2eDZweXoQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
-      '@aws-sdk/client-dynamodb': ^3.1115.0
+      '@aws-sdk/client-dynamodb': ^3.1120.0
 
   '@aws-sdk/middleware-endpoint-discovery@3.972.30':
     resolution: {integrity: sha512-0hmD7/NG2NoVOVHvUb6rtY5POQYr+/9gdHvrYhIBA1zmCqKOBd5Gz3dL+iZ15FHOJbs/5kLplGoePc8PHTlzYA==}
@@ -298,59 +298,59 @@ packages:
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
     engines: {node: '>=18'}
 
-  '@biomejs/biome@2.5.9':
-    resolution: {integrity: sha512-KkgCvdHB4IhtpHpF564plA9jo6fDOwWGQ/3jvreLzgOtRLEDoPqr7QO9qejNA8jKwDsSkAKr77hqBHnyUbIw4g==}
+  '@biomejs/biome@2.5.11':
+    resolution: {integrity: sha512-Tj0dnkLPdW0ASjHfj2D/ZkkvPU2wrFmnE1jWTD2xzV1ycapV1DutbYXk4NDnR3rYTi1ZCbNFD4G2gRMEY65WaA==}
     engines: {node: '>=14.21.3'}
     hasBin: true
 
-  '@biomejs/cli-darwin-arm64@2.5.9':
-    resolution: {integrity: sha512-am22pX2aBqznqq1eMyIj/bZ++riF3Lk6ct7cbv+gQK0csFhr+d8O0RkOi2FF2qSgFgANbqNkIZ0/PxlnW2pLFg==}
+  '@biomejs/cli-darwin-arm64@2.5.11':
+    resolution: {integrity: sha512-6SGZxoKbXvUjMn1t6A98HqWISPnGNbYs0R/Rt2JarmXBSev+lva4QxUMWEBX9lX1Wo1XTJ78uk5xVDtG58SRZg==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [darwin]
 
-  '@biomejs/cli-darwin-x64@2.5.9':
-    resolution: {integrity: sha512-l44KWDHLDvEnD0N/XcrVs7VXb3A18xL7QS3WB0eL93wbmk529ffIG55vleGCqaunpRUjLrdnjK05Qki1dsjylg==}
+  '@biomejs/cli-darwin-x64@2.5.11':
+    resolution: {integrity: sha512-nYkXY7tLBEgnGbYapDKAyKzgt44ZEyG+AKalvTXtCWKYgepI9dw327q+cVgedxm+Udi1ZzHKUyZrIusHi/KQbw==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [darwin]
 
-  '@biomejs/cli-linux-arm64-musl@2.5.9':
-    resolution: {integrity: sha512-7ImVPwBLCtkmpR5esd8RHhTqW94f0JLJQum6AneYcy94jRm18TaPPm7slaigGzFhfgt3QiD1Vj52LKmBAnKizA==}
+  '@biomejs/cli-linux-arm64-musl@2.5.11':
+    resolution: {integrity: sha512-qhyZUMyCbWYFV2bAwRNVvfMVZ+hv7WYl6mossGrxC+uiQQXhvsuWWU8zz6jYX0mChZd9MgQZbm4vozTmG/5iGw==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@biomejs/cli-linux-arm64@2.5.9':
-    resolution: {integrity: sha512-ICaK+IYaVZvKbBxX2rwrPT0DdUDMnE9Vm3nQGe+mltQPmUg19pONzkPWGdY4FCsoreDETWDynvdt4ysCbF5gNQ==}
+  '@biomejs/cli-linux-arm64@2.5.11':
+    resolution: {integrity: sha512-3PVLSTD9RR73rvVPt5G3T1gc+ycggWEGfTD7RvzzbtcDPD27NxgxBbAFfpm7DXJKW6VLHWE1lLMGvFt2Qxjcow==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@biomejs/cli-linux-x64-musl@2.5.9':
-    resolution: {integrity: sha512-RXGaD0o1/pTTguYw1aeDJh9ad6Lfrui0fI7mBderTyGr7WuUJkBIttgLkR3XJyoxOkkgfBDspaUT8wXArTqLZw==}
+  '@biomejs/cli-linux-x64-musl@2.5.11':
+    resolution: {integrity: sha512-oRRlrchG5EfrEL/EmtT1qUjSNHk3/5LGeZhQqADBBAJF1b1ET6964xEKe7aGlGARzDfza8H/seEsFJl7S6Ql9w==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@biomejs/cli-linux-x64@2.5.9':
-    resolution: {integrity: sha512-z22Q/zFYSvbIJfW1CbfZPu4X8PddS6Qd2ORbc6h+aT6EcwAxUF3m6fA4HjNvA3TU4X0dTJRwNPB165ES3PJXzg==}
+  '@biomejs/cli-linux-x64@2.5.11':
+    resolution: {integrity: sha512-JOytptlsgM33B2MMFUg8iBrb4IKpbD5JnJrSeYiaFEeAj4vuXx0iQSQZ4qK7sqyMtfjZxxPdNdMZZVL4y/mFyA==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@biomejs/cli-win32-arm64@2.5.9':
-    resolution: {integrity: sha512-nHK+/HHC+D0ogAHUxomgoSTdjImb6fmNNVTKmf0tyu4eDL1DqPKIHc+i+UL8+b0RnAu8224qo8F2tCVnaT0A3w==}
+  '@biomejs/cli-win32-arm64@2.5.11':
+    resolution: {integrity: sha512-e49E6K9hzH/ohJNx8Y26mY8HaV4I4ZViIeoqhKsmoXLKHhQnMeBAVqCgsGf2Wa3lXlS7RkporDXMHHWkzvZzFw==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [win32]
 
-  '@biomejs/cli-win32-x64@2.5.9':
-    resolution: {integrity: sha512-Yiq0H56LjXSSw/hd9YkXgSLQfzyDJzbzU2TezozxyNw+uKWAqOtqGVvBfzKRRDiaFF5avGAhHdWKx7LtDOShUw==}
+  '@biomejs/cli-win32-x64@2.5.11':
+    resolution: {integrity: sha512-QSQr/KjOgXA7OzXJUWS+oguKyAZ3Q0l/lnlDGbu397eKo83atuWUjBPJrsqbKNF6CARGw8XXJLGzpHC8Ryhd4Q==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
@@ -383,8 +383,8 @@ packages:
   '@lightweight-clients/shikimori-graphql-api-lightweight-client@1.2.0':
     resolution: {integrity: sha512-Omw+3Ucap6lJSolrUhmVY8P5IebXRu9wJcC/3CEZpN2gwDNeU+ddyxeuDfsPuuVn/Db4lxFmmxRZ3Lq2T6Wheg==}
 
-  '@lightweight-clients/telegram-bot-api-lightweight-client@10.2.0':
-    resolution: {integrity: sha512-ck6zP8ibHtyg8dzoqYWGIqnb8L1gQLElaQUeaWh1RI+vkxIeoG3/siwiKcdtaaj8dJJVnp+PGx46vX62nFGlsA==}
+  '@lightweight-clients/telegram-bot-api-lightweight-client@10.3.0':
+    resolution: {integrity: sha512-mx1Xz0enUO5mizpy/vIHqX/JWOVsVSbiDlCtr761nF/pZ1KE2oos9Bqu9E1JLuH1tmHrFdHSrpaY5FHcwxQSmw==}
 
   '@napi-rs/wasm-runtime@1.2.3':
     resolution: {integrity: sha512-UMduMbqO5s5zF2NkNacMT/yK5Y5QiKvWr2+50bzIIxFDwVJ2h49b+oyjaCGPhJxd2/gC2x39EHv/gHVuu36x2Q==}
@@ -945,8 +945,8 @@ packages:
   ast-v8-to-istanbul@1.0.5:
     resolution: {integrity: sha512-UPAgKJFSEGMWSDr3LX4tqnAb4f7KGT8O40Tyx8wbYmmZ/yn58lNCm8h3svs3eXgiGd5AXxz8NDOvXWvicq+rJA==}
 
-  aws-cdk-lib@2.266.0:
-    resolution: {integrity: sha512-sBQU42pEc9ud3yeVU2En2euQRUhCg63eaJIPEVpBtE5aPhJjN3d9MkzQ9eYGLVXP3fnohUE54BiVOdUrkEDUbg==}
+  aws-cdk-lib@2.267.0:
+    resolution: {integrity: sha512-ubmc2Th+XFjQAy6cnihRmH9Xxf9X2iZ5Vuf0g/4kBiBSoLahJy5cwJB5TmicEpitZ+fHBRyfoAZ4BkLk4G0Stg==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
       constructs: ^10.5.0
@@ -964,8 +964,8 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.1138.0:
-    resolution: {integrity: sha512-gZ5F8rmh+qc7ZNWsbaXYoV+p7jSYynRRg70s7FAn3VmzRaSkTE31ijpQHYroxCbDEtKSzgN63ORR/WuZmvXAwA==}
+  aws-cdk@2.1139.0:
+    resolution: {integrity: sha512-JVvrVvY2fZasf4gW4fvF7x1QMXUtvvGjnTKDe6cppWR1FUG8XgRF/S7xOkcdPVcdEf4R5ss7QdEfNVI7xiDomQ==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
 
@@ -1079,8 +1079,8 @@ packages:
     resolution: {integrity: sha512-2/8adwnK1/+Fdjyts4r6wSpfANWw8zdNhU9U/Llk59c6O+DjSisPWPykwoL8gZmocP9Dy64S7oie2g+Mia123A==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
 
-  knip@6.32.2:
-    resolution: {integrity: sha512-WXTXbmocrw7gqm1A1TQvFN0OgJ7hUSU6E1g6SPRIzzHFogUBhXByc7cYeOFVtJ2uODg7DP4VbESYBYnfbtBYsg==}
+  knip@6.32.3:
+    resolution: {integrity: sha512-wOJ1Av8PwKqFO0wU7F64vzIcUjxhrieA3Tc2lmeK9C9prpxq+TeG2ewNH5tCaBVZwXNPp6lJkrr+IhZ20iqkMA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -1441,7 +1441,7 @@ snapshots:
 
   '@aws-cdk/cloud-assembly-schema@54.20.0': {}
 
-  '@aws-sdk/client-dynamodb@3.1115.0':
+  '@aws-sdk/client-dynamodb@3.1120.0':
     dependencies:
       '@aws-sdk/core': 3.977.9
       '@aws-sdk/credential-provider-node': 3.972.81
@@ -1454,7 +1454,7 @@ snapshots:
       '@smithy/types': 4.17.2
       tslib: 2.8.1
 
-  '@aws-sdk/client-lambda@3.1115.0':
+  '@aws-sdk/client-lambda@3.1120.0':
     dependencies:
       '@aws-sdk/core': 3.977.9
       '@aws-sdk/credential-provider-node': 3.972.81
@@ -1465,7 +1465,7 @@ snapshots:
       '@smithy/types': 4.17.2
       tslib: 2.8.1
 
-  '@aws-sdk/client-ssm@3.1115.0':
+  '@aws-sdk/client-ssm@3.1120.0':
     dependencies:
       '@aws-sdk/core': 3.977.9
       '@aws-sdk/credential-provider-node': 3.972.81
@@ -1583,11 +1583,11 @@ snapshots:
       mnemonist: 0.38.3
       tslib: 2.8.1
 
-  '@aws-sdk/lib-dynamodb@3.1115.0(@aws-sdk/client-dynamodb@3.1115.0)':
+  '@aws-sdk/lib-dynamodb@3.1120.0(@aws-sdk/client-dynamodb@3.1120.0)':
     dependencies:
-      '@aws-sdk/client-dynamodb': 3.1115.0
+      '@aws-sdk/client-dynamodb': 3.1120.0
       '@aws-sdk/core': 3.977.9
-      '@aws-sdk/util-dynamodb': 3.996.9(@aws-sdk/client-dynamodb@3.1115.0)
+      '@aws-sdk/util-dynamodb': 3.996.9(@aws-sdk/client-dynamodb@3.1120.0)
       '@smithy/core': 3.33.3
       '@smithy/types': 4.17.2
       tslib: 2.8.1
@@ -1632,9 +1632,9 @@ snapshots:
       '@smithy/types': 4.17.2
       tslib: 2.8.1
 
-  '@aws-sdk/util-dynamodb@3.996.9(@aws-sdk/client-dynamodb@3.1115.0)':
+  '@aws-sdk/util-dynamodb@3.996.9(@aws-sdk/client-dynamodb@3.1120.0)':
     dependencies:
-      '@aws-sdk/client-dynamodb': 3.1115.0
+      '@aws-sdk/client-dynamodb': 3.1120.0
       tslib: 2.8.1
 
   '@aws-sdk/xml-builder@3.972.40':
@@ -1659,39 +1659,39 @@ snapshots:
 
   '@bcoe/v8-coverage@1.0.2': {}
 
-  '@biomejs/biome@2.5.9':
+  '@biomejs/biome@2.5.11':
     optionalDependencies:
-      '@biomejs/cli-darwin-arm64': 2.5.9
-      '@biomejs/cli-darwin-x64': 2.5.9
-      '@biomejs/cli-linux-arm64': 2.5.9
-      '@biomejs/cli-linux-arm64-musl': 2.5.9
-      '@biomejs/cli-linux-x64': 2.5.9
-      '@biomejs/cli-linux-x64-musl': 2.5.9
-      '@biomejs/cli-win32-arm64': 2.5.9
-      '@biomejs/cli-win32-x64': 2.5.9
+      '@biomejs/cli-darwin-arm64': 2.5.11
+      '@biomejs/cli-darwin-x64': 2.5.11
+      '@biomejs/cli-linux-arm64': 2.5.11
+      '@biomejs/cli-linux-arm64-musl': 2.5.11
+      '@biomejs/cli-linux-x64': 2.5.11
+      '@biomejs/cli-linux-x64-musl': 2.5.11
+      '@biomejs/cli-win32-arm64': 2.5.11
+      '@biomejs/cli-win32-x64': 2.5.11
 
-  '@biomejs/cli-darwin-arm64@2.5.9':
+  '@biomejs/cli-darwin-arm64@2.5.11':
     optional: true
 
-  '@biomejs/cli-darwin-x64@2.5.9':
+  '@biomejs/cli-darwin-x64@2.5.11':
     optional: true
 
-  '@biomejs/cli-linux-arm64-musl@2.5.9':
+  '@biomejs/cli-linux-arm64-musl@2.5.11':
     optional: true
 
-  '@biomejs/cli-linux-arm64@2.5.9':
+  '@biomejs/cli-linux-arm64@2.5.11':
     optional: true
 
-  '@biomejs/cli-linux-x64-musl@2.5.9':
+  '@biomejs/cli-linux-x64-musl@2.5.11':
     optional: true
 
-  '@biomejs/cli-linux-x64@2.5.9':
+  '@biomejs/cli-linux-x64@2.5.11':
     optional: true
 
-  '@biomejs/cli-win32-arm64@2.5.9':
+  '@biomejs/cli-win32-arm64@2.5.11':
     optional: true
 
-  '@biomejs/cli-win32-x64@2.5.9':
+  '@biomejs/cli-win32-x64@2.5.11':
     optional: true
 
   '@emnapi/core@1.11.2':
@@ -1725,7 +1725,7 @@ snapshots:
 
   '@lightweight-clients/shikimori-graphql-api-lightweight-client@1.2.0': {}
 
-  '@lightweight-clients/telegram-bot-api-lightweight-client@10.2.0': {}
+  '@lightweight-clients/telegram-bot-api-lightweight-client@10.3.0': {}
 
   '@napi-rs/wasm-runtime@1.2.3(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)':
     dependencies:
@@ -2096,20 +2096,20 @@ snapshots:
       estree-walker: 3.0.3
       js-tokens: 10.0.0
 
-  aws-cdk-lib@2.266.0(constructs@10.8.1):
+  aws-cdk-lib@2.267.0(constructs@10.8.1):
     dependencies:
       '@aws-cdk/asset-awscli-v1': 2.2.292
       '@aws-cdk/asset-node-proxy-agent-v6': 2.1.2
       '@aws-cdk/cloud-assembly-schema': 54.20.0
       constructs: 10.8.1
 
-  aws-cdk@2.1138.0: {}
+  aws-cdk@2.1139.0: {}
 
   bowser@2.14.1: {}
 
-  cdk-lambda-llrt@0.1.4(aws-cdk-lib@2.266.0(constructs@10.8.1))(constructs@10.8.1):
+  cdk-lambda-llrt@0.1.4(aws-cdk-lib@2.267.0(constructs@10.8.1))(constructs@10.8.1):
     dependencies:
-      aws-cdk-lib: 2.266.0(constructs@10.8.1)
+      aws-cdk-lib: 2.267.0(constructs@10.8.1)
       constructs: 10.8.1
 
   chai@6.2.2: {}
@@ -2189,7 +2189,7 @@ snapshots:
 
   json-parse-even-better-errors@6.0.0: {}
 
-  knip@6.32.2:
+  knip@6.32.3:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.5)
       formatly: 0.3.0
